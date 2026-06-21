@@ -218,6 +218,32 @@
       font-weight: 900;
     }
 
+    .challenge-code {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      max-width: 100%;
+      padding: 7px 15px;
+      border: 1px solid rgba(255, 228, 92, 0.48);
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(255, 228, 92, 0.18), rgba(66, 217, 255, 0.08)),
+        rgba(255, 255, 255, 0.06);
+      color: var(--yellow);
+      font-size: 0.9rem;
+      font-weight: 1000;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 0 18px rgba(255, 228, 92, 0.12);
+    }
+
+    .challenge-code--result {
+      justify-self: center;
+      margin-top: -6px;
+      color: #fff2a8;
+    }
+
     h1 {
       margin: 0;
       color: #ffffff;
@@ -1294,6 +1320,7 @@
       </div>
       <div class="cover-inner">
         <span class="unit-label">3학년 2학기 1단원</span>
+        <span class="challenge-code" data-field="challenge-code-cover">오늘의 도전</span>
         <h1 id="coverTitle">곱셈 상자런</h1>
         <p class="cover-copy">곱해서 상자를 열어요</p>
         <button class="primary-button" type="button" data-action="start">시작</button>
@@ -1362,6 +1389,7 @@
       <div class="result-card">
         <h2 class="result-title" id="resultTitle">최종 점수</h2>
         <div class="final-score" data-field="final-score">0점</div>
+        <span class="challenge-code challenge-code--result" data-field="challenge-code-result">오늘의 도전</span>
         <p class="result-praise" data-field="result-praise">계산 집중력이 좋아요!</p>
         <div class="result-mathmon-scene" data-mathmon-result>
           <div class="result-mathmon-stage">
@@ -1396,6 +1424,8 @@
       const ROUND_SIZE = 10;
       const MIN_PROBLEM_BANK_SIZE = 100;
       const BASE_CORRECT_SCORE = 100n;
+      const CHALLENGE_SEED_PREFIX = "eduitit-math-3-2-1-1";
+      const CHALLENGE_VERSION = "v1";
       const PHASES = Object.freeze({
         cover: "cover",
         playing: "playing",
@@ -1469,6 +1499,8 @@
         startFirstProblemButton: document.querySelector('[data-action="start-first-problem"]'),
         restartButton: document.querySelector('[data-action="restart"]'),
         openCrateButton: document.querySelector('[data-action="open-crate"]'),
+        challengeCodeCover: document.querySelector('[data-field="challenge-code-cover"]'),
+        challengeCodeResult: document.querySelector('[data-field="challenge-code-result"]'),
         progress: document.querySelector('[data-field="progress"]'),
         combo: document.querySelector('[data-field="combo"]'),
         score: document.querySelector('[data-field="score"]'),
@@ -1515,18 +1547,75 @@
         pendingReward: null,
         pendingCrateType: "normal",
         pendingCrateGrade: null,
+        challengeDateKey: "",
+        challengeCode: "",
+        challengeRandom: null,
         downloadCardUrl: "",
         downloadRequestToken: "",
       };
 
-      function randomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+      function pad2(value) {
+        return String(value).padStart(2, "0");
       }
 
-      function shuffle(items) {
+      function getKoreaDateParts(date = new Date()) {
+        const koreaTime = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+        return {
+          year: koreaTime.getUTCFullYear(),
+          month: koreaTime.getUTCMonth() + 1,
+          day: koreaTime.getUTCDate(),
+        };
+      }
+
+      function getTodayChallengeDateKey(date = new Date()) {
+        const { year, month, day } = getKoreaDateParts(date);
+        return `${year}-${pad2(month)}-${pad2(day)}`;
+      }
+
+      function getTodayChallengeCode(dateKey = getTodayChallengeDateKey()) {
+        const [, month, day] = dateKey.split("-");
+        return `${month}${day} 상자런`;
+      }
+
+      function hashSeed(seedText) {
+        let hash = 2166136261;
+        for (let index = 0; index < seedText.length; index += 1) {
+          hash ^= seedText.charCodeAt(index);
+          hash = Math.imul(hash, 16777619);
+        }
+        return hash >>> 0;
+      }
+
+      function createSeededRandom(seedText) {
+        let seed = hashSeed(seedText);
+        return () => {
+          seed = (seed + 0x6D2B79F5) >>> 0;
+          let value = seed;
+          value = Math.imul(value ^ (value >>> 15), value | 1);
+          value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+          return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function getChallengeSeed(dateKey) {
+        return `${CHALLENGE_SEED_PREFIX}:${CHALLENGE_VERSION}:${dateKey}`;
+      }
+
+      function renderChallengeCode() {
+        const code = state.challengeCode || getTodayChallengeCode();
+        const text = `오늘의 도전 ${code}`;
+        els.challengeCodeCover.textContent = text;
+        els.challengeCodeResult.textContent = text;
+      }
+
+      function randomInt(min, max, random = state.challengeRandom || Math.random) {
+        return Math.floor(random() * (max - min + 1)) + min;
+      }
+
+      function shuffle(items, random = state.challengeRandom || Math.random) {
         const copy = [...items];
         for (let index = copy.length - 1; index > 0; index -= 1) {
-          const other = randomInt(0, index);
+          const other = randomInt(0, index, random);
           [copy[index], copy[other]] = [copy[other], copy[index]];
         }
         return copy;
@@ -2092,6 +2181,7 @@
         state.phase = PHASES.finished;
         els.finalScore.textContent = formatScore(state.score, true);
         els.finalScore.title = formatScore(state.score);
+        renderChallengeCode();
         els.resultPraise.textContent = getResultPraise(state.score, state.correctCount);
         els.finalCorrect.textContent = `${state.correctCount}/${ROUND_SIZE}`;
         showScreen("result");
@@ -2099,6 +2189,9 @@
       }
 
       function startRound() {
+        state.challengeDateKey = getTodayChallengeDateKey();
+        state.challengeCode = getTodayChallengeCode(state.challengeDateKey);
+        state.challengeRandom = createSeededRandom(getChallengeSeed(state.challengeDateKey));
         state.questions = buildRound();
         state.currentIndex = 0;
         state.score = 0n;
@@ -2115,6 +2208,7 @@
         state.pendingCrateType = "normal";
         state.pendingCrateGrade = null;
         state.downloadRequestToken = "";
+        renderChallengeCode();
         setDownloadPending();
         showScreen("play");
         renderQuestion();
@@ -2136,6 +2230,7 @@
         fitLastRewardText();
         fitRewardText();
       });
+      renderChallengeCode();
     })();
   </script>
 </body>
