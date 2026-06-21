@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>3학년 2학기 1단원 · 곱셈 상자런 | 에듀잇티</title>
+  <title>3학년 2학기 1단원 · 매스몬 상자런 | 에듀잇티</title>
   <style>
     :root {
       --page: #080914;
@@ -140,6 +140,55 @@
       border-color: rgba(66, 217, 255, 0.38);
     }
 
+    .cover-mathmons {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .cover-mathmon {
+      --cover-mathmon-transform: translate3d(0, 0, 0);
+      position: absolute;
+      aspect-ratio: 1;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.34));
+      opacity: 0.74;
+      transform: var(--cover-mathmon-transform);
+      animation: cover-mathmon-float 5.8s ease-in-out infinite;
+    }
+
+    .cover-mathmon-almon {
+      --cover-mathmon-transform: translateX(-50%) rotate(-4deg);
+      width: clamp(112px, 13vw, 178px);
+      left: 50%;
+      top: clamp(8px, 3vh, 28px);
+      background-image: url("mathmon-0-almon.png?v=2");
+      animation-delay: -1.4s;
+    }
+
+    .cover-mathmon-foxmon {
+      --cover-mathmon-transform: rotate(5deg);
+      width: clamp(126px, 14.5vw, 202px);
+      right: clamp(34px, 5vw, 78px);
+      top: clamp(284px, 45vh, 380px);
+      background-image: url("mathmon-2-foxmon.png?v=2");
+      animation-delay: -3.1s;
+    }
+
+    .cover-mathmon-babydragonmon {
+      --cover-mathmon-transform: translate3d(0, 0, 0);
+      width: clamp(140px, 16vw, 230px);
+      left: clamp(54px, 9vw, 130px);
+      bottom: clamp(92px, 15vh, 170px);
+      background-image: url("mathmon-3-babydragonmon.png?v=2");
+      opacity: 0.54;
+      animation-delay: -2.2s;
+    }
+
     .cover-inner {
       position: relative;
       z-index: 1;
@@ -151,13 +200,48 @@
     .tutorial {
       place-items: center;
       padding: clamp(18px, 5vw, 56px);
+      position: relative;
     }
 
     .tutorial-card {
+      position: relative;
+      z-index: 1;
       width: min(760px, 100%);
       display: grid;
       gap: clamp(16px, 3vw, 28px);
       text-align: center;
+    }
+
+    .tutorial-card .unit-label {
+      justify-self: center;
+    }
+
+    .tutorial-mathmon {
+      position: absolute;
+      z-index: 0;
+      width: clamp(118px, 13vw, 172px);
+      aspect-ratio: 1;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      pointer-events: none;
+      opacity: 0.58;
+      filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.34));
+      animation: cover-mathmon-float 6.2s ease-in-out infinite;
+    }
+
+    .tutorial-mathmon-top {
+      left: clamp(120px, 13vw, 180px);
+      top: clamp(70px, 11vh, 96px);
+      background-image: url("mathmon-1-ppiyakmon.png?v=2");
+      animation-delay: -2.1s;
+    }
+
+    .tutorial-mathmon-bottom {
+      right: clamp(74px, 8vw, 120px);
+      bottom: clamp(58px, 8vh, 96px);
+      background-image: url("mathmon-2-foxmon.png?v=2");
+      animation-delay: -4.1s;
     }
 
     .tutorial-title {
@@ -218,30 +302,22 @@
       font-weight: 900;
     }
 
-    .challenge-code {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      max-width: 100%;
-      padding: 7px 15px;
-      border: 1px solid rgba(255, 228, 92, 0.48);
-      border-radius: 999px;
-      background:
-        linear-gradient(180deg, rgba(255, 228, 92, 0.18), rgba(66, 217, 255, 0.08)),
-        rgba(255, 255, 255, 0.06);
-      color: var(--yellow);
-      font-size: 0.9rem;
-      font-weight: 1000;
-      line-height: 1;
-      white-space: nowrap;
-      box-shadow: 0 0 18px rgba(255, 228, 92, 0.12);
+    .cover-unit-label {
+      position: absolute;
+      top: clamp(16px, 2.2vw, 24px);
+      right: clamp(16px, 2.2vw, 24px);
+      z-index: 2;
     }
 
-    .challenge-code--result {
-      justify-self: center;
-      margin-top: -6px;
-      color: #fff2a8;
+    .cover-learning-label {
+      position: absolute;
+      left: clamp(16px, 2.2vw, 24px);
+      bottom: clamp(42px, 6.5vh, 70px);
+      z-index: 2;
+      border-color: rgba(255, 178, 62, 0.58);
+      color: #ffbd4a;
+      background: rgba(255, 178, 62, 0.1);
+      box-shadow: 0 12px 30px rgba(255, 140, 46, 0.12);
     }
 
     h1 {
@@ -269,6 +345,9 @@
       border-radius: var(--radius);
       font-weight: 950;
       letter-spacing: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
       -webkit-tap-highlight-color: transparent;
     }
@@ -283,6 +362,40 @@
       font-size: clamp(1.35rem, 4vw, 2.2rem);
     }
 
+    .cover .primary-button {
+      position: relative;
+      top: clamp(8px, 1.4vh, 16px);
+      min-width: min(280px, 100%);
+      min-height: 76px;
+      margin-top: clamp(30px, 5vh, 58px);
+      gap: 13px;
+      border: 2px solid rgba(255, 255, 255, 0.42);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.36), transparent 36%),
+        linear-gradient(180deg, #fff46f 0%, #ffc44e 54%, #ff9f2e 100%);
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.54),
+        0 10px 0 #9a4513,
+        0 24px 42px rgba(255, 178, 62, 0.34);
+      font-size: clamp(1.5rem, 3.5vw, 2.35rem);
+    }
+
+    .tutorial .primary-button {
+      justify-self: center;
+      min-width: min(320px, 100%);
+    }
+
+    .cover .primary-button::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 16px solid #17120a;
+      filter: drop-shadow(0 2px 0 rgba(255, 255, 255, 0.32));
+    }
+
     .primary-button:hover,
     .choice-button:hover,
     .secondary-button:hover {
@@ -293,6 +406,17 @@
     .choice-button:active,
     .secondary-button:active {
       transform: translateY(2px);
+    }
+
+    @keyframes cover-mathmon-float {
+      0%,
+      100% {
+        transform: var(--cover-mathmon-transform) translateY(0);
+      }
+
+      50% {
+        transform: var(--cover-mathmon-transform) translateY(-14px);
+      }
     }
 
     .play {
@@ -835,32 +959,47 @@
 
     .result {
       place-items: center;
-      padding: clamp(18px, 5vw, 58px);
+      padding: clamp(12px, 3vh, 28px) clamp(18px, 5vw, 58px);
     }
 
     .result-card {
       width: min(840px, 100%);
       display: grid;
-      gap: 18px;
+      gap: clamp(10px, 1.5vh, 14px);
       text-align: center;
+    }
+
+    .result-summary {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      padding: clamp(12px, 2vh, 18px) clamp(16px, 3vw, 24px);
+      border: 2px solid rgba(255, 228, 92, 0.36);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(180deg, rgba(255, 228, 92, 0.12), rgba(255, 255, 255, 0.04)),
+        rgba(4, 6, 18, 0.66);
+      box-shadow: 0 0 30px rgba(255, 228, 92, 0.1);
     }
 
     .result-title {
       margin: 0;
       color: #ffffff;
-      font-size: clamp(2.2rem, 7vw, 4.8rem);
+      font-size: clamp(1.45rem, 3.6vw, 2.35rem);
       line-height: 1;
       font-weight: 1000;
     }
 
     .final-score {
       min-width: 0;
-      padding: 22px;
-      border: 2px solid rgba(255, 228, 92, 0.44);
-      border-radius: var(--radius);
-      background: rgba(255, 228, 92, 0.08);
+      justify-self: center;
+      width: min(780px, 100%);
+      padding: 0 clamp(14px, 3vw, 22px);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
       color: var(--yellow);
-      font-size: clamp(2.4rem, 8vw, 5.6rem);
+      font-size: clamp(2.45rem, 7vw, 4.55rem);
       line-height: 1;
       font-weight: 1000;
       overflow-wrap: anywhere;
@@ -870,21 +1009,19 @@
     .result-praise {
       justify-self: center;
       max-width: min(720px, 100%);
-      margin-top: -4px;
-      padding: 9px 16px 10px;
-      border: 1px solid rgba(66, 217, 255, 0.36);
-      border-radius: 999px;
-      background:
-        linear-gradient(180deg, rgba(66, 217, 255, 0.16), rgba(255, 228, 92, 0.1)),
-        rgba(255, 255, 255, 0.06);
+      margin: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
       color: var(--ink);
-      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      font-size: clamp(0.95rem, 1.9vw, 1.2rem);
       font-weight: 950;
       line-height: 1.25;
       text-align: center;
       white-space: normal;
       word-break: keep-all;
-      box-shadow: 0 0 24px rgba(66, 217, 255, 0.12);
+      text-shadow: 0 0 18px rgba(66, 217, 255, 0.18);
     }
 
     .result-mathmon-scene {
@@ -894,15 +1031,15 @@
       grid-template-columns: minmax(190px, 0.8fr) minmax(0, 1fr);
       align-items: center;
       gap: clamp(14px, 3vw, 28px);
-      min-height: 250px;
-      padding: clamp(16px, 3vw, 26px);
-      border: 2px solid rgba(255, 228, 92, 0.36);
+      min-height: 196px;
+      padding: clamp(12px, 2vw, 18px);
+      border: 2px solid rgba(66, 217, 255, 0.22);
       border-radius: var(--radius);
       background:
         radial-gradient(circle at 24% 50%, var(--mathmon-aura), transparent 42%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
-        rgba(4, 6, 18, 0.72);
-      box-shadow: 0 0 42px rgba(255, 228, 92, 0.12);
+        linear-gradient(180deg, rgba(66, 217, 255, 0.08), rgba(255, 255, 255, 0.035)),
+        rgba(4, 6, 18, 0.66);
+      box-shadow: 0 0 28px rgba(66, 217, 255, 0.08);
       overflow: hidden;
     }
 
@@ -916,7 +1053,7 @@
     }
 
     .result-mathmon-scene::before {
-      border: 1px dashed rgba(255, 255, 255, 0.18);
+      display: none;
     }
 
     .result-mathmon-scene::after {
@@ -935,11 +1072,11 @@
       z-index: 1;
       display: grid;
       place-items: center;
-      min-height: 210px;
+      min-height: 158px;
     }
 
     .result-mathmon-sprite {
-      width: min(220px, 100%);
+      width: min(178px, 100%);
       aspect-ratio: 1;
       border-radius: var(--radius);
       background-size: contain;
@@ -958,7 +1095,7 @@
       z-index: 1;
       display: grid;
       justify-items: start;
-      gap: 10px;
+      gap: 7px;
       text-align: left;
     }
 
@@ -976,7 +1113,7 @@
 
     .result-mathmon-info strong {
       color: #ffffff;
-      font-size: clamp(2rem, 6vw, 4.2rem);
+      font-size: clamp(1.9rem, 5.2vw, 3.45rem);
       line-height: 0.95;
       font-weight: 1000;
       text-shadow: 0 0 24px rgba(255, 228, 92, 0.26);
@@ -986,25 +1123,33 @@
     .result-mathmon-info p {
       margin: 0;
       color: var(--ink);
-      font-size: clamp(1rem, 2.4vw, 1.35rem);
-      line-height: 1.35;
+      font-size: clamp(0.95rem, 2.05vw, 1.18rem);
+      line-height: 1.25;
       font-weight: 900;
     }
 
     .result-stats {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      grid-template-columns: minmax(150px, 0.65fr) minmax(270px, 1fr) minmax(150px, 0.55fr);
+      align-items: stretch;
+      gap: 12px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
     }
 
     .result-stat {
       min-width: 0;
       display: grid;
       gap: 5px;
-      padding: 14px;
+      min-height: 128px;
+      padding: 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.07);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.035)),
+        rgba(4, 6, 18, 0.62);
     }
 
     .result-stat span {
@@ -1022,7 +1167,6 @@
     }
 
     .result-stat--correct {
-      min-height: 184px;
       place-items: center;
       text-align: center;
     }
@@ -1033,7 +1177,7 @@
     }
 
     .result-stat--correct strong {
-      font-size: clamp(3.25rem, 7vw, 5.2rem);
+      font-size: clamp(2.35rem, 5.4vw, 3.65rem);
       line-height: 0.95;
       text-shadow: 0 0 24px rgba(255, 255, 255, 0.14);
       white-space: nowrap;
@@ -1050,8 +1194,13 @@
       text-align: center;
     }
 
+    .result-stat--restart {
+      display: grid;
+      place-items: center;
+    }
+
     .download-mathmon {
-      width: min(96px, 100%);
+      width: min(78px, 100%);
       aspect-ratio: 1;
       justify-self: center;
       border-radius: var(--radius);
@@ -1084,6 +1233,13 @@
       pointer-events: none;
       opacity: 0.68;
       box-shadow: 0 4px 0 #7b3d15;
+    }
+
+    .result .primary-button {
+      min-height: 58px;
+      align-self: center;
+      padding: 10px 18px;
+      font-size: clamp(1.15rem, 2.2vw, 1.45rem);
     }
 
     .sr-only {
@@ -1318,29 +1474,36 @@
         <img src="eduitit-logo-mark.png" alt="" aria-hidden="true">
         <span>에듀잇티 수학 게임</span>
       </div>
+      <span class="unit-label cover-unit-label">3학년 2학기 1단원</span>
+      <span class="unit-label cover-learning-label">받아올림이 없는 (세 자리 수)×(한 자리 수)</span>
+      <div class="cover-mathmons" aria-hidden="true">
+        <div class="cover-mathmon cover-mathmon-almon"></div>
+        <div class="cover-mathmon cover-mathmon-foxmon"></div>
+        <div class="cover-mathmon cover-mathmon-babydragonmon"></div>
+      </div>
       <div class="cover-inner">
-        <span class="unit-label">3학년 2학기 1단원</span>
-        <span class="challenge-code" data-field="challenge-code-cover">오늘의 도전</span>
-        <h1 id="coverTitle">곱셈 상자런</h1>
-        <p class="cover-copy">곱해서 상자를 열어요</p>
+        <h1 id="coverTitle">매스몬 상자런</h1>
+        <p class="cover-copy">점수를 모아 매스몬을 얻어요</p>
         <button class="primary-button" type="button" data-action="start">시작</button>
       </div>
     </section>
 
     <section class="screen tutorial" data-screen="tutorial" aria-labelledby="tutorialTitle">
+      <div class="tutorial-mathmon tutorial-mathmon-top" aria-hidden="true"></div>
+      <div class="tutorial-mathmon tutorial-mathmon-bottom" aria-hidden="true"></div>
       <div class="tutorial-card">
         <span class="unit-label">어떻게 해요?</span>
-        <h2 class="tutorial-title" id="tutorialTitle">상자를 열어요</h2>
+        <h2 class="tutorial-title" id="tutorialTitle">점수를 모아요</h2>
         <ol class="tutorial-steps">
-          <li data-tutorial-step><b>1</b><span>문제를 보고 답을 골라요</span></li>
-          <li data-tutorial-step><b>2</b><span>정답이면 색깔 상자를 열어요</span></li>
-          <li data-tutorial-step><b>3</b><span>두 번 틀리면 깨진 상자가 열려요</span></li>
+          <li data-tutorial-step><b>1</b><span>10문제를 풀며 점수를 모아요</span></li>
+          <li data-tutorial-step><b>2</b><span>정답이면 일반, 반짝, 황금 상자를 열어요</span></li>
+          <li data-tutorial-step><b>3</b><span>마지막 점수와 정답 수로 매스몬을 얻어요</span></li>
         </ol>
         <button class="primary-button" type="button" data-action="start-first-problem">문제 시작</button>
       </div>
     </section>
 
-    <section class="screen play" data-screen="play" aria-label="곱셈 상자런 문제">
+    <section class="screen play" data-screen="play" aria-label="매스몬 상자런 문제">
       <div class="hud" aria-label="점수판">
         <div class="hud-card hud-card--progress">
           <span>문제</span>
@@ -1387,10 +1550,11 @@
 
     <section class="screen result" data-screen="result" aria-labelledby="resultTitle">
       <div class="result-card">
-        <h2 class="result-title" id="resultTitle">최종 점수</h2>
-        <div class="final-score" data-field="final-score">0점</div>
-        <span class="challenge-code challenge-code--result" data-field="challenge-code-result">오늘의 도전</span>
-        <p class="result-praise" data-field="result-praise">계산 집중력이 좋아요!</p>
+        <div class="result-summary">
+          <h2 class="result-title" id="resultTitle">최종 점수</h2>
+          <div class="final-score" data-field="final-score">0점</div>
+          <p class="result-praise" data-field="result-praise">계산 집중력이 좋아요!</p>
+        </div>
         <div class="result-mathmon-scene" data-mathmon-result>
           <div class="result-mathmon-stage">
             <div class="result-mathmon-sprite" data-field="result-mathmon-sprite" aria-hidden="true"></div>
@@ -1411,8 +1575,10 @@
             <div class="download-mathmon" data-field="download-mathmon" aria-hidden="true"></div>
             <a class="download-button is-disabled" data-action="download-mathmon" href="#" download="mathmon-score-card.png" aria-disabled="true">준비 중</a>
           </div>
+          <div class="result-stat result-stat--restart">
+            <button class="primary-button" type="button" data-action="restart">다시</button>
+          </div>
         </div>
-        <button class="primary-button" type="button" data-action="restart">다시</button>
       </div>
     </section>
   </main>
@@ -1424,8 +1590,6 @@
       const ROUND_SIZE = 10;
       const MIN_PROBLEM_BANK_SIZE = 100;
       const BASE_CORRECT_SCORE = 100n;
-      const CHALLENGE_SEED_PREFIX = "eduitit-math-3-2-1-1";
-      const CHALLENGE_VERSION = "v1";
       const PHASES = Object.freeze({
         cover: "cover",
         playing: "playing",
@@ -1499,8 +1663,6 @@
         startFirstProblemButton: document.querySelector('[data-action="start-first-problem"]'),
         restartButton: document.querySelector('[data-action="restart"]'),
         openCrateButton: document.querySelector('[data-action="open-crate"]'),
-        challengeCodeCover: document.querySelector('[data-field="challenge-code-cover"]'),
-        challengeCodeResult: document.querySelector('[data-field="challenge-code-result"]'),
         progress: document.querySelector('[data-field="progress"]'),
         combo: document.querySelector('[data-field="combo"]'),
         score: document.querySelector('[data-field="score"]'),
@@ -1547,75 +1709,18 @@
         pendingReward: null,
         pendingCrateType: "normal",
         pendingCrateGrade: null,
-        challengeDateKey: "",
-        challengeCode: "",
-        challengeRandom: null,
         downloadCardUrl: "",
         downloadRequestToken: "",
       };
 
-      function pad2(value) {
-        return String(value).padStart(2, "0");
+      function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
       }
 
-      function getKoreaDateParts(date = new Date()) {
-        const koreaTime = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-        return {
-          year: koreaTime.getUTCFullYear(),
-          month: koreaTime.getUTCMonth() + 1,
-          day: koreaTime.getUTCDate(),
-        };
-      }
-
-      function getTodayChallengeDateKey(date = new Date()) {
-        const { year, month, day } = getKoreaDateParts(date);
-        return `${year}-${pad2(month)}-${pad2(day)}`;
-      }
-
-      function getTodayChallengeCode(dateKey = getTodayChallengeDateKey()) {
-        const [, month, day] = dateKey.split("-");
-        return `${month}${day} 상자런`;
-      }
-
-      function hashSeed(seedText) {
-        let hash = 2166136261;
-        for (let index = 0; index < seedText.length; index += 1) {
-          hash ^= seedText.charCodeAt(index);
-          hash = Math.imul(hash, 16777619);
-        }
-        return hash >>> 0;
-      }
-
-      function createSeededRandom(seedText) {
-        let seed = hashSeed(seedText);
-        return () => {
-          seed = (seed + 0x6D2B79F5) >>> 0;
-          let value = seed;
-          value = Math.imul(value ^ (value >>> 15), value | 1);
-          value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
-          return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
-        };
-      }
-
-      function getChallengeSeed(dateKey) {
-        return `${CHALLENGE_SEED_PREFIX}:${CHALLENGE_VERSION}:${dateKey}`;
-      }
-
-      function renderChallengeCode() {
-        const code = state.challengeCode || getTodayChallengeCode();
-        const text = `오늘의 도전 ${code}`;
-        els.challengeCodeCover.textContent = text;
-        els.challengeCodeResult.textContent = text;
-      }
-
-      function randomInt(min, max, random = state.challengeRandom || Math.random) {
-        return Math.floor(random() * (max - min + 1)) + min;
-      }
-
-      function shuffle(items, random = state.challengeRandom || Math.random) {
+      function shuffle(items) {
         const copy = [...items];
         for (let index = copy.length - 1; index > 0; index -= 1) {
-          const other = randomInt(0, index, random);
+          const other = randomInt(0, index);
           [copy[index], copy[other]] = [copy[other], copy[index]];
         }
         return copy;
@@ -1861,7 +1966,7 @@
         context.shadowBlur = 0;
         context.shadowOffsetY = 0;
 
-        drawFittedText(context, "곱셈 상자런", 600, 148, 820, 62, 36, "#ffe45c");
+        drawFittedText(context, "매스몬 상자런", 600, 148, 820, 62, 36, "#ffe45c");
 
         drawRoundRect(context, 458, 800, 284, 62, 31);
         context.fillStyle = "rgba(255, 228, 92, 0.2)";
@@ -2181,7 +2286,6 @@
         state.phase = PHASES.finished;
         els.finalScore.textContent = formatScore(state.score, true);
         els.finalScore.title = formatScore(state.score);
-        renderChallengeCode();
         els.resultPraise.textContent = getResultPraise(state.score, state.correctCount);
         els.finalCorrect.textContent = `${state.correctCount}/${ROUND_SIZE}`;
         showScreen("result");
@@ -2189,9 +2293,6 @@
       }
 
       function startRound() {
-        state.challengeDateKey = getTodayChallengeDateKey();
-        state.challengeCode = getTodayChallengeCode(state.challengeDateKey);
-        state.challengeRandom = createSeededRandom(getChallengeSeed(state.challengeDateKey));
         state.questions = buildRound();
         state.currentIndex = 0;
         state.score = 0n;
@@ -2208,7 +2309,6 @@
         state.pendingCrateType = "normal";
         state.pendingCrateGrade = null;
         state.downloadRequestToken = "";
-        renderChallengeCode();
         setDownloadPending();
         showScreen("play");
         renderQuestion();
@@ -2230,7 +2330,6 @@
         fitLastRewardText();
         fitRewardText();
       });
-      renderChallengeCode();
     })();
   </script>
 </body>
