@@ -1,0 +1,2872 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3학년 2학기 1단원 · 매스몬 로켓발사 대작전 | 에듀잇티</title>
+  <style>
+    :root {
+      --page: #111018;
+      --panel: #201a2d;
+      --panel-soft: #2b243a;
+      --ink: #fff8e8;
+      --muted: #d7cadb;
+      --line: rgba(255, 255, 255, 0.16);
+      --mint: #35d9b2;
+      --amber: #ffc857;
+      --rose: #ff5d7a;
+      --sky: #60d7ff;
+      --violet: #b88cff;
+      --deep: #0e0c16;
+      --radius: 8px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(255, 200, 87, 0.08) 0 1px, transparent 1px 80px),
+        linear-gradient(90deg, rgba(96, 215, 255, 0.07) 0 1px, transparent 1px 96px),
+        linear-gradient(135deg, #16111f 0%, #21182b 46%, #101019 100%);
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+    }
+
+    .phone-blocker {
+      display: none;
+    }
+
+    .game {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: clamp(14px, 2.4vw, 28px);
+    }
+
+    .screen {
+      position: relative;
+      width: min(1120px, 100%);
+      min-height: min(720px, calc(100dvh - 28px));
+      display: none;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.06), transparent 34%),
+        linear-gradient(180deg, #251e32, #171421);
+      box-shadow: var(--shadow);
+    }
+
+    .screen.is-active {
+      display: grid;
+    }
+
+    .top-row {
+      position: absolute;
+      inset: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) auto clamp(14px, 2vw, 22px);
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .brand-badge,
+    .unit-badge,
+    .lesson-badge,
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(14, 12, 22, 0.7);
+      color: #ffffff;
+      font-size: 0.86rem;
+      font-weight: 900;
+      line-height: 1.1;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-badge img {
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
+      border-radius: 6px;
+    }
+
+    .unit-badge {
+      border-color: rgba(96, 215, 255, 0.5);
+      color: #c8f3ff;
+    }
+
+    .lesson-badge {
+      position: absolute;
+      left: clamp(14px, 2vw, 22px);
+      bottom: clamp(14px, 2vw, 22px);
+      z-index: 3;
+      border-color: rgba(255, 200, 87, 0.56);
+      color: #ffe0a3;
+    }
+
+    .primary-button,
+    .ghost-button {
+      min-height: 58px;
+      padding: 0 28px;
+      border: 0;
+      border-radius: var(--radius);
+      font-size: clamp(1.05rem, 2.6vw, 1.32rem);
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.34), 0 22px 38px rgba(0, 0, 0, 0.3);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    }
+
+    .primary-button {
+      color: #2a1700;
+      background: linear-gradient(180deg, #ffe27a, #ffb83d);
+    }
+
+    .ghost-button {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .primary-button:hover,
+    .ghost-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .primary-button:active,
+    .ghost-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 0 rgba(106, 70, 23, 0.28), 0 12px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .primary-button:focus-visible,
+    .ghost-button:focus-visible,
+    .choice-button:focus-visible,
+    .sound-toggle:focus-visible {
+      outline: 4px solid rgba(255, 255, 255, 0.86);
+      outline-offset: 4px;
+    }
+
+    .sound-toggle {
+      position: fixed;
+      right: clamp(14px, 2.4vw, 30px);
+      bottom: clamp(14px, 2.4vw, 30px);
+      z-index: 30;
+      min-width: 84px;
+      min-height: 38px;
+      border: 1px solid rgba(255, 200, 87, 0.5);
+      border-radius: 999px;
+      color: #ffe3a5;
+      background: rgba(14, 12, 22, 0.78);
+      font-size: 0.82rem;
+      font-weight: 950;
+      backdrop-filter: blur(10px);
+    }
+
+    .sound-toggle[aria-pressed="false"] {
+      border-color: rgba(215, 202, 219, 0.34);
+      color: var(--muted);
+    }
+
+    .cover {
+      align-items: center;
+      padding: clamp(70px, 10vw, 100px) clamp(24px, 5vw, 70px);
+      background: #171421;
+    }
+
+    .raster-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(18, 12, 26, 0.74) 0%, rgba(18, 12, 26, 0.44) 38%, transparent 68%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 38%);
+      pointer-events: none;
+    }
+
+    .cover-scene {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(300px, 0.92fr) minmax(360px, 1.08fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 58px);
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      justify-items: start;
+      gap: 22px;
+    }
+
+    .hero-copy h1 {
+      max-width: 8.4em;
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(3rem, 7vw, 6.6rem);
+      line-height: 0.94;
+      font-weight: 1000;
+      text-shadow: 0 7px 0 rgba(0, 0, 0, 0.22), 0 0 28px rgba(96, 215, 255, 0.24);
+    }
+
+    .hero-copy p {
+      max-width: 520px;
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.2rem, 2.8vw, 1.72rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .cover-visual {
+      position: relative;
+      min-height: 470px;
+      display: grid;
+      place-items: center;
+      visibility: hidden;
+    }
+
+    .star-field {
+      position: absolute;
+      inset: 4% 0 0 0;
+      background:
+        linear-gradient(90deg, transparent 0 14%, rgba(255, 255, 255, 0.54) 14% 15%, transparent 15% 45%, rgba(255, 200, 87, 0.6) 45% 46%, transparent 46%),
+        linear-gradient(90deg, transparent 0 62%, rgba(96, 215, 255, 0.56) 62% 63%, transparent 63%),
+        linear-gradient(90deg, transparent 0 28%, rgba(255, 255, 255, 0.42) 28% 29%, transparent 29% 82%, rgba(255, 93, 122, 0.5) 82% 83%, transparent 83%);
+      background-size: 220px 80px, 260px 130px, 310px 110px;
+      opacity: 0.5;
+      transform: skewY(-6deg);
+    }
+
+    .rocket-hero {
+      position: relative;
+      width: min(330px, 72%);
+      height: 420px;
+      filter: drop-shadow(0 26px 34px rgba(0, 0, 0, 0.35));
+      animation: float-rocket 4.8s ease-in-out infinite;
+    }
+
+    .rocket-body {
+      position: absolute;
+      left: 50%;
+      top: 34px;
+      width: 136px;
+      height: 274px;
+      transform: translateX(-50%);
+      border: 4px solid rgba(255, 255, 255, 0.75);
+      border-radius: 78px 78px 36px 36px;
+      background: linear-gradient(90deg, #f8f4eb 0%, #ffffff 38%, #d9ecff 100%);
+    }
+
+    .rocket-nose {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 128px;
+      height: 108px;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: linear-gradient(135deg, #ff5d7a, #ffc857);
+    }
+
+    .rocket-window {
+      position: absolute;
+      left: 50%;
+      top: 114px;
+      width: 66px;
+      height: 66px;
+      transform: translateX(-50%);
+      border: 7px solid #7d4b2d;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60d7ff, #d2fbff);
+      box-shadow: inset 10px -10px 0 rgba(21, 107, 140, 0.14);
+    }
+
+    .rocket-band {
+      position: absolute;
+      left: 50%;
+      top: 205px;
+      width: 120px;
+      height: 36px;
+      transform: translateX(-50%);
+      border-radius: var(--radius);
+      background: #35d9b2;
+    }
+
+    .rocket-fin {
+      position: absolute;
+      top: 240px;
+      width: 76px;
+      height: 112px;
+      background: linear-gradient(180deg, #ff5d7a, #c93b58);
+    }
+
+    .rocket-fin.left {
+      left: 42px;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    .rocket-fin.right {
+      right: 42px;
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    .rocket-flame {
+      position: absolute;
+      left: 50%;
+      top: 314px;
+      width: 78px;
+      height: 100px;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 100%, 100% 0, 0 0);
+      background: linear-gradient(180deg, #ffe27a, #ff8f3d 52%, #ff5d7a);
+      animation: flame-pulse 0.48s ease-in-out infinite alternate;
+    }
+
+    .cover-mathmon {
+      position: absolute;
+      right: 2%;
+      bottom: 7%;
+      width: clamp(128px, 16vw, 180px);
+      transform: rotate(4deg);
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.32));
+    }
+
+    .tutorial {
+      align-items: center;
+      padding: clamp(74px, 10vw, 100px) clamp(22px, 5vw, 70px) clamp(28px, 4vw, 42px);
+      background: #171421;
+    }
+
+    .tutorial::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(14, 10, 22, 0.88) 0%, rgba(14, 10, 22, 0.72) 37%, rgba(14, 10, 22, 0.2) 68%, rgba(14, 10, 22, 0.08) 100%),
+        linear-gradient(180deg, rgba(8, 6, 12, 0.24), rgba(8, 6, 12, 0.18));
+      pointer-events: none;
+    }
+
+    .tutorial-layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.68fr) minmax(320px, 1fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 56px);
+    }
+
+    .tutorial-copy {
+      display: grid;
+      gap: 20px;
+      max-width: 720px;
+    }
+
+    .tutorial-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.2rem, 5.4vw, 4.2rem);
+      line-height: 1.02;
+      font-weight: 1000;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(26, 21, 36, 0.68);
+      color: #ffffff;
+      font-size: clamp(1.05rem, 2.4vw, 1.38rem);
+      font-weight: 950;
+      line-height: 1.28;
+      backdrop-filter: blur(10px);
+    }
+
+    .steps b {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      color: #201000;
+      background: var(--amber);
+      font-size: 1.2rem;
+    }
+
+    .tutorial-art-spacer {
+      min-height: clamp(360px, 48vw, 590px);
+    }
+
+    .play {
+      grid-template-rows: auto 1fr;
+      padding: clamp(16px, 2.4vw, 24px);
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: minmax(210px, auto) 1fr auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hud .brand-badge,
+    .hud .unit-badge {
+      position: static;
+      pointer-events: auto;
+    }
+
+    .hud-center {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      min-width: 112px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.92rem;
+      font-weight: 950;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    #progressText {
+      min-height: 48px;
+      min-width: 172px;
+      padding: 10px 22px;
+      border-color: rgba(255, 200, 87, 0.52);
+      color: #231400;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      font-size: clamp(1.08rem, 2.2vw, 1.42rem);
+      box-shadow: 0 10px 0 rgba(106, 70, 23, 0.2), 0 16px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    #energyText,
+    #chainText {
+      display: none;
+    }
+
+    .play-layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(270px, 0.78fr) minmax(460px, 1.22fr);
+      gap: clamp(16px, 2.8vw, 28px);
+    }
+
+    .rocket-zone,
+    .problem-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .rocket-zone {
+      position: relative;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      overflow: hidden;
+      padding: 18px;
+      isolation: isolate;
+      --charge: 0;
+      background: #151522;
+    }
+
+    .rocket-zone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 50% 67%, rgba(53, 217, 178, calc(0.08 + var(--charge) * 0.24)), transparent 0 26%, transparent 50%),
+        linear-gradient(180deg, rgba(7, 8, 14, 0.04), rgba(8, 6, 14, 0.46) 72%, rgba(8, 6, 14, 0.76));
+      pointer-events: none;
+    }
+
+    .rocket-zone::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        repeating-linear-gradient(112deg, transparent 0 68px, rgba(96, 215, 255, calc(0.02 + var(--charge) * 0.08)) 70px 74px, transparent 76px 150px),
+        radial-gradient(circle at 18% 18%, rgba(255, 200, 87, calc(0.08 + var(--charge) * 0.18)), transparent 0 9%, transparent 22%),
+        radial-gradient(circle at 82% 22%, rgba(255, 93, 122, calc(0.05 + var(--charge) * 0.16)), transparent 0 8%, transparent 20%);
+      mix-blend-mode: screen;
+      opacity: calc(0.45 + var(--charge) * 0.42);
+      pointer-events: none;
+    }
+
+    .launchpad-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      filter: saturate(calc(0.82 + var(--charge) * 0.34)) brightness(calc(0.76 + var(--charge) * 0.18));
+      transform: scale(1.015);
+      transition: filter 0.7s ease;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .launch-effects {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .pad-glow,
+    .energy-ring,
+    .launch-beam,
+    .steam-jet,
+    .spark {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .pad-glow {
+      left: 50%;
+      top: 66%;
+      width: calc(128px + var(--charge) * 110px);
+      height: calc(42px + var(--charge) * 44px);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 222, 105, calc(0.24 + var(--charge) * 0.52)), rgba(53, 217, 178, calc(0.12 + var(--charge) * 0.34)) 38%, transparent 72%);
+      filter: blur(8px);
+      animation: pad-pulse 1.7s ease-in-out infinite;
+    }
+
+    .energy-ring {
+      left: 50%;
+      top: 66%;
+      width: calc(142px + var(--charge) * 92px);
+      height: calc(42px + var(--charge) * 32px);
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(255, 200, 87, calc(0.34 + var(--charge) * 0.46));
+      border-radius: 50%;
+      box-shadow:
+        0 0 calc(8px + var(--charge) * 28px) rgba(255, 200, 87, calc(0.24 + var(--charge) * 0.32)),
+        inset 0 0 calc(8px + var(--charge) * 22px) rgba(53, 217, 178, calc(0.14 + var(--charge) * 0.28));
+      animation: ring-spin 2.4s linear infinite;
+    }
+
+    .launch-beam {
+      top: -8%;
+      width: 20%;
+      height: 92%;
+      background: linear-gradient(180deg, transparent, rgba(96, 215, 255, calc(0.04 + var(--charge) * 0.18)), rgba(255, 200, 87, calc(0.05 + var(--charge) * 0.2)), transparent);
+      filter: blur(8px);
+      opacity: calc(0.18 + var(--charge) * 0.58);
+      transform: skewX(-18deg);
+      animation: light-sweep 3.8s ease-in-out infinite;
+    }
+
+    .launch-beam.left {
+      left: 4%;
+    }
+
+    .launch-beam.right {
+      right: 6%;
+      animation-delay: -1.7s;
+    }
+
+    .steam-jet {
+      bottom: 24%;
+      width: 34%;
+      height: 16%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, calc(0.16 + var(--charge) * 0.38)), rgba(255, 228, 188, calc(0.08 + var(--charge) * 0.16)) 42%, transparent 72%);
+      filter: blur(10px);
+      opacity: calc(0.18 + var(--charge) * 0.54);
+      animation: steam-billow 2.2s ease-in-out infinite;
+    }
+
+    .steam-jet.left {
+      left: -6%;
+    }
+
+    .steam-jet.right {
+      right: -8%;
+      animation-delay: -0.9s;
+    }
+
+    .spark {
+      bottom: 28%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffe27a;
+      box-shadow: 0 0 12px rgba(255, 200, 87, 0.82);
+      opacity: calc(var(--charge) * 0.88);
+      animation: spark-rise 1.35s ease-in-out infinite;
+    }
+
+    .spark.one {
+      left: 27%;
+    }
+
+    .spark.two {
+      left: 71%;
+      animation-delay: -0.42s;
+    }
+
+    .spark.three {
+      left: 52%;
+      animation-delay: -0.84s;
+    }
+
+    .rocket-mini {
+      position: relative;
+      z-index: 3;
+      align-self: center;
+      justify-self: center;
+      width: clamp(230px, 18vw, 290px);
+      aspect-ratio: 748 / 1071;
+      transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      transition: transform 0.45s ease;
+      filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.34));
+    }
+
+    .rocket-sprite {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .battery-slot {
+      position: absolute;
+      left: 36.9%;
+      top: 39.1%;
+      z-index: 3;
+      width: 26.1%;
+      height: 34.4%;
+      overflow: hidden;
+      border-radius: 24% / 10%;
+      background: rgba(10, 24, 31, 0.24);
+      box-shadow:
+        inset 0 0 18px rgba(10, 24, 31, 0.88),
+        0 0 calc(8px + var(--charge, 0) * 22px) rgba(53, 217, 178, calc(0.1 + var(--charge, 0) * 0.34));
+    }
+
+    .battery-liquid {
+      position: absolute;
+      left: -16%;
+      right: -16%;
+      bottom: 0;
+      height: var(--fuel-height, 0%);
+      min-height: calc(var(--charge, 0) * 10px);
+      border-radius: 18px 18px 0 0;
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.82), transparent 0 8px, transparent 12px),
+        linear-gradient(180deg, #d9fff2 0%, #45f2b8 34%, #1cc890 72%, #0a8f6b 100%);
+      box-shadow:
+        inset 0 10px 16px rgba(255, 255, 255, 0.32),
+        inset 0 -10px 22px rgba(4, 97, 80, 0.38),
+        0 0 24px rgba(53, 217, 178, 0.62);
+      transition: height 0.72s cubic-bezier(0.18, 0.9, 0.26, 1.15);
+    }
+
+    .battery-liquid::before {
+      content: "";
+      position: absolute;
+      left: -18%;
+      top: -17px;
+      width: 136%;
+      height: 34px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 24% 52%, rgba(255, 255, 255, 0.72) 0 12%, transparent 13%),
+        radial-gradient(ellipse at 54% 46%, rgba(255, 255, 255, 0.46) 0 15%, transparent 16%),
+        radial-gradient(ellipse at 82% 56%, rgba(255, 255, 255, 0.38) 0 11%, transparent 12%),
+        linear-gradient(180deg, rgba(211, 255, 239, 0.92), rgba(53, 217, 178, 0.88));
+      animation: liquid-wave 2.2s ease-in-out infinite;
+    }
+
+    .battery-liquid::after {
+      content: "";
+      position: absolute;
+      inset: 8px 12px 10px;
+      background:
+        radial-gradient(circle at 22% 78%, rgba(255, 255, 255, 0.65) 0 3px, transparent 4px),
+        radial-gradient(circle at 62% 58%, rgba(255, 255, 255, 0.5) 0 2px, transparent 3px),
+        radial-gradient(circle at 78% 84%, rgba(255, 255, 255, 0.42) 0 2px, transparent 3px);
+      opacity: calc(0.24 + var(--charge, 0) * 0.6);
+      animation: liquid-bubbles 2.6s linear infinite;
+    }
+
+    .rocket-zone.is-rainbow .launchpad-bg {
+      filter: saturate(1.22) brightness(1.02);
+    }
+
+    .rocket-zone.is-rainbow::after {
+      background:
+        repeating-linear-gradient(112deg, transparent 0 68px, rgba(255, 255, 255, 0.1) 70px 74px, transparent 76px 150px),
+        linear-gradient(125deg, rgba(255, 82, 128, 0.22), rgba(255, 210, 75, 0.18), rgba(72, 236, 174, 0.22), rgba(90, 184, 255, 0.2), rgba(184, 116, 255, 0.18));
+      opacity: 0.88;
+    }
+
+    .rocket-mini.is-rainbow .battery-liquid,
+    .rocket-mini.is-rainbow + .fuel-panel .fuel-meter-fill {
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.82), transparent 0 8px, transparent 12px),
+        linear-gradient(90deg, #ff5d7a, #ffc857, #45f2b8, #60d7ff, #b874ff, #ff5d7a);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.45s linear infinite;
+      box-shadow: 0 0 30px rgba(255, 200, 87, 0.52), 0 0 28px rgba(96, 215, 255, 0.44);
+    }
+
+    .battery-shine {
+      position: absolute;
+      inset: 8% auto auto 12%;
+      z-index: 4;
+      width: 22%;
+      height: 82%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.03));
+      opacity: calc(0.08 + var(--charge, 0) * 0.42);
+      pointer-events: none;
+    }
+
+    .rocket-thrust {
+      position: absolute;
+      left: 50%;
+      bottom: -1%;
+      z-index: 1;
+      width: calc(26% + var(--charge, 0) * 18%);
+      height: calc(9% + var(--charge, 0) * 18%);
+      transform: translateX(-50%);
+      border-radius: 0 0 50% 50%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 225, 116, 0.96), rgba(255, 136, 62, 0.68) 42%, rgba(255, 93, 122, 0) 72%);
+      opacity: calc(0.15 + var(--charge, 0) * 0.72);
+      filter: blur(1px);
+      animation: thrust-pulse 0.58s ease-in-out infinite alternate;
+    }
+
+    .rocket-mini.is-boosting .battery-slot {
+      animation: battery-boost 0.68s ease;
+    }
+
+    .rocket-mini.is-boosting {
+      animation: rocket-boost 0.68s ease;
+    }
+
+    .fuel-panel {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.64);
+      backdrop-filter: blur(10px);
+    }
+
+    .fuel-readout {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      color: #ffffff;
+      font-size: 0.94rem;
+      font-weight: 950;
+    }
+
+    .fuel-readout strong {
+      color: #b8ffe9;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .fuel-meter {
+      position: relative;
+      height: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.16);
+    }
+
+    .fuel-meter-fill {
+      display: block;
+      width: var(--fuel-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.42), transparent 22%),
+        linear-gradient(180deg, #d9fff2, #35d9b2 62%, #0f9b77);
+      box-shadow: 0 0 20px rgba(53, 217, 178, 0.48);
+      transition: width 0.7s cubic-bezier(0.18, 0.9, 0.26, 1.15);
+    }
+
+    .fuel-note {
+      display: none;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 850;
+      line-height: 1.32;
+    }
+
+    .planet-panel {
+      display: none;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .planet-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #fff0c6;
+      font-size: 0.9rem;
+      font-weight: 950;
+    }
+
+    .planet-title strong {
+      color: #ffffff;
+    }
+
+    .planet-track {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .planet-chip {
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      color: rgba(255, 255, 255, 0.58);
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 0.86rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .planet-chip.is-reached {
+      border-color: rgba(96, 215, 255, 0.58);
+      color: #10202a;
+      background: linear-gradient(180deg, #d7f8ff, #60d7ff);
+    }
+
+    .planet-chip.is-current {
+      border-color: rgba(255, 200, 87, 0.86);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.22), 0 0 22px rgba(255, 200, 87, 0.22);
+    }
+
+    .planet-chip.is-target {
+      border-color: rgba(255, 200, 87, 0.9);
+      color: #231400;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.24), 0 0 28px rgba(255, 200, 87, 0.34);
+    }
+
+    .planet-chip.is-secret {
+      border-color: rgba(184, 116, 255, 0.58);
+      color: #ffeaff;
+      background: linear-gradient(135deg, rgba(255, 93, 122, 0.28), rgba(96, 215, 255, 0.22), rgba(184, 116, 255, 0.28));
+    }
+
+    .planet-chip.is-secret.is-target,
+    .planet-chip.is-secret.is-reached {
+      color: #24132b;
+      background: linear-gradient(135deg, #ff8ca6, #ffe27a, #60d7ff, #c59bff);
+      box-shadow: 0 0 0 3px rgba(184, 116, 255, 0.26), 0 0 30px rgba(96, 215, 255, 0.34);
+    }
+
+    .problem-panel {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 14px;
+      padding: clamp(16px, 2.6vw, 24px);
+    }
+
+    .problem-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .problem-heading h2 {
+      width: 100%;
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.3rem, 6.5vw, 5rem);
+      line-height: 1;
+      font-weight: 1000;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .phase-label {
+      display: none;
+      min-height: 34px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #231400;
+      background: var(--amber);
+      font-size: 0.88rem;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .calc-stage {
+      display: grid;
+      grid-template-columns: minmax(210px, 0.8fr) minmax(320px, 1.2fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .vertical-sum,
+    .step-panel {
+      min-height: 224px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.42);
+    }
+
+    .vertical-sum {
+      display: grid;
+      align-content: center;
+      gap: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .sum-row {
+      display: grid;
+      grid-template-columns: 34px repeat(4, minmax(0, 1fr));
+      align-items: center;
+      gap: clamp(4px, 0.55vw, 6px);
+      width: 100%;
+      min-height: 40px;
+    }
+
+    .sum-cell,
+    .sum-mark {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      width: 100%;
+      min-height: clamp(34px, 5vw, 42px);
+      border-radius: var(--radius);
+      color: #ffffff;
+      font-size: clamp(1.26rem, 2.75vw, 1.95rem);
+      font-weight: 1000;
+      line-height: 1;
+      overflow: hidden;
+    }
+
+    .sum-cell {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .sum-cell.is-empty {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .carry-cell {
+      min-height: 30px;
+      color: var(--amber);
+      font-size: clamp(1rem, 2.1vw, 1.38rem);
+      background: rgba(255, 200, 87, 0.08);
+      border-color: rgba(255, 200, 87, 0.22);
+    }
+
+    .sum-line {
+      height: 3px;
+      margin-left: 40px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .answer-cell {
+      color: #35f0b2;
+      background: rgba(53, 217, 178, 0.1);
+      border-color: rgba(53, 217, 178, 0.28);
+    }
+
+    .answer-cell.is-current {
+      box-shadow: inset 0 0 0 3px rgba(255, 200, 87, 0.56), 0 0 16px rgba(255, 200, 87, 0.22);
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto minmax(122px, 1fr) auto;
+      gap: 10px;
+      border-color: rgba(255, 200, 87, 0.36);
+      background:
+        linear-gradient(150deg, rgba(255, 200, 87, 0.13), transparent 48%),
+        rgba(14, 12, 22, 0.5);
+    }
+
+    .step-focus-label {
+      display: none;
+      margin: 0;
+      color: #ffe7a4;
+      font-size: 0.88rem;
+      font-weight: 1000;
+      letter-spacing: 0;
+    }
+
+    .step-track {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-chip {
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      padding: 6px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.86rem;
+      font-weight: 950;
+    }
+
+    .step-chip.is-current {
+      color: #231400;
+      background: var(--amber);
+      border-color: rgba(255, 200, 87, 0.86);
+    }
+
+    .step-chip.is-done {
+      color: #10271f;
+      background: #78f2c8;
+      border-color: rgba(53, 217, 178, 0.86);
+    }
+
+    .step-formula {
+      display: grid;
+      place-items: center;
+      min-height: 122px;
+      padding: 10px 12px;
+      border: 2px solid rgba(255, 200, 87, 0.72);
+      border-radius: var(--radius);
+      color: #251500;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.68), transparent 0 22%, transparent 48%),
+        linear-gradient(180deg, #fff0a8, #ffc857);
+      font-size: clamp(2.25rem, 5.3vw, 4.45rem);
+      font-weight: 1000;
+      text-align: center;
+      line-height: 1.08;
+      box-shadow: 0 12px 0 rgba(106, 70, 23, 0.22), 0 18px 34px rgba(0, 0, 0, 0.26);
+    }
+
+    .step-meaning {
+      margin: 0;
+      color: #fff0c6;
+      font-size: clamp(0.98rem, 2vw, 1.14rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .prompt {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 200, 87, 0.26);
+      border-radius: var(--radius);
+      background: rgba(255, 200, 87, 0.08);
+      color: #fff0c6;
+      font-size: clamp(1.02rem, 2.1vw, 1.22rem);
+      font-weight: 950;
+      line-height: 1.35;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      gap: 10px;
+    }
+
+    .choice-button {
+      min-height: 78px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-size: clamp(1.05rem, 2.2vw, 1.46rem);
+      font-weight: 1000;
+      line-height: 1.22;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .choice-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .choice-button.is-correct {
+      color: #10271f;
+      border-color: rgba(53, 217, 178, 0.86);
+      background: linear-gradient(180deg, #b8ffe9, #35d9b2);
+    }
+
+    .choice-button.is-wrong {
+      color: #ffffff;
+      border-color: rgba(255, 93, 122, 0.78);
+      background: rgba(255, 93, 122, 0.32);
+    }
+
+    .feedback {
+      min-height: 42px;
+      color: #ffffff;
+      font-size: clamp(0.98rem, 2vw, 1.14rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .feedback.good {
+      color: #b8ffe9;
+    }
+
+    .feedback.try {
+      color: #ffe7a4;
+    }
+
+    .feedback.wrong {
+      color: #ffc0cd;
+    }
+
+    .reward-pop {
+      position: absolute;
+      z-index: 10;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(14, 12, 22, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .reward-pop.is-visible {
+      display: grid;
+    }
+
+    .reward-card {
+      width: min(540px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      padding: clamp(22px, 5vw, 38px);
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(150deg, rgba(255, 200, 87, 0.2), transparent 42%),
+        #201a2d;
+      text-align: center;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.36);
+    }
+
+    .reward-card h3 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      line-height: 1;
+      font-weight: 1000;
+    }
+
+    .reward-delta {
+      display: grid;
+      place-items: center;
+      width: 176px;
+      height: 92px;
+      padding: 0 14px;
+      border-radius: var(--radius);
+      color: #241500;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      font-size: clamp(1.45rem, 3.8vw, 2.3rem);
+      font-weight: 1000;
+      line-height: 1.05;
+      box-shadow: 0 16px 0 rgba(106, 70, 23, 0.28);
+    }
+
+    .reward-pop.fuel-event--normal .reward-card,
+    .reward-pop.fuel-event--megaFuel .reward-card {
+      border-color: rgba(53, 217, 178, 0.48);
+      background:
+        linear-gradient(150deg, rgba(53, 217, 178, 0.2), transparent 42%),
+        #201a2d;
+    }
+
+    .reward-pop.fuel-event--smallExplosion .reward-card,
+    .reward-pop.fuel-event--leak .reward-card,
+    .reward-pop.fuel-event--emptyTank .reward-card {
+      border-color: rgba(255, 93, 122, 0.5);
+      background:
+        linear-gradient(150deg, rgba(255, 93, 122, 0.22), transparent 42%),
+        #201a2d;
+    }
+
+    .reward-pop.fuel-event--instantLaunch .reward-card {
+      border-color: rgba(255, 200, 87, 0.62);
+      background:
+        linear-gradient(150deg, rgba(255, 200, 87, 0.26), transparent 46%),
+        #201a2d;
+      animation: reward-pop 0.42s ease both;
+    }
+
+    .reward-pop.fuel-event--rainbowFuel .reward-card {
+      border-color: rgba(184, 116, 255, 0.72);
+      background:
+        linear-gradient(135deg, rgba(255, 93, 122, 0.22), rgba(255, 200, 87, 0.16), rgba(96, 215, 255, 0.2), rgba(184, 116, 255, 0.24)),
+        #201a2d;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.36), 0 0 42px rgba(96, 215, 255, 0.26);
+    }
+
+    .reward-pop.fuel-event--smallExplosion .reward-card,
+    .reward-pop.fuel-event--emptyTank .reward-card {
+      animation: tank-shake 0.5s ease both;
+    }
+
+    .reward-pop.fuel-event--smallExplosion .reward-delta,
+    .reward-pop.fuel-event--leak .reward-delta,
+    .reward-pop.fuel-event--emptyTank .reward-delta {
+      color: #ffffff;
+      background: linear-gradient(180deg, #ff8ca6, #ff5d7a);
+      box-shadow: 0 16px 0 rgba(116, 25, 48, 0.28);
+    }
+
+    .reward-pop.fuel-event--rainbowFuel .reward-delta {
+      color: #24132b;
+      background: linear-gradient(90deg, #ff8ca6, #ffe27a, #60d7ff, #c59bff);
+    }
+
+    .reward-card p {
+      margin: 0;
+      color: #fff0c6;
+      font-size: clamp(1.04rem, 2.4vw, 1.28rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    #rewardMessage {
+      display: none;
+    }
+
+    .result {
+      align-items: center;
+      padding: clamp(72px, 9vw, 92px) clamp(24px, 5vw, 62px) clamp(28px, 4vw, 44px);
+      background: #171421;
+    }
+
+    .result::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(13, 10, 20, 0.28) 45%, rgba(13, 10, 20, 0.78) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.22));
+      pointer-events: none;
+    }
+
+    .result::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
+      background:
+        repeating-linear-gradient(115deg, transparent 0 42px, rgba(96, 215, 255, 0.16) 43px 47px, transparent 48px 118px),
+        radial-gradient(circle at 22% 48%, rgba(255, 200, 87, 0.22), transparent 0 24%, transparent 25%);
+      transform: translateX(-8%);
+      pointer-events: none;
+    }
+
+    .result.is-measuring::before {
+      opacity: 1;
+      animation: flight-streak 1.4s linear infinite;
+    }
+
+    .result-layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.86fr) minmax(360px, 1.14fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 56px);
+    }
+
+    .launch-scene {
+      min-height: 460px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+    }
+
+    .launch-scene .rocket-hero {
+      display: none;
+    }
+
+    .launch-pad {
+      display: none;
+    }
+
+    .result-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.6rem, 6.5vw, 5.4rem);
+      line-height: 0.98;
+      font-weight: 1000;
+      text-shadow: 0 5px 18px rgba(0, 0, 0, 0.42);
+    }
+
+    .praise {
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.14rem, 2.4vw, 1.45rem);
+      font-weight: 950;
+      line-height: 1.35;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
+    }
+
+    .result-measure {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(96, 215, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.56);
+      box-shadow: 0 0 30px rgba(96, 215, 255, 0.1);
+    }
+
+    .result-measure::after {
+      content: "";
+      position: absolute;
+      inset: -40% auto -40% -30%;
+      width: 26%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+      transform: skewX(-18deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .result.is-measuring .result-measure::after {
+      opacity: 1;
+      animation: scan-sweep 1.35s ease-in-out infinite;
+    }
+
+    .measure-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      color: #ffffff;
+      font-weight: 1000;
+    }
+
+    .measure-top span {
+      color: #c8f3ff;
+      font-size: 0.96rem;
+    }
+
+    .measure-top strong {
+      color: #b8ffe9;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      line-height: 1;
+    }
+
+    .measure-tube {
+      position: relative;
+      height: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .measure-fill {
+      display: block;
+      width: var(--measure-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(180deg, #d9fff2, #45f2b8 42%, #12a97d);
+      box-shadow: 0 0 28px rgba(53, 217, 178, 0.56);
+      transition: width 1.7s cubic-bezier(0.18, 0.9, 0.2, 1);
+    }
+
+    .result.is-rainbow-result .measure-fill {
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(90deg, #ff5d7a, #ffc857, #45f2b8, #60d7ff, #b874ff, #ff5d7a);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.45s linear infinite;
+      box-shadow: 0 0 30px rgba(255, 200, 87, 0.42), 0 0 28px rgba(96, 215, 255, 0.4);
+    }
+
+    .measure-scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+      opacity: 0;
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
+
+    .result.is-measuring .measure-scan {
+      opacity: 1;
+      animation: meter-scan 1.2s ease-in-out infinite;
+    }
+
+    .result-planet-track {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .result-planet-track .planet-chip {
+      min-height: 40px;
+      font-size: 0.94rem;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result-stat {
+      min-height: 94px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .result-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-top: 6px;
+      color: #ffffff;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .result-actions [hidden] {
+      display: none;
+    }
+
+    .result.is-measuring .result-actions {
+      visibility: hidden;
+    }
+
+    @keyframes float-rocket {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+      50% {
+        transform: translateY(-14px) rotate(2deg);
+      }
+    }
+
+    @keyframes flame-pulse {
+      from {
+        transform: translateX(-50%) scaleY(0.84);
+      }
+      to {
+        transform: translateX(-50%) scaleY(1.08);
+      }
+    }
+
+    @keyframes liquid-wave {
+      0%,
+      100% {
+        transform: translateX(-6%) translateY(0) rotate(-1deg);
+      }
+      50% {
+        transform: translateX(6%) translateY(3px) rotate(1deg);
+      }
+    }
+
+    @keyframes liquid-bubbles {
+      from {
+        transform: translateY(18px);
+      }
+      to {
+        transform: translateY(-24px);
+      }
+    }
+
+    @keyframes rainbow-flow {
+      from {
+        background-position: 0% 50%;
+      }
+      to {
+        background-position: 200% 50%;
+      }
+    }
+
+    @keyframes thrust-pulse {
+      from {
+        transform: translateX(-50%) scaleY(0.76);
+      }
+      to {
+        transform: translateX(-50%) scaleY(1.08);
+      }
+    }
+
+    @keyframes battery-boost {
+      0% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 8px rgba(53, 217, 178, 0.18);
+      }
+      48% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.72), 0 0 38px rgba(53, 217, 178, 0.86);
+      }
+      100% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 18px rgba(53, 217, 178, 0.3);
+      }
+    }
+
+    @keyframes rocket-boost {
+      0%,
+      100% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      }
+      42% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px - 12px)) rotate(-1.4deg);
+      }
+      70% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px + 4px)) rotate(1deg);
+      }
+    }
+
+    @keyframes tank-shake {
+      0%,
+      100% {
+        transform: translateX(0) rotate(0deg);
+      }
+      22% {
+        transform: translateX(-10px) rotate(-1deg);
+      }
+      44% {
+        transform: translateX(9px) rotate(1deg);
+      }
+      66% {
+        transform: translateX(-5px) rotate(-0.5deg);
+      }
+    }
+
+    @keyframes reward-pop {
+      from {
+        transform: scale(0.94);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pad-pulse {
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(0.94);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.08);
+      }
+    }
+
+    @keyframes ring-spin {
+      0% {
+        transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg);
+      }
+    }
+
+    @keyframes light-sweep {
+      0%,
+      100% {
+        transform: translateX(-18%) skewX(-18deg);
+      }
+      50% {
+        transform: translateX(18%) skewX(-18deg);
+      }
+    }
+
+    @keyframes steam-billow {
+      0%,
+      100% {
+        transform: translateY(8px) scale(0.88);
+      }
+      50% {
+        transform: translateY(-12px) scale(1.14);
+      }
+    }
+
+    @keyframes spark-rise {
+      0% {
+        transform: translateY(20px) scale(0.5);
+        opacity: 0;
+      }
+      35% {
+        opacity: calc(var(--charge) * 0.9);
+      }
+      100% {
+        transform: translateY(-92px) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes flight-streak {
+      from {
+        background-position: 0 0, 0 0;
+        transform: translateX(-8%);
+      }
+      to {
+        background-position: 180px -120px, 0 0;
+        transform: translateX(8%);
+      }
+    }
+
+    @keyframes scan-sweep {
+      0% {
+        transform: translateX(0) skewX(-18deg);
+      }
+      100% {
+        transform: translateX(560%) skewX(-18deg);
+      }
+    }
+
+    @keyframes meter-scan {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (max-width: 880px) {
+      .screen {
+        min-height: calc(100dvh - 20px);
+      }
+
+      .cover,
+      .tutorial,
+      .result {
+        padding-top: 78px;
+      }
+
+      .cover-scene,
+      .tutorial-layout,
+      .play-layout,
+      .result-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .cover-visual {
+        min-height: 300px;
+        order: -1;
+      }
+
+      .rocket-hero {
+        height: 300px;
+      }
+
+      .cover-mathmon {
+        width: 118px;
+      }
+
+      .hud {
+        grid-template-columns: 1fr;
+      }
+
+      .hud-center {
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+
+      .calc-stage {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) and (orientation: portrait) {
+      .game,
+      .sound-toggle {
+        display: none;
+      }
+
+      .phone-blocker {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .phone-blocker div {
+        width: min(420px, 100%);
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+      }
+
+      .phone-blocker h1 {
+        margin: 0 0 10px;
+        font-size: 1.7rem;
+      }
+
+      .phone-blocker p {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 850;
+        line-height: 1.45;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-blocker" aria-hidden="true">
+    <div>
+      <h1>가로 화면에서 플레이해요</h1>
+      <p>태블릿이나 컴퓨터 화면에서 로켓발사 대작전을 시작할 수 있어요.</p>
+    </div>
+  </div>
+
+  <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true">소리 켬</button>
+
+  <main class="game">
+    <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
+      <img class="raster-bg" src="cover-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 1단원 2차시</span>
+      </div>
+      <span class="lesson-badge">받아올림 있는 세 자리 수 × 한 자리 수</span>
+      <div class="cover-scene">
+        <div class="hero-copy">
+          <h1 id="coverTitle">매스몬 로켓발사 대작전</h1>
+          <p>받아올림 있는 곱셈을 풀어 로켓의 연료를 넣어요.</p>
+          <button class="primary-button" id="startButton" type="button">시작</button>
+        </div>
+        <div class="cover-visual" aria-hidden="true">
+          <div class="star-field"></div>
+          <div class="rocket-hero">
+            <div class="rocket-nose"></div>
+            <div class="rocket-body">
+              <div class="rocket-window"></div>
+              <div class="rocket-band"></div>
+            </div>
+            <div class="rocket-fin left"></div>
+            <div class="rocket-fin right"></div>
+            <div class="rocket-flame"></div>
+          </div>
+          <img class="cover-mathmon" src="mathmon-3-babydragonmon.png" alt="">
+        </div>
+      </div>
+    </section>
+
+    <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle">
+      <img class="raster-bg" src="tutorial-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 1단원 2차시</span>
+      </div>
+      <div class="tutorial-layout">
+        <div class="tutorial-copy">
+          <span class="mini-badge">어떻게 해요?</span>
+          <h2 id="tutorialTitle">세로셈을 차례로 채워요</h2>
+          <ol class="steps">
+            <li><b>1</b><span>문제를 풀면 연료 일이 일어나요.</span></li>
+            <li><b>2</b><span>가끔 많이 차거나 줄어들 수 있어요.</span></li>
+            <li><b>3</b><span>연료를 모으면 해왕성까지 갈 수 있어요.</span></li>
+          </ol>
+          <button class="primary-button" id="tutorialNextButton" type="button">연료 넣기</button>
+        </div>
+        <div class="tutorial-art-spacer" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="screen play" id="playScreen" aria-labelledby="questionText">
+      <header class="hud">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <div class="hud-center">
+          <span class="stat-pill" id="progressText">문제 1/10</span>
+          <span class="stat-pill" id="energyText">연료 넣는 중</span>
+          <span class="stat-pill" id="chainText">마지막에 측정</span>
+        </div>
+        <span class="unit-badge">로켓 연료 넣기</span>
+      </header>
+      <div class="play-layout">
+        <aside class="rocket-zone" id="rocketZone" aria-label="로켓 연료 상태">
+          <img class="launchpad-bg" src="rocket-launchpad-generated.webp" alt="">
+          <div class="launch-effects" aria-hidden="true">
+            <span class="launch-beam left"></span>
+            <span class="launch-beam right"></span>
+            <span class="pad-glow"></span>
+            <span class="energy-ring"></span>
+            <span class="steam-jet left"></span>
+            <span class="steam-jet right"></span>
+            <span class="spark one"></span>
+            <span class="spark two"></span>
+            <span class="spark three"></span>
+          </div>
+          <div class="rocket-mini" id="rocketMini" aria-hidden="true">
+            <img class="rocket-sprite" src="rocket-charge.webp" alt="">
+            <div class="battery-slot">
+              <div class="battery-liquid"></div>
+              <div class="battery-shine"></div>
+            </div>
+            <div class="rocket-thrust"></div>
+          </div>
+          <div class="fuel-panel">
+            <div class="fuel-readout">
+              <span>로켓 안 연료</span>
+              <strong id="fuelPercentText">채우는 중</strong>
+            </div>
+            <div class="fuel-meter" aria-hidden="true">
+              <span class="fuel-meter-fill" id="fuelMeterFill"></span>
+            </div>
+            <p class="fuel-note" id="fuelNote">10문제를 끝내면 연료를 재서 도착 행성을 정해요.</p>
+            <div class="planet-panel">
+              <div class="planet-title">
+                <span>행성 거리</span>
+                <strong id="destinationText">마지막에 측정</strong>
+              </div>
+              <div class="planet-track" id="planetTrack" aria-label="로켓이 갈 수 있는 행성"></div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="problem-panel" aria-live="polite">
+          <div class="problem-heading">
+            <h2 id="questionText">123 × 4</h2>
+            <span class="phase-label" id="phaseLabel">일의 자리</span>
+          </div>
+          <div class="calc-stage">
+            <div class="vertical-sum" aria-label="세로셈 계산판">
+              <div class="sum-row">
+                <span class="sum-mark"></span>
+                <span class="sum-cell is-empty"></span>
+                <span class="sum-cell carry-cell" id="carryHundredsSlot"></span>
+                <span class="sum-cell carry-cell" id="carryTensSlot"></span>
+                <span class="sum-cell is-empty"></span>
+              </div>
+              <div class="sum-row">
+                <span class="sum-mark"></span>
+                <span class="sum-cell is-empty"></span>
+                <span class="sum-cell" id="hundredsDigit">1</span>
+                <span class="sum-cell" id="tensDigit">2</span>
+                <span class="sum-cell" id="onesDigit">3</span>
+              </div>
+              <div class="sum-row">
+                <span class="sum-mark">×</span>
+                <span class="sum-cell is-empty"></span>
+                <span class="sum-cell is-empty"></span>
+                <span class="sum-cell is-empty"></span>
+                <span class="sum-cell" id="multiplierText">4</span>
+              </div>
+              <div class="sum-line"></div>
+              <div class="sum-row">
+                <span class="sum-mark"></span>
+                <span class="sum-cell answer-cell" id="thousandsAnswer"></span>
+                <span class="sum-cell answer-cell" id="hundredsAnswer"></span>
+                <span class="sum-cell answer-cell" id="tensAnswer"></span>
+                <span class="sum-cell answer-cell is-current" id="onesAnswer">?</span>
+              </div>
+            </div>
+            <div class="step-panel">
+              <div class="step-track" aria-label="계산 순서">
+                <span class="step-chip is-current" id="stepChipOnes">일</span>
+                <span class="step-chip" id="stepChipTens">십</span>
+                <span class="step-chip" id="stepChipHundreds">백</span>
+              </div>
+              <p class="step-focus-label">지금 계산</p>
+              <div class="step-formula" id="stepFormula">3 × 4 = ?</div>
+              <p class="step-meaning" id="stepMeaning">일의 자리부터 계산해요.</p>
+            </div>
+          </div>
+          <div class="prompt" id="promptText">지금 보이는 계산의 값을 골라요.</div>
+          <div class="choice-grid" id="choiceGrid"></div>
+          <div class="feedback" id="feedbackText"></div>
+        </section>
+      </div>
+      <div class="reward-pop" id="rewardPop" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+        <div class="reward-card">
+          <h3 id="rewardTitle">연료 넣기</h3>
+          <div class="reward-delta" id="rewardDelta">연료 쑥</div>
+          <p id="rewardMessage">정답! 로켓의 연료가 들어갔어요.</p>
+          <button class="primary-button" id="rewardNextButton" type="button">다음</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen result" id="resultScreen" aria-labelledby="resultTitle">
+      <img class="raster-bg" id="resultRaster" src="result-mercury-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 1단원 2차시</span>
+      </div>
+      <div class="result-layout">
+        <div class="launch-scene" aria-hidden="true">
+          <div class="rocket-hero">
+            <div class="rocket-nose"></div>
+            <div class="rocket-body">
+              <div class="rocket-window"></div>
+              <div class="rocket-band"></div>
+            </div>
+            <div class="rocket-fin left"></div>
+            <div class="rocket-fin right"></div>
+            <div class="rocket-flame"></div>
+          </div>
+          <div class="launch-pad"></div>
+        </div>
+        <div class="result-copy">
+          <h2 id="resultTitle">연료 측정 준비</h2>
+          <p class="praise" id="praiseText">자리올림을 끝까지 살핀 멋진 계산이에요.</p>
+          <div class="result-measure" id="resultMeasure" aria-label="연료 측정 결과">
+            <div class="measure-top">
+              <span id="measureStatus">연료 측정 중</span>
+              <strong id="measurePercent">연료 0</strong>
+            </div>
+            <div class="measure-tube" aria-hidden="true">
+              <span class="measure-fill" id="measureFill"></span>
+              <span class="measure-scan"></span>
+            </div>
+            <div class="result-planet-track" id="resultPlanetTrack" aria-label="행성 거리 측정"></div>
+          </div>
+          <div class="result-stats">
+            <div class="result-stat">
+              <span>연료 측정값</span>
+              <strong id="finalEnergyText">0</strong>
+            </div>
+            <div class="result-stat">
+              <span>맞힌 문제</span>
+              <strong id="finalCorrectText">0/10</strong>
+            </div>
+            <div class="result-stat">
+              <span>도착한 곳</span>
+              <strong id="finalDestinationText">수성</strong>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="primary-button" id="restartButton" type="button">다시하기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const TOTAL_QUESTIONS = 10;
+    const MAX_FUEL = 100;
+    const DESTINATIONS = [
+      { id: "mercury", short: "수", name: "수성", min: 1, max: 12, image: "result-mercury-generated.webp" },
+      { id: "venus", short: "금", name: "금성", min: 13, max: 24, image: "result-venus-generated.webp" },
+      { id: "earth", short: "지", name: "지구", min: 25, max: 36, image: "result-earth-generated.webp" },
+      { id: "mars", short: "화", name: "화성", min: 37, max: 49, image: "result-mars-generated.webp" },
+      { id: "jupiter", short: "목", name: "목성", min: 50, max: 62, image: "result-jupiter-generated.webp" },
+      { id: "saturn", short: "토", name: "토성", min: 63, max: 75, image: "result-saturn-generated.webp" },
+      { id: "uranus", short: "천", name: "천왕성", min: 76, max: 89, image: "result-uranus-generated.webp" },
+      { id: "neptune", short: "해", name: "해왕성", min: 90, max: 100, image: "result-neptune-generated.webp" }
+    ];
+    const SECRET_DESTINATION = {
+      id: "andromeda",
+      short: "안",
+      name: "안드로메다",
+      min: 100,
+      max: 100,
+      image: "result-andromeda-generated.webp",
+      secret: true
+    };
+    const ALL_DESTINATIONS = [...DESTINATIONS, SECRET_DESTINATION];
+    const FUEL_EVENT_CLASSES = [
+      "fuel-event--normal",
+      "fuel-event--smallExplosion",
+      "fuel-event--megaFuel",
+      "fuel-event--instantLaunch",
+      "fuel-event--emptyTank",
+      "fuel-event--rainbowFuel",
+      "fuel-event--leak"
+    ];
+
+    const state = {
+      screen: "cover",
+      problems: [],
+      index: 0,
+      fuelPercent: 0,
+      correct: 0,
+      chain: 0,
+      stepIndex: 0,
+      stepAttempts: 0,
+      problemHadMistake: false,
+      problemHadReveal: false,
+      rainbowFuel: false,
+      lastFuelEvent: null,
+      instantLaunch: false,
+      soundsOn: true,
+      audio: null
+    };
+
+    const el = {
+      coverScreen: document.getElementById("coverScreen"),
+      tutorialScreen: document.getElementById("tutorialScreen"),
+      playScreen: document.getElementById("playScreen"),
+      resultScreen: document.getElementById("resultScreen"),
+      startButton: document.getElementById("startButton"),
+      tutorialNextButton: document.getElementById("tutorialNextButton"),
+      soundToggle: document.getElementById("soundToggle"),
+      progressText: document.getElementById("progressText"),
+      energyText: document.getElementById("energyText"),
+      chainText: document.getElementById("chainText"),
+      fuelPercentText: document.getElementById("fuelPercentText"),
+      fuelMeterFill: document.getElementById("fuelMeterFill"),
+      fuelNote: document.getElementById("fuelNote"),
+      destinationText: document.getElementById("destinationText"),
+      planetTrack: document.getElementById("planetTrack"),
+      rocketZone: document.getElementById("rocketZone"),
+      rocketMini: document.getElementById("rocketMini"),
+      questionText: document.getElementById("questionText"),
+      phaseLabel: document.getElementById("phaseLabel"),
+      hundredsDigit: document.getElementById("hundredsDigit"),
+      tensDigit: document.getElementById("tensDigit"),
+      onesDigit: document.getElementById("onesDigit"),
+      multiplierText: document.getElementById("multiplierText"),
+      carryHundredsSlot: document.getElementById("carryHundredsSlot"),
+      carryTensSlot: document.getElementById("carryTensSlot"),
+      thousandsAnswer: document.getElementById("thousandsAnswer"),
+      hundredsAnswer: document.getElementById("hundredsAnswer"),
+      tensAnswer: document.getElementById("tensAnswer"),
+      onesAnswer: document.getElementById("onesAnswer"),
+      stepChipOnes: document.getElementById("stepChipOnes"),
+      stepChipTens: document.getElementById("stepChipTens"),
+      stepChipHundreds: document.getElementById("stepChipHundreds"),
+      stepFormula: document.getElementById("stepFormula"),
+      stepMeaning: document.getElementById("stepMeaning"),
+      promptText: document.getElementById("promptText"),
+      choiceGrid: document.getElementById("choiceGrid"),
+      feedbackText: document.getElementById("feedbackText"),
+      rewardPop: document.getElementById("rewardPop"),
+      rewardTitle: document.getElementById("rewardTitle"),
+      rewardDelta: document.getElementById("rewardDelta"),
+      rewardMessage: document.getElementById("rewardMessage"),
+      rewardNextButton: document.getElementById("rewardNextButton"),
+      resultRaster: document.getElementById("resultRaster"),
+      resultMeasure: document.getElementById("resultMeasure"),
+      measureStatus: document.getElementById("measureStatus"),
+      measurePercent: document.getElementById("measurePercent"),
+      measureFill: document.getElementById("measureFill"),
+      resultPlanetTrack: document.getElementById("resultPlanetTrack"),
+      praiseText: document.getElementById("praiseText"),
+      finalEnergyText: document.getElementById("finalEnergyText"),
+      finalCorrectText: document.getElementById("finalCorrectText"),
+      finalDestinationText: document.getElementById("finalDestinationText"),
+      restartButton: document.getElementById("restartButton")
+    };
+
+    function showScreen(name) {
+      state.screen = name;
+      [el.coverScreen, el.tutorialScreen, el.playScreen, el.resultScreen].forEach((screen) => {
+        screen.classList.remove("is-active");
+      });
+      document.getElementById(`${name}Screen`).classList.add("is-active");
+    }
+
+    function startGame() {
+      state.problems = buildProblems();
+      state.index = 0;
+      state.fuelPercent = 0;
+      state.correct = 0;
+      state.chain = 0;
+      state.rainbowFuel = false;
+      state.lastFuelEvent = null;
+      state.instantLaunch = false;
+      playSound("start");
+      showScreen("play");
+      renderProblem();
+    }
+
+    function buildProblems() {
+      const candidates = [];
+      for (let number = 102; number <= 987; number += 1) {
+        const hundreds = Math.floor(number / 100);
+        const tens = Math.floor((number % 100) / 10);
+        const ones = number % 10;
+        for (let multiplier = 2; multiplier <= 9; multiplier += 1) {
+          const onesRaw = ones * multiplier;
+          const carryToTens = Math.floor(onesRaw / 10);
+          const onesResult = onesRaw % 10;
+          const tensRaw = tens * multiplier + carryToTens;
+          const carryToHundreds = Math.floor(tensRaw / 10);
+          const tensResult = tensRaw % 10;
+          const hundredsRaw = hundreds * multiplier + carryToHundreds;
+          const product = number * multiplier;
+          if (carryToTens === 0 && carryToHundreds === 0) {
+            continue;
+          }
+          if (product < 1000 || product > 8999) {
+            continue;
+          }
+          candidates.push({
+            number,
+            multiplier,
+            hundreds,
+            tens,
+            ones,
+            product,
+            carryToTens,
+            carryToHundreds,
+            onesResult,
+            tensResult,
+            hundredsRaw
+          });
+        }
+      }
+      return shuffle(candidates).slice(0, TOTAL_QUESTIONS);
+    }
+
+    function renderProblem() {
+      const problem = currentProblem();
+      state.stepIndex = 0;
+      state.stepAttempts = 0;
+      state.problemHadMistake = false;
+      state.problemHadReveal = false;
+      el.rewardPop.classList.remove("is-visible");
+      FUEL_EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      el.questionText.textContent = `${problem.number} × ${problem.multiplier}`;
+      el.hundredsDigit.textContent = problem.hundreds;
+      el.tensDigit.textContent = problem.tens;
+      el.onesDigit.textContent = problem.ones;
+      el.multiplierText.textContent = problem.multiplier;
+      el.carryHundredsSlot.textContent = "";
+      el.carryTensSlot.textContent = "";
+      el.thousandsAnswer.textContent = "";
+      el.hundredsAnswer.textContent = "";
+      el.tensAnswer.textContent = "";
+      el.onesAnswer.textContent = "?";
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      renderStatus();
+      renderStep();
+    }
+
+    function renderStatus() {
+      el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
+      el.energyText.textContent = state.fuelPercent > 0 ? "연료 넣는 중" : "연료 준비";
+      el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 측정" : "마지막에 측정";
+      const charge = getFuelPercent() / MAX_FUEL;
+      const fuelPercent = getFuelPercent();
+      el.rocketZone.style.setProperty("--charge", charge.toFixed(3));
+      el.rocketMini.style.setProperty("--charge", charge.toFixed(3));
+      el.rocketMini.style.setProperty("--fuel-height", `${Math.round(charge * 100)}%`);
+      el.rocketZone.classList.toggle("is-rainbow", state.rainbowFuel);
+      el.rocketMini.classList.toggle("is-rainbow", state.rainbowFuel);
+      el.fuelPercentText.textContent = state.rainbowFuel ? "무지개 연료" : "채우는 중";
+      el.fuelMeterFill.style.setProperty("--fuel-width", `${fuelPercent}%`);
+      el.destinationText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 측정" : "마지막에 측정";
+      el.fuelNote.textContent = "10문제를 끝내면 로켓 안 연료를 재서 도착 행성을 정해요.";
+      renderPlanetTrack(el.planetTrack, { targetIndex: -1, reachedIndex: -1 });
+    }
+
+    function getFuelPercent(fuelPercent = state.fuelPercent) {
+      return clamp(Math.round(fuelPercent), 0, MAX_FUEL);
+    }
+
+    function getDestinationByFuel(fuelPercent = state.fuelPercent, rainbowFuel = state.rainbowFuel) {
+      if (rainbowFuel) {
+        return { ...SECRET_DESTINATION, index: DESTINATIONS.length, started: true };
+      }
+      const fuel = getFuelPercent(fuelPercent);
+      if (fuel <= 0) {
+        return null;
+      }
+      const index = DESTINATIONS.findIndex((destination) => fuel >= destination.min && fuel <= destination.max);
+      const destination = DESTINATIONS[Math.max(index, 0)];
+      return { ...destination, index: DESTINATIONS.indexOf(destination), started: true };
+    }
+
+    function getDestination() {
+      return getDestinationByFuel(state.fuelPercent, state.rainbowFuel);
+    }
+
+    function getNextPlanet(destination) {
+      if (!destination) {
+        return DESTINATIONS[0];
+      }
+      return DESTINATIONS[Math.min(destination.index + 1, DESTINATIONS.length - 1)];
+    }
+
+    function renderPlanetTrack(container, { targetIndex = -1, reachedIndex = -1 } = {}) {
+      container.innerHTML = "";
+      const planets = container === el.resultPlanetTrack ? ALL_DESTINATIONS : DESTINATIONS;
+      planets.forEach((planet, index) => {
+        const chip = document.createElement("span");
+        chip.className = "planet-chip";
+        chip.textContent = planet.short;
+        chip.title = planet.name;
+        if (planet.secret) {
+          chip.classList.add("is-secret");
+        }
+        if (index <= reachedIndex) {
+          chip.classList.add("is-reached");
+        }
+        if (index === targetIndex) {
+          chip.classList.add("is-target");
+        }
+        container.appendChild(chip);
+      });
+    }
+
+    function renderStep() {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      el.phaseLabel.textContent = step.label;
+      el.stepFormula.textContent = step.formula;
+      el.stepMeaning.textContent = step.meaning;
+      el.promptText.textContent = step.prompt;
+      updateStepChips();
+      updateCurrentAnswerCell();
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      const options = buildStepOptions(step);
+      renderChoices(options.map((option) => ({
+        label: option.value.toLocaleString("ko-KR"),
+        value: option,
+        correct: option.value === step.correct
+      })), handleStepChoice);
+    }
+
+    function getCurrentStep(problem) {
+      const steps = buildSteps(problem);
+      return steps[state.stepIndex];
+    }
+
+    function buildSteps(problem) {
+      const onesRaw = problem.ones * problem.multiplier;
+      const tensRaw = problem.tens * problem.multiplier + problem.carryToTens;
+      const hundredsRaw = problem.hundreds * problem.multiplier + problem.carryToHundreds;
+      return [
+        {
+          id: "ones",
+          label: "일의 자리",
+          formula: `${problem.ones} × ${problem.multiplier} = ?`,
+          correct: onesRaw,
+          prompt: "위 계산의 값을 골라요.",
+          meaning: "먼저 일의 자리부터 계산해요.",
+          hint: `${problem.ones}을 ${problem.multiplier}번 더한 값을 찾아요.`,
+          explain: `${onesRaw}라서 일의 자리에 ${problem.onesResult}을 쓰고, 십의 자리로 ${problem.carryToTens} 올려요.`
+        },
+        {
+          id: "tens",
+          label: "십의 자리",
+          formula: problem.carryToTens > 0
+            ? `${problem.tens} × ${problem.multiplier} + ${problem.carryToTens} = ?`
+            : `${problem.tens} × ${problem.multiplier} = ?`,
+          correct: tensRaw,
+          prompt: "위 계산의 값을 골라요.",
+          meaning: problem.carryToTens > 0 ? `아까 올린 ${problem.carryToTens}도 더해요.` : "올림이 없으면 그대로 곱해요.",
+          hint: problem.carryToTens > 0 ? `곱한 뒤 올림 ${problem.carryToTens}을 더해요.` : `${problem.tens} × ${problem.multiplier}을 계산해요.`,
+          explain: `${tensRaw}라서 십의 자리에 ${problem.tensResult}을 쓰고, 백의 자리로 ${problem.carryToHundreds} 올려요.`
+        },
+        {
+          id: "hundreds",
+          label: "백의 자리",
+          formula: problem.carryToHundreds > 0
+            ? `${problem.hundreds} × ${problem.multiplier} + ${problem.carryToHundreds} = ?`
+            : `${problem.hundreds} × ${problem.multiplier} = ?`,
+          correct: hundredsRaw,
+          prompt: "위 계산의 값을 골라요.",
+          meaning: problem.carryToHundreds > 0 ? `백의 자리에는 올림 ${problem.carryToHundreds}을 더해요.` : "마지막으로 백의 자리를 계산해요.",
+          hint: problem.carryToHundreds > 0 ? `곱한 뒤 올림 ${problem.carryToHundreds}을 더해요.` : `${problem.hundreds} × ${problem.multiplier}을 계산해요.`,
+          explain: `${hundredsRaw}을 앞에 쓰면 ${problem.product.toLocaleString("ko-KR")}이 완성돼요.`
+        }
+      ];
+    }
+
+    function updateStepChips() {
+      [
+        [el.stepChipOnes, 0],
+        [el.stepChipTens, 1],
+        [el.stepChipHundreds, 2]
+      ].forEach(([chip, index]) => {
+        chip.classList.toggle("is-current", state.stepIndex === index);
+        chip.classList.toggle("is-done", state.stepIndex > index);
+      });
+    }
+
+    function updateCurrentAnswerCell() {
+      [el.thousandsAnswer, el.hundredsAnswer, el.tensAnswer, el.onesAnswer].forEach((cell) => {
+        cell.classList.remove("is-current");
+      });
+      if (state.stepIndex === 0) {
+        el.onesAnswer.classList.add("is-current");
+      } else if (state.stepIndex === 1) {
+        el.tensAnswer.classList.add("is-current");
+      } else {
+        el.hundredsAnswer.classList.add("is-current");
+      }
+    }
+
+    function buildStepOptions(step) {
+      const values = [step.correct];
+      [step.correct + 1, step.correct - 1, step.correct + 10, step.correct - 10, step.correct + 2].forEach((value) => {
+        if (value >= 0 && !values.includes(value)) {
+          values.push(value);
+        }
+      });
+      while (values.length < 4) {
+        const value = Math.max(0, step.correct + randomInt(-5, 5));
+        if (!values.includes(value)) {
+          values.push(value);
+        }
+      }
+      return shuffle(values.slice(0, 4).map((value) => ({ value })));
+    }
+
+    function handleStepChoice(option, button) {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      if (option.correct) {
+        button.classList.add("is-correct");
+        setButtonsDisabled(true);
+        completeStep(step, false);
+        return;
+      }
+
+      state.stepAttempts += 1;
+      state.problemHadMistake = true;
+      button.classList.add("is-wrong");
+      playSound("try");
+      if (state.stepAttempts === 1) {
+        el.feedbackText.textContent = `다시 골라요. ${step.hint}`;
+        el.feedbackText.className = "feedback try";
+        button.disabled = true;
+        return;
+      }
+
+      state.problemHadReveal = true;
+      setButtonsDisabled(true);
+      el.feedbackText.textContent = `정답은 ${step.correct}예요. ${step.explain}`;
+      el.feedbackText.className = "feedback try";
+      completeStep(step, true);
+    }
+
+    function completeStep(step, revealed) {
+      const problem = currentProblem();
+      applyStepToBoard(step, problem);
+      renderStatus();
+      el.rocketMini.classList.remove("is-boosting");
+      void el.rocketMini.offsetWidth;
+      el.rocketMini.classList.add("is-boosting");
+      if (!revealed) {
+        el.feedbackText.textContent = step.explain;
+        el.feedbackText.className = "feedback good";
+        playSound("correct");
+      }
+      window.setTimeout(() => {
+        if (state.stepIndex >= 2) {
+          completeProblem();
+          return;
+        }
+        state.stepIndex += 1;
+        state.stepAttempts = 0;
+        renderStep();
+      }, revealed ? 1000 : 760);
+    }
+
+    function applyStepToBoard(step, problem) {
+      if (step.id === "ones") {
+        el.onesAnswer.textContent = problem.onesResult;
+        el.carryTensSlot.textContent = problem.carryToTens > 0 ? problem.carryToTens : "";
+      } else if (step.id === "tens") {
+        el.tensAnswer.textContent = problem.tensResult;
+        el.carryHundredsSlot.textContent = problem.carryToHundreds > 0 ? problem.carryToHundreds : "";
+      } else {
+        const raw = problem.hundredsRaw;
+        if (raw >= 10) {
+          el.thousandsAnswer.textContent = Math.floor(raw / 10);
+          el.hundredsAnswer.textContent = raw % 10;
+        } else {
+          el.thousandsAnswer.textContent = "";
+          el.hundredsAnswer.textContent = raw;
+        }
+      }
+      updateCurrentAnswerCell();
+    }
+
+    function completeProblem() {
+      const perfect = !state.problemHadMistake;
+      if (perfect) {
+        state.correct += 1;
+        state.chain += 1;
+      } else {
+        state.chain = 0;
+      }
+      const event = perfect ? rollFuelEvent() : createLeakEvent();
+      applyFuelEvent(event);
+      renderStatus();
+      finishProblem(state.lastFuelEvent);
+      playSound("reward");
+    }
+
+    function pickFuelEventForRoll(roll, amountPicker = randomInt) {
+      if (roll < 76.45) {
+        const amount = amountPicker(4, 8);
+        return {
+          id: "normal",
+          amount,
+          title: "연료가 들어갔어요",
+          message: "연료가 안정적으로 들어갔어요."
+        };
+      }
+      if (roll < 88.45) {
+        const amount = -amountPicker(5, 10);
+        return {
+          id: "smallExplosion",
+          amount,
+          title: "연료통이 펑!",
+          message: "맞췄지만 연료통이 흔들렸어요."
+        };
+      }
+      if (roll < 97.45) {
+        const amount = amountPicker(12, 20);
+        return {
+          id: "megaFuel",
+          amount,
+          title: "연료가 콸콸!",
+          message: "연료가 크게 들어왔어요!"
+        };
+      }
+      if (roll < 97.95) {
+        return {
+          id: "instantLaunch",
+          amount: 6,
+          title: "발사 스위치 작동!",
+          message: "발사 스위치가 켜졌어요. 지금 떠날 수 있어요.",
+          launches: true
+        };
+      }
+      if (roll < 99.95) {
+        return {
+          id: "emptyTank",
+          amount: 0,
+          title: "연료가 사라졌어요",
+          message: "연료통이 비었어요. 다음 문제로 다시 채워 봐요.",
+          emptiesTank: true
+        };
+      }
+      return {
+        id: "rainbowFuel",
+        amount: 10,
+        title: "무지개 연료 발견!",
+        message: "무지개 연료가 켜졌어요. 떠나면 안드로메다로 가요.",
+        rainbow: true
+      };
+    }
+
+    function rollFuelEvent() {
+      return pickFuelEventForRoll(Math.random() * 100);
+    }
+
+    function createLeakEvent() {
+      const amount = -randomInt(8, 18);
+      return {
+        id: "leak",
+        amount,
+        title: "연료가 새요",
+        message: "틀린 곳을 고치며 연료가 새었어요."
+      };
+    }
+
+    function applyFuelEvent(event) {
+      const before = state.fuelPercent;
+      if (event.emptiesTank) {
+        state.fuelPercent = 0;
+      } else {
+        state.fuelPercent = clamp(state.fuelPercent + event.amount, 0, MAX_FUEL);
+      }
+      if (event.rainbow) {
+        state.rainbowFuel = true;
+      }
+      if (event.launches) {
+        state.instantLaunch = true;
+      }
+      const actualDelta = state.fuelPercent - before;
+      state.lastFuelEvent = {
+        ...event,
+        actualDelta,
+        message: getFuelEventMessage(event, actualDelta, before)
+      };
+    }
+
+    function getFuelEventMessage(event, actualDelta, before) {
+      if (event.rainbow) {
+        return "떠나면 안드로메다로 가요.";
+      }
+      if (event.launches) {
+        return "발사 스위치가 켜졌어요. 지금 떠날 수 있어요.";
+      }
+      if (event.emptiesTank) {
+        return before > 0 ? "연료통이 모두 비었어요. 다음 문제로 다시 채워 봐요." : "연료통이 이미 비어 있어요. 다음 문제로 다시 채워 봐요.";
+      }
+      if (actualDelta > 0) {
+        return event.id === "megaFuel" ? "연료가 크게 들어왔어요!" : "연료가 안정적으로 들어갔어요.";
+      }
+      if (actualDelta < 0) {
+        return event.id === "smallExplosion"
+          ? "맞췄지만 연료통이 흔들렸어요."
+          : "틀린 곳을 고치며 연료가 새었어요.";
+      }
+      return event.amount < 0 ? "연료통이 이미 비어 있어서 더 줄지는 않았어요." : "연료통이 가득 차서 더 들어가지 않았어요.";
+    }
+
+    function getFuelEventDeltaLabel(event) {
+      if (event.rainbow) {
+        return "무지개";
+      }
+      if (event.launches) {
+        return "발사!";
+      }
+      if (event.emptiesTank) {
+        return "연료 0";
+      }
+      const actualDelta = typeof event.actualDelta === "number" ? event.actualDelta : event.amount;
+      if (actualDelta > 0) {
+        return `연료 +${actualDelta}`;
+      }
+      if (actualDelta < 0) {
+        return `연료 ${actualDelta}`;
+      }
+      return "변화 없음";
+    }
+
+    function renderChoices(options, handler) {
+      el.choiceGrid.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.innerHTML = option.label;
+        button.addEventListener("click", () => handler(option, button));
+        el.choiceGrid.appendChild(button);
+      });
+    }
+
+    function finishProblem(result) {
+      renderStatus();
+      el.rocketMini.classList.remove("is-boosting");
+      void el.rocketMini.offsetWidth;
+      el.rocketMini.classList.add("is-boosting");
+      FUEL_EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      el.rewardPop.classList.add(`fuel-event--${result.id}`);
+      el.rewardTitle.textContent = result.title;
+      el.rewardDelta.textContent = getFuelEventDeltaLabel(result);
+      el.rewardMessage.textContent = result.message;
+      el.rewardNextButton.textContent = result.launches
+        ? "발사하기"
+        : state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
+      window.setTimeout(() => {
+        el.rewardPop.classList.add("is-visible");
+        el.rewardNextButton.focus();
+      }, 680);
+    }
+
+    function nextAfterReward() {
+      if (state.lastFuelEvent?.launches || state.index + 1 >= TOTAL_QUESTIONS) {
+        showResult();
+        return;
+      }
+      state.index += 1;
+      playSound("next");
+      renderProblem();
+    }
+
+    function showResult() {
+      const destination = getDestination();
+      const launched = Boolean(destination);
+      const fuelPercent = getFuelPercent();
+      const measureLabel = state.rainbowFuel ? "무지개 연료" : `연료 ${fuelPercent}`;
+      el.resultRaster.src = launched ? destination.image : "result-retry-generated.webp";
+      el.resultScreen.classList.add("is-measuring");
+      el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowFuel);
+      document.getElementById("resultTitle").textContent = "연료 측정 중";
+      el.finalEnergyText.textContent = "측정 중";
+      el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.finalDestinationText.textContent = "측정 중";
+      el.praiseText.textContent = "로켓 안에 모인 연료를 재고 있어요.";
+      el.measureStatus.textContent = "연료 측정 중";
+      el.measurePercent.textContent = "연료 0";
+      el.measureFill.style.setProperty("--measure-width", "0%");
+      renderPlanetTrack(el.resultPlanetTrack, { targetIndex: -1, reachedIndex: -1 });
+      el.restartButton.hidden = true;
+      el.restartButton.disabled = true;
+      el.restartButton.textContent = launched ? "한 번 더" : "다시하기";
+      playSound("scan");
+      showScreen("result");
+      window.setTimeout(() => {
+        el.measureStatus.textContent = "행성 거리 계산 중";
+        el.measurePercent.textContent = measureLabel;
+        el.measureFill.style.setProperty("--measure-width", `${fuelPercent}%`);
+        el.finalEnergyText.textContent = measureLabel;
+        renderPlanetTrack(el.resultPlanetTrack, {
+          targetIndex: launched ? destination.index : -1,
+          reachedIndex: launched ? destination.index : -1
+        });
+        playSound("measure");
+      }, 120);
+      window.setTimeout(() => {
+        el.resultScreen.classList.remove("is-measuring");
+        document.getElementById("resultTitle").textContent = launched ? `${destination.name} 도착!` : "연료 더 필요";
+        el.finalDestinationText.textContent = launched ? destination.name : "다시 도전";
+        el.praiseText.textContent = launched ? getPraise(destination) : getRetryMessage();
+        el.restartButton.hidden = false;
+        el.restartButton.disabled = false;
+        playSound("finish");
+      }, 2500);
+    }
+
+    function isLaunchSuccess() {
+      return Boolean(getDestination());
+    }
+
+    function getPraise(destination) {
+      if (destination.secret) {
+        return "무지개 연료가 켜져 안드로메다까지 날아갔어요!";
+      }
+      if (destination.index >= 7) {
+        return "로켓이 해왕성까지 날아갔어요. 자리 계산을 끝까지 잘 채웠어요.";
+      }
+      if (destination.index >= 5) {
+        return `로켓이 ${destination.name}까지 날아갔어요. 높은 자리까지 차근차근 살폈어요.`;
+      }
+      if (destination.index >= 3) {
+        return `로켓이 ${destination.name}까지 도착했어요. 일, 십, 백 계산이 좋아지고 있어요.`;
+      }
+      return `로켓이 ${destination.name}까지 갔어요. 다음에는 더 먼 행성까지 가 봐요.`;
+    }
+
+    function getRetryMessage() {
+      const next = getNextPlanet(null);
+      if (state.correct >= 6) {
+        return `거의 다 왔어요. ${next.name}까지 가려면 일의 자리부터 한 번만 더 살펴요.`;
+      }
+      if (state.correct >= 3) {
+        return `로켓의 연료가 조금 부족해요. 다시 넣으면 ${next.name}까지 갈 수 있어요.`;
+      }
+      return "괜찮아요. 작은 자리부터 차례대로 채우면 수성까지 갈 수 있어요.";
+    }
+
+    function setButtonsDisabled(disabled) {
+      [...el.choiceGrid.querySelectorAll("button")].forEach((button) => {
+        button.disabled = disabled;
+      });
+    }
+
+    function currentProblem() {
+      return state.problems[state.index];
+    }
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function initAudio() {
+      if (state.audio) {
+        return;
+      }
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        return;
+      }
+      state.audio = new AudioContext();
+    }
+
+    function playSound(kind) {
+      if (!state.soundsOn) {
+        return;
+      }
+      initAudio();
+      if (!state.audio) {
+        return;
+      }
+      if (state.audio.state === "suspended") {
+        state.audio.resume();
+      }
+      const plans = {
+        start: [260, 330, 392],
+        correct: [440, 660],
+        try: [180, 150],
+        reward: [392, 523, 784],
+        scan: [220, 294, 392],
+        measure: [330, 440, 660],
+        next: [330],
+        finish: [392, 523, 659, 880]
+      };
+      const frequencies = plans[kind] || [330];
+      frequencies.forEach((frequency, index) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        oscillator.type = "triangle";
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, state.audio.currentTime + index * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.045, state.audio.currentTime + index * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, state.audio.currentTime + index * 0.08 + 0.16);
+        oscillator.connect(gain).connect(state.audio.destination);
+        oscillator.start(state.audio.currentTime + index * 0.08);
+        oscillator.stop(state.audio.currentTime + index * 0.08 + 0.18);
+      });
+    }
+
+    el.startButton.addEventListener("click", () => {
+      playSound("start");
+      showScreen("tutorial");
+    });
+
+    el.tutorialNextButton.addEventListener("click", startGame);
+    el.rewardNextButton.addEventListener("click", nextAfterReward);
+    el.restartButton.addEventListener("click", () => {
+      playSound("start");
+      showScreen("cover");
+    });
+    el.soundToggle.addEventListener("click", () => {
+      state.soundsOn = !state.soundsOn;
+      el.soundToggle.textContent = state.soundsOn ? "소리 켬" : "소리 끔";
+      el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
+      if (state.soundsOn) {
+        playSound("next");
+      }
+    });
+
+    renderStatus();
+  </script>
+</body>
+</html>

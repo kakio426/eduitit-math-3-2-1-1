@@ -1492,7 +1492,7 @@
     <button class="sound-toggle" type="button" data-action="toggle-bgm" aria-pressed="true">BGM 켜짐</button>
 
     <section class="screen cover is-active" data-screen="cover" aria-labelledby="coverTitle">
-      <img class="cover-art" src="cover-generated.png?v=1" alt="" aria-hidden="true">
+      <img class="cover-art" src="cover-generated.webp?v=1" alt="" aria-hidden="true">
       <h1 class="sr-only" id="coverTitle">매스몬 상자런</h1>
       <p class="sr-only">에듀잇티 수학 게임</p>
       <p class="sr-only">점수를 모아 매스몬을 얻어요. 받아올림이 없는 (세 자리 수)×(한 자리 수) 게임입니다.</p>
@@ -1560,7 +1560,7 @@
     </section>
 
     <section class="screen result" data-screen="result" aria-labelledby="resultTitle">
-      <img class="result-art" src="result-generated-v2.png?v=1" alt="" aria-hidden="true">
+      <img class="result-art" src="result-generated-v2.webp?v=1" alt="" aria-hidden="true">
       <div class="result-card">
         <div class="result-summary">
           <h2 class="result-title" id="resultTitle">최종 점수</h2>
@@ -1733,6 +1733,7 @@
         bgmGain: null,
         sfxGain: null,
         bgmTimer: 0,
+        bgmLoopCount: 0,
         bgmEnabled: loadBgmPreference(),
       };
 
@@ -1766,7 +1767,7 @@
         audioState.bgmGain = context.createGain();
         audioState.sfxGain = context.createGain();
         audioState.masterGain.gain.value = 0.72;
-        audioState.bgmGain.gain.value = 0.12;
+        audioState.bgmGain.gain.value = 0.055;
         audioState.sfxGain.gain.value = 0.55;
         audioState.bgmGain.connect(audioState.masterGain);
         audioState.sfxGain.connect(audioState.masterGain);
@@ -1830,27 +1831,51 @@
         if (!audioState.bgmEnabled) return;
         const context = ensureAudio();
         if (!context || context.state === "suspended") return;
-        const notes = [294, 370, 440, 494, 440, 370, 330, 392];
-        notes.forEach((note, index) => {
-          playTone(note, index * 0.32, 0.2, {
-            type: index % 2 ? "sine" : "triangle",
-            volume: 0.032,
-            attack: 0.018,
+        const padRoot = audioState.bgmLoopCount % 2 === 0 ? 196 : 220;
+        [padRoot, padRoot * 1.25, padRoot * 1.5].forEach((note, index) => {
+          playTone(note, 0.04 * index, 3.8, {
+            type: "sine",
+            volume: 0.012,
+            attack: 0.8,
             destination: audioState.bgmGain,
           });
         });
-        playTone(147, 0, 1.6, {
+        [0, 1.4, 2.8].forEach((offset) => {
+          playTone(98, offset, 0.32, {
+            type: "sine",
+            volume: 0.014,
+            attack: 0.04,
+            endFrequency: 62,
+            destination: audioState.bgmGain,
+          });
+        });
+        if (audioState.bgmLoopCount % 3 === 0) {
+          playTone(784, 2.1, 0.16, {
+            type: "sine",
+            volume: 0.01,
+            attack: 0.04,
+            destination: audioState.bgmGain,
+          });
+          playTone(988, 2.26, 0.18, {
+            type: "sine",
+            volume: 0.009,
+            attack: 0.04,
+            destination: audioState.bgmGain,
+          });
+        }
+        playTone(65, 0, 3.6, {
           type: "sine",
-          volume: 0.018,
-          attack: 0.04,
+          volume: 0.01,
+          attack: 1.2,
           destination: audioState.bgmGain,
         });
+        audioState.bgmLoopCount += 1;
       }
 
       function startBgm() {
         if (!audioState.bgmEnabled || audioState.bgmTimer) return;
         playBgmLoop();
-        audioState.bgmTimer = window.setInterval(playBgmLoop, 2800);
+        audioState.bgmTimer = window.setInterval(playBgmLoop, 4200);
       }
 
       function stopBgm() {

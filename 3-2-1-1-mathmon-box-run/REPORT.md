@@ -124,8 +124,8 @@
 이 폴더는 별도 빌드 없이 바로 열 수 있는 정적 패키지입니다.
 
 - `index.html`
-- `cover-generated.png`
-- `result-generated-v2.png`
+- `cover-generated.webp`
+- `result-generated-v2.webp`
 - `eduitit-logo-mark.png`
 - `mathmon-0-almon.png` ~ `mathmon-9-kingdragonmon.png`
 - `screenshots/*.png`
