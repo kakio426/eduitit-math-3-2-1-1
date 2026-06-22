@@ -84,7 +84,7 @@
 
 ![최종 결과](screenshots/08-final-result.png)
 
-최종 결과는 이미지 생성으로 만든 시상식 무대를 배경으로 사용합니다. 최종 점수, 칭찬 문구, 획득 매스몬, 정답 수, 이미지 받기, 다시 버튼은 HTML로 올려 매 판 달라지는 결과값이 정확하게 보이도록 했습니다. 매스몬은 점수만이 아니라 정답 수 조건도 함께 봅니다.
+최종 결과는 이미지 생성으로 만든 RasterStage 시상식 무대를 배경으로 사용합니다. 무대를 왼쪽으로 치우치게 두고 매스몬을 그 무대 중앙에 올린 뒤, 최종 점수, 칭찬 문구, 획득 매스몬 설명, 정답 수, 이미지 받기, 다시 버튼은 HTML로 올려 매 판 달라지는 결과값이 정확하게 보이도록 했습니다. 매스몬은 점수만이 아니라 정답 수 조건도 함께 봅니다.
 
 ### 이미지 받기
 
@@ -124,7 +124,7 @@
 
 - `index.html`
 - `cover-generated.png`
-- `result-generated.png`
+- `result-generated-v2.png`
 - `eduitit-logo-mark.png`
 - `mathmon-0-almon.png` ~ `mathmon-9-kingdragonmon.png`
 - `screenshots/*.png`

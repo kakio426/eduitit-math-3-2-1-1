@@ -28,7 +28,7 @@
 
 - `index.html`: 게임 본문
 - `cover-generated.png`: 첫 화면 대표 커버 이미지
-- `result-generated.png`: 최종 결과 무대 배경 이미지
+- `result-generated-v2.png`: 최종 결과 RasterStage 배경 이미지
 - `mathmon-*.png`: 최종 점수로 얻는 매스몬 이미지
 - `eduitit-logo-mark.png`: 첫 화면 브랜딩 로고
 - `screenshots/`: 화면별 스크린샷과 다운로드 카드 예시
