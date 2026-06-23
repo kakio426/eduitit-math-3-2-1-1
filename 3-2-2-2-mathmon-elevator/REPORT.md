@@ -18,7 +18,7 @@
 - 대표 오답: 남은 십을 빠뜨리고 일의 자리만 나누는 선택지
 - 보상: 한 문제 완료마다 엘리베이터 동력 이벤트를 1회 적용. 정답 문제는 가속 모터, 정전, 슈퍼 모터, 급행 운행, 멈춤, 무지개 동력 중 하나가 나오고, 오답이 있었던 문제는 정전 처리만 적용
 - 결과 등급: 동력과 정답 수 게이트를 함께 사용해 도착 층을 공개
-- 비밀 등급: 무지개 동력을 얻고 정답 수 조건을 넘으면 꼭대기 전망대가 열림
+- 비밀 등급: 무지개 동력을 얻으면 정답 수와 관계없이 꼭대기 전망대가 열림
 - 최종 보상: 도착 층 자체가 보상이며, 매스몬 도감 수집 구조는 사용하지 않음
 
 ### 교육적 의도
@@ -59,26 +59,45 @@
 
 ### 보상 화면
 
-한 문제의 3단계 계산이 끝나면 화면 중앙에 엘리베이터 동력 이벤트가 뜹니다. 정답 문제는 가속 모터, 슈퍼 모터, 정전, 급행 운행, 멈춤, 무지개 동력 중 하나가 나오며, 문제 안에서 한 번이라도 틀리면 정전 처리만 적용됩니다. 보상은 엘리베이터 동력 하나로만 적용됩니다.
+한 문제의 3단계 계산이 끝나면 화면 중앙에 엘리베이터 동력 이벤트가 뜹니다. 정답 문제는 가속 모터, 슈퍼 모터, 정전, 급행 운행, 멈춤, 무지개 동력 중 하나가 나오며, 문제 안에서 한 번이라도 틀리면 정전 처리만 적용됩니다. 보상 이미지는 `reward-events-sprite-generated.png`의 3×2 스프라이트에서 이벤트별 칸을 골라 보여 줍니다. 보상은 엘리베이터 동력 하나로만 적용됩니다.
 
 ### 결과 화면
 
-결과 화면은 `result-stage-generated.webp`를 RasterStage 배경으로 사용합니다. 그 위에 동력 측정 막대, 정답 수, 도착 층, 칭찬 문구, 다시하기 버튼을 HTML로 얹습니다.
+결과 화면은 도착 층별 RasterStage 배경을 동적으로 교체합니다. `result-basement-generated.webp`, `result-first-generated.webp`, `result-middle-generated.webp`, `result-view-generated.webp`, `result-roof-generated.webp`, `result-rainbow-generated.webp`, `result-retry-generated.webp`를 사용하고, 그 위에 동력 측정 막대, 정답 수, 도착 층, 칭찬 문구, 다시하기 버튼을 HTML로 얹습니다.
 
-도착 층은 지하 정비층, 1층 로비, 중간층, 전망층, 옥상 정원, 꼭대기 전망대로 구분됩니다. 최고 층은 동력만으로 쉽게 열리지 않도록 정답 수 게이트를 함께 사용합니다.
+도착 층은 지하 정비층, 1층 로비, 중간층, 전망층, 옥상 정원, 꼭대기 전망대로 구분됩니다. 일반 층은 동력만으로 쉽게 열리지 않도록 정답 수 게이트를 함께 사용합니다. 무지개 동력은 특별 보상으로, 정답 수가 낮아도 꼭대기 전망대에 바로 도착합니다. 실패 결과는 축하 무대가 아니라 다시 준비하는 안전한 장면으로 분리했습니다.
 
-## 5. 매스몬 역할
+## 5. 검증 스크린샷
+
+![첫 화면](screenshots/01-cover.png)
+![설명 화면](screenshots/02-tutorial.png)
+![문제 화면](screenshots/03-problem.png)
+![힌트가 열린 문제 화면](screenshots/03-problem-hint.png)
+![보상 화면](screenshots/04-reward.png)
+![성공 결과](screenshots/05-result-success.png)
+![다시 준비 결과](screenshots/06-result-retry.png)
+![태블릿 표지](screenshots/07-tablet-cover.png)
+![무지개 결과](screenshots/08-result-rainbow.png)
+
+## 6. 매스몬 역할
 
 매스몬은 첫 화면과 결과 화면에서 엘리베이터 모험을 함께하는 동행 캐릭터로 등장합니다. 학생이 얻는 중심 보상은 `엘리베이터 도착 층`이며, 도감 수집 구조는 사용하지 않습니다.
 
-## 6. 공개 패키지 구성
+## 7. 공개 패키지 구성
 
 이 폴더는 별도 빌드 없이 바로 열 수 있는 정적 패키지입니다. 학생용 static 사본에는 실행에 필요한 파일만 복사하고, PNG 원본과 스크린샷은 작업실에 보관합니다.
 
 - `index.html`
 - `cover-generated.webp`
 - `board-shaft-generated.webp`
-- `result-stage-generated.webp`
+- `reward-events-sprite-generated.png`
+- `result-basement-generated.webp`
+- `result-first-generated.webp`
+- `result-middle-generated.webp`
+- `result-view-generated.webp`
+- `result-roof-generated.webp`
+- `result-rainbow-generated.webp`
+- `result-retry-generated.webp`
 - `eduitit-logo-mark.png`
 - `README.md`
 - `REPORT.md`

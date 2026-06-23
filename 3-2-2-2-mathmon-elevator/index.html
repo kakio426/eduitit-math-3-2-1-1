@@ -995,21 +995,11 @@
       overflow: hidden;
       border-radius: 16px;
       border: 1px solid rgba(255, 255, 255, 0.18);
-      background:
-        radial-gradient(circle at 50% 55%, rgba(53, 214, 199, 0.26), transparent 0 38%, transparent 62%),
-        linear-gradient(180deg, #20383d, #0f1d22);
-    }
-
-    .reward-visual::before {
-      content: "";
-      width: 44%;
-      height: 60%;
-      border: 4px solid rgba(255, 247, 215, 0.72);
-      border-radius: 22px;
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 48%, rgba(255, 255, 255, 0.48) 49% 51%, rgba(255, 255, 255, 0.16) 52%),
-        linear-gradient(180deg, #58ddd4, #1e9baa);
-      box-shadow: 0 0 34px rgba(53, 214, 199, 0.24);
+      background-image: url("reward-events-sprite-generated.png");
+      background-size: 300% 200%;
+      background-position: 0% 0%;
+      background-repeat: no-repeat;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 42px rgba(0, 0, 0, 0.26);
     }
 
     .reward-visual::after {
@@ -1020,35 +1010,34 @@
       border: 3px solid rgba(255, 200, 87, 0.52);
       opacity: 0.56;
       animation: reward-ring 1.4s ease-in-out infinite;
+      pointer-events: none;
     }
 
-    .reward-pop.reward-art--loss .reward-visual,
-    .reward-pop.reward-art--empty .reward-visual {
-      background:
-        radial-gradient(circle at 50% 55%, rgba(255, 107, 99, 0.24), transparent 0 38%, transparent 62%),
-        linear-gradient(180deg, #3b2428, #171217);
+    .reward-pop.reward-art--normal .reward-visual {
+      background-position: 0% 0%;
+    }
+
+    .reward-pop.reward-art--mega .reward-visual {
+      background-position: 50% 0%;
+    }
+
+    .reward-pop.reward-art--loss .reward-visual {
+      background-position: 100% 0%;
       animation: tank-shake 0.5s ease both;
     }
 
-    .reward-pop.reward-art--mega .reward-visual,
+    .reward-pop.reward-art--empty .reward-visual {
+      background-position: 0% 100%;
+      animation: tank-shake 0.5s ease both;
+    }
+
     .reward-pop.reward-art--express .reward-visual {
-      background:
-        radial-gradient(circle at 50% 55%, rgba(255, 200, 87, 0.3), transparent 0 38%, transparent 62%),
-        linear-gradient(180deg, #3b3420, #172729);
+      background-position: 50% 100%;
     }
 
     .reward-pop.reward-art--rainbow .reward-visual {
-      background:
-        linear-gradient(135deg, rgba(255, 107, 99, 0.26), rgba(255, 200, 87, 0.28), rgba(53, 214, 199, 0.28), rgba(112, 215, 255, 0.26), rgba(181, 140, 255, 0.26)),
-        linear-gradient(180deg, #263342, #111827);
-    }
-
-    .reward-pop.reward-art--rainbow .reward-visual::before {
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 48%, rgba(255, 255, 255, 0.48) 49% 51%, rgba(255, 255, 255, 0.16) 52%),
-        linear-gradient(135deg, #ff7a9a, #ffe27a, #45f2b8, #70d7ff, #b58cff);
-      background-size: 220% 100%;
-      animation: rainbow-flow 1.2s linear infinite;
+      background-position: 100% 100%;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), 0 0 34px rgba(112, 215, 255, 0.34), 0 18px 42px rgba(0, 0, 0, 0.26);
     }
 
     .reward-delta {
@@ -1524,7 +1513,7 @@
     </section>
 
     <section class="screen result" id="resultScreen" aria-labelledby="resultTitle">
-      <img class="raster-bg" src="result-stage-generated.webp" alt="">
+      <img class="raster-bg" id="resultRaster" src="result-retry-generated.webp" alt="">
       <div class="top-row">
         <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
         <span class="unit-badge">3학년 2학기 2단원 2차시</span>
@@ -1576,11 +1565,11 @@
     const TOTAL_QUESTIONS = 10;
     const MAX_POWER = 100;
     const FLOORS = [
-      { id: "basement", short: "지하", name: "지하 정비층", min: 1, max: 18, requiredCorrect: 1 },
-      { id: "first", short: "1층", name: "1층 로비", min: 19, max: 38, requiredCorrect: 3 },
-      { id: "middle", short: "중간", name: "중간층", min: 39, max: 58, requiredCorrect: 5 },
-      { id: "view", short: "전망", name: "전망층", min: 59, max: 78, requiredCorrect: 7 },
-      { id: "roof", short: "옥상", name: "옥상 정원", min: 79, max: 100, requiredCorrect: 9 }
+      { id: "basement", short: "지하", name: "지하 정비층", min: 1, max: 18, requiredCorrect: 1, image: "result-basement-generated.webp" },
+      { id: "first", short: "1층", name: "1층 로비", min: 19, max: 38, requiredCorrect: 3, image: "result-first-generated.webp" },
+      { id: "middle", short: "중간", name: "중간층", min: 39, max: 58, requiredCorrect: 5, image: "result-middle-generated.webp" },
+      { id: "view", short: "전망", name: "전망층", min: 59, max: 78, requiredCorrect: 7, image: "result-view-generated.webp" },
+      { id: "roof", short: "옥상", name: "옥상 정원", min: 79, max: 100, requiredCorrect: 9, image: "result-roof-generated.webp" }
     ];
     const SECRET_FLOOR = {
       id: "rainbow",
@@ -1588,7 +1577,8 @@
       name: "꼭대기 전망대",
       min: 100,
       max: 100,
-      requiredCorrect: 7,
+      requiredCorrect: 0,
+      image: "result-rainbow-generated.webp",
       secret: true
     };
     const ALL_FLOORS = [...FLOORS, SECRET_FLOOR];
@@ -1658,6 +1648,7 @@
       rewardDelta: document.getElementById("rewardDelta"),
       rewardMessage: document.getElementById("rewardMessage"),
       rewardNextButton: document.getElementById("rewardNextButton"),
+      resultRaster: document.getElementById("resultRaster"),
       arrivalShort: document.getElementById("arrivalShort"),
       arrivalName: document.getElementById("arrivalName"),
       resultTitle: document.getElementById("resultTitle"),
@@ -1753,14 +1744,15 @@
 
     function renderStatus() {
       const power = getPower();
-      const charge = power / MAX_POWER;
+      const displayedPower = state.rainbowPower ? MAX_POWER : power;
+      const charge = displayedPower / MAX_POWER;
       el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
       el.powerText.textContent = state.power > 0 || state.rainbowPower ? "동력 모으는 중" : "동력 준비";
       el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 도착" : "마지막에 도착";
       el.elevatorZone.style.setProperty("--power", charge.toFixed(3));
       el.elevatorZone.classList.toggle("is-rainbow", state.rainbowPower);
       el.powerPercentText.textContent = state.rainbowPower ? "무지개 동력" : "모으는 중";
-      el.powerMeterFill.style.setProperty("--power-width", `${power}%`);
+      el.powerMeterFill.style.setProperty("--power-width", `${displayedPower}%`);
       const destination = getDestinationByPower(state.power, state.rainbowPower);
       renderFloorTrack(el.floorTrack, {
         targetIndex: destination ? destination.index : -1,
@@ -1792,7 +1784,7 @@
     }
 
     function getDestinationByPower(power = state.power, rainbowPower = state.rainbowPower) {
-      if (rainbowPower && state.correct >= SECRET_FLOOR.requiredCorrect) {
+      if (rainbowPower) {
         return { ...SECRET_FLOOR, index: FLOORS.length, started: true };
       }
       const currentPower = getPower(power);
@@ -2135,6 +2127,7 @@
       }
       if (event.rainbow) {
         state.rainbowPower = true;
+        state.power = MAX_POWER;
       }
       if (event.express) {
         state.express = true;
@@ -2220,7 +2213,9 @@
       const destination = getDestination();
       const arrived = Boolean(destination);
       const power = getPower();
+      const measuredPower = state.rainbowPower ? MAX_POWER : power;
       const powerLabel = state.rainbowPower ? "무지개 동력" : `동력 ${power}`;
+      el.resultRaster.src = arrived ? destination.image : "result-retry-generated.webp";
       el.resultScreen.classList.add("is-measuring");
       el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowPower);
       el.resultTitle.textContent = "도착 층 확인 중";
@@ -2241,7 +2236,7 @@
       window.setTimeout(() => {
         el.measureStatus.textContent = "도착 층 계산 중";
         el.measurePercent.textContent = powerLabel;
-        el.measureFill.style.setProperty("--measure-width", `${power}%`);
+        el.measureFill.style.setProperty("--measure-width", `${measuredPower}%`);
         el.finalPowerText.textContent = powerLabel;
         renderFloorTrack(el.resultFloorTrack, {
           targetIndex: arrived ? destination.index : -1,
