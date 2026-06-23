@@ -2817,7 +2817,11 @@
       lastFuelEvent: null,
       instantLaunch: false,
       soundsOn: true,
-      audio: null
+      audio: null,
+      bgmGain: null,
+      bgmTimer: null,
+      bgmRunning: false,
+      bgmStep: 0
     };
 
     const el = {
@@ -3337,7 +3341,6 @@
       applyFuelEvent(event);
       renderStatus();
       finishProblem(state.lastFuelEvent);
-      playSound("reward");
     }
 
     function pickFuelEventForRoll(roll, amountPicker = randomInt) {
@@ -3565,6 +3568,26 @@
       return "is-impact-empty";
     }
 
+    function getRewardSoundKind(result) {
+      const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
+      if (result.rainbow) {
+        return "rewardRainbow";
+      }
+      if (result.launches) {
+        return "rewardLaunch";
+      }
+      if (result.emptiesTank) {
+        return "rewardEmpty";
+      }
+      if (actualDelta < 0 || result.id === "smallExplosion" || result.id === "leak") {
+        return "rewardLoss";
+      }
+      if (actualDelta >= 12 || result.art === "mega") {
+        return "rewardMega";
+      }
+      return "rewardPositive";
+    }
+
     function triggerRewardTransfer(result) {
       const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
       const hasVisibleTransfer = actualDelta > 0 || result.rainbow || result.launches;
@@ -3614,6 +3637,7 @@
         : state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
       window.setTimeout(() => {
         el.rewardPop.classList.add("is-visible");
+        playSound(getRewardSoundKind(result));
         el.rewardNextButton.focus();
       }, 840);
     }
@@ -3783,22 +3807,125 @@
       state.audio = new AudioContext();
     }
 
+    function resumeAudio() {
+      initAudio();
+      if (!state.audio) {
+        return false;
+      }
+      if (state.audio.state === "suspended") {
+        state.audio.resume();
+      }
+      return true;
+    }
+
+    function stopBgm() {
+      state.bgmRunning = false;
+      if (state.bgmTimer) {
+        window.clearTimeout(state.bgmTimer);
+        state.bgmTimer = null;
+      }
+      if (!state.bgmGain || !state.audio) {
+        state.bgmGain = null;
+        return;
+      }
+      const gain = state.bgmGain;
+      const now = state.audio.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setTargetAtTime(0.0001, now, 0.18);
+      window.setTimeout(() => {
+        try {
+          gain.disconnect();
+        } catch (error) {
+          // Already disconnected.
+        }
+      }, 700);
+      state.bgmGain = null;
+    }
+
+    function startBgm() {
+      if (!state.soundsOn || state.bgmRunning || !resumeAudio()) {
+        return;
+      }
+      state.bgmRunning = true;
+      state.bgmGain = state.audio.createGain();
+      state.bgmGain.gain.setValueAtTime(0.0001, state.audio.currentTime);
+      state.bgmGain.gain.exponentialRampToValueAtTime(0.045, state.audio.currentTime + 1.2);
+      state.bgmGain.connect(state.audio.destination);
+      state.bgmStep = 0;
+      queueBgmLoop();
+    }
+
+    function queueBgmLoop() {
+      if (!state.bgmRunning || !state.audio || !state.bgmGain) {
+        return;
+      }
+      const phrases = [
+        [
+          { frequency: 130.81, at: 0, duration: 2.8, peak: 0.16, type: "sine" },
+          { frequency: 196, at: 0.35, duration: 1.8, peak: 0.12, type: "sine" },
+          { frequency: 329.63, at: 0.9, duration: 0.45, peak: 0.08, type: "triangle" },
+          { frequency: 392, at: 1.7, duration: 0.5, peak: 0.07, type: "triangle" },
+          { frequency: 261.63, at: 2.7, duration: 0.65, peak: 0.08, type: "triangle" }
+        ],
+        [
+          { frequency: 146.83, at: 0, duration: 2.7, peak: 0.15, type: "sine" },
+          { frequency: 220, at: 0.4, duration: 1.8, peak: 0.11, type: "sine" },
+          { frequency: 293.66, at: 0.7, duration: 0.48, peak: 0.08, type: "triangle" },
+          { frequency: 440, at: 1.55, duration: 0.45, peak: 0.07, type: "triangle" },
+          { frequency: 349.23, at: 2.45, duration: 0.62, peak: 0.08, type: "triangle" }
+        ],
+        [
+          { frequency: 164.81, at: 0, duration: 2.9, peak: 0.15, type: "sine" },
+          { frequency: 246.94, at: 0.45, duration: 1.9, peak: 0.1, type: "sine" },
+          { frequency: 415.3, at: 0.95, duration: 0.4, peak: 0.075, type: "triangle" },
+          { frequency: 493.88, at: 1.8, duration: 0.45, peak: 0.07, type: "triangle" },
+          { frequency: 329.63, at: 2.8, duration: 0.55, peak: 0.075, type: "triangle" }
+        ],
+        [
+          { frequency: 123.47, at: 0, duration: 3, peak: 0.14, type: "sine" },
+          { frequency: 185, at: 0.4, duration: 2, peak: 0.1, type: "sine" },
+          { frequency: 277.18, at: 0.75, duration: 0.42, peak: 0.075, type: "triangle" },
+          { frequency: 369.99, at: 1.65, duration: 0.48, peak: 0.07, type: "triangle" },
+          { frequency: 523.25, at: 2.65, duration: 0.65, peak: 0.08, type: "triangle" }
+        ]
+      ];
+      const now = state.audio.currentTime;
+      const notes = phrases[state.bgmStep % phrases.length];
+      state.bgmStep += 1;
+      notes.forEach(({ frequency, at, duration, peak, type }) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, now + at);
+        oscillator.detune.setValueAtTime(-6 + Math.random() * 12, now + at);
+        gain.gain.setValueAtTime(0.0001, now + at);
+        gain.gain.exponentialRampToValueAtTime(peak, now + at + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + at + duration);
+        oscillator.connect(gain).connect(state.bgmGain);
+        oscillator.start(now + at);
+        oscillator.stop(now + at + duration + 0.1);
+      });
+      state.bgmTimer = window.setTimeout(queueBgmLoop, 5200);
+    }
+
     function playSound(kind) {
       if (!state.soundsOn) {
         return;
       }
-      initAudio();
-      if (!state.audio) {
+      if (!resumeAudio()) {
         return;
-      }
-      if (state.audio.state === "suspended") {
-        state.audio.resume();
       }
       const plans = {
         start: [260, 330, 392],
         correct: [440, 660],
         try: [180, 150],
         reward: [392, 523, 784],
+        rewardPositive: [392, 523, 659],
+        rewardMega: [330, 440, 659, 880],
+        rewardRainbow: [523, 659, 784, 1046],
+        rewardLaunch: [262, 523, 784],
+        rewardLoss: [247, 196, 147],
+        rewardEmpty: [196, 147, 110],
         scan: [220, 294, 392],
         measure: [330, 440, 660],
         next: [330],
@@ -3811,7 +3938,7 @@
         oscillator.type = "triangle";
         oscillator.frequency.value = frequency;
         gain.gain.setValueAtTime(0.0001, state.audio.currentTime + index * 0.08);
-        gain.gain.exponentialRampToValueAtTime(0.045, state.audio.currentTime + index * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.085, state.audio.currentTime + index * 0.08 + 0.02);
         gain.gain.exponentialRampToValueAtTime(0.0001, state.audio.currentTime + index * 0.08 + 0.16);
         oscillator.connect(gain).connect(state.audio.destination);
         oscillator.start(state.audio.currentTime + index * 0.08);
@@ -3820,6 +3947,7 @@
     }
 
     el.startButton.addEventListener("click", () => {
+      startBgm();
       playSound("start");
       showScreen("tutorial");
     });
@@ -3832,6 +3960,7 @@
     });
     el.rewardNextButton.addEventListener("click", nextAfterReward);
     el.restartButton.addEventListener("click", () => {
+      startBgm();
       playSound("start");
       showScreen("cover");
     });
@@ -3840,7 +3969,10 @@
       el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
       el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
       if (state.soundsOn) {
+        startBgm();
         playSound("next");
+      } else {
+        stopBgm();
       }
     });
 
