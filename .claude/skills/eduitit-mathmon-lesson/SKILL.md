@@ -71,9 +71,9 @@ teacher-facing SaaS·관리자 화면에는 적용하지 않는다(그건 `eduit
 
 - 모든 차시는 `16:10` Stage, 기준 제작 크기 `1280×800`으로 만든다.
 - 모든 `index.html`의 `<main class="game">`에는 `data-stage-ratio="16:10"`과 `data-stage-size="1280x800"`을 둔다.
-- 기본 `.screen` CSS는 `width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);`, `min-height: auto;`, `aspect-ratio: 16 / 10;`을 유지한다.
+- 기본 Stage CSS는 `.stage-shell`이 `width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);`, `aspect-ratio: 16 / 10;`을 담당하고, `.screen`은 `position: absolute; inset: 0; width: 100%; height: 100%;`로 Stage를 채우게 한다.
 - PC와 태블릿 가로에서는 Stage를 contain 방식으로 맞추고, 남는 영역은 바깥 배경 여백으로 처리한다.
-- `소리 켬` 같은 전역 조작 버튼은 Stage 밖에 따로 고정하지 말고 Stage 우하단 안전영역을 따라가게 배치한다.
+- `소리` 같은 전역 조작 버튼은 Stage 밖에 fixed로 띄우지 말고 `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 둔다. `top-row`/`hud`는 그 공간만큼 비워 버튼이 배지·문제·선택지를 가리지 않게 한다.
 - 새 차시를 만들거나 화면을 크게 고친 뒤에는 반드시 `node scripts/check-stage-ratio.mjs`를 통과시킨다.
 
 ## 성취기준 표기 주의

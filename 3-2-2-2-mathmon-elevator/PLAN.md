@@ -38,11 +38,9 @@
 | 파일명(예) | 용도 | 종횡비 | 묘사 |
 | --- | --- | --- | --- |
 | `cover-generated.png/webp` | 커버 | 4:3 | 엘리베이터·매스몬·시작 자리 |
-| `board-shaft.png/webp` | 문제 배경 | 4:3 | 층 표시 샤프트 + 보드 자리 |
-| `elevator-car.png/webp` | 보상 오브젝트 | 세로 | 내려가는 엘리베이터 칸 |
-| `result-floor-1~5.png/webp` | 등급 5장 | 정사각 | 지하~옥상 |
-| `result-floor-rainbow.png/webp` | 전설 | 정사각 | 무지개 꼭대기 |
-| `result-stage.png/webp` | 결과 무대 | 4:3 | 도착 시상 무대 |
+| `board-shaft-generated.png/webp` | 설명/문제 배경 | 4:3 | 층 표시 샤프트 + HTML 보드 자리 |
+| `result-stage-generated.png/webp` | 결과 무대 | 4:3 | 도착 시상 무대 + 오른쪽 결과 오버레이 자리 |
+- 엘리베이터 칸, 층 등급, 동력 이벤트는 HTML/CSS 오버레이로 동적 렌더링
 - PNG 원본 보관, 배포 WebP
 
 ## 재사용 엔진

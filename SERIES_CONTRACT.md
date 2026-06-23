@@ -77,8 +77,8 @@
 - 기준 제작 크기는 `1280×800`입니다. 첫 화면·설명·문제·보상·결과 화면은 이 비율 안에서 설계하고, 스크린샷도 이 비율을 우선합니다.
 - PC와 태블릿 가로 화면에서는 Stage를 `contain` 방식으로 맞춥니다. 남는 영역은 바깥 배경 여백으로 처리하고, Stage 내부 UI를 늘려 비율을 깨지 않습니다.
 - 모든 `index.html`의 `<main class="game">`에는 `data-stage-ratio="16:10"`과 `data-stage-size="1280x800"`을 둡니다.
-- 모든 `index.html`의 기본 `.screen` CSS는 `width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);`, `min-height: auto;`, `aspect-ratio: 16 / 10;`을 유지합니다.
-- `소리 켬` 같은 전역 조작 버튼은 Stage 밖 viewport 하단에 따로 고정하지 않습니다. Stage 우하단 안전영역을 따라가게 배치해 상하가 짧은 태블릿·모니터에서도 잘리지 않게 합니다.
+- 모든 `index.html`은 `.stage-shell`이 `width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);`, `aspect-ratio: 16 / 10;`을 담당하고, `.screen`은 그 안을 `position: absolute; inset: 0; width: 100%; height: 100%;`로 채웁니다.
+- `소리` 같은 전역 조작 버튼은 Stage 밖 viewport에 fixed로 띄우지 않습니다. `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 두고, `top-row`/`hud`는 그 공간만큼 비워 배지·문제·선택지를 가리지 않게 합니다.
 - 차시를 만들거나 화면을 크게 바꾼 뒤에는 루트에서 `node scripts/check-stage-ratio.mjs`를 실행해 Stage 계약을 통과해야 합니다.
 
 ## 차시 확장 체크리스트

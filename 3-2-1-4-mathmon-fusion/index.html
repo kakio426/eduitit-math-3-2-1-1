@@ -57,16 +57,28 @@
     }
 
     .game {
+      --stage-padding: clamp(10px, 2vw, 24px);
       min-height: 100dvh;
       display: grid;
       place-items: center;
-      padding: 24px;
+      padding: var(--stage-padding);
+    }
+
+    .stage-shell {
+      --stage-inset: clamp(14px, 2vw, 22px);
+      --sound-slot: clamp(64px, 6vw, 78px);
+      position: relative;
+      width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+      aspect-ratio: 16 / 10;
     }
 
     .screen {
-      position: relative;
-      width: min(1120px, 100%);
-      min-height: min(720px, calc(100dvh - 28px));
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: auto;
+      aspect-ratio: 16 / 10;
       display: none;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -188,19 +200,46 @@
     }
 
     .sound-toggle {
-      position: fixed;
-      right: 28px;
-      bottom: 28px;
-      z-index: 30;
-      min-width: 84px;
-      min-height: 38px;
-      border: 1px solid rgba(255, 200, 87, 0.5);
+      position: absolute;
+      top: var(--stage-inset);
+      right: var(--stage-inset);
+      z-index: 60;
+      display: inline-grid;
+      place-items: center;
+      width: clamp(54px, 5.3vw, 66px);
+      min-width: 0;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      border: 1px solid rgba(255, 200, 87, 0.55);
       border-radius: 999px;
       color: #ffe3a5;
-      background: rgba(17, 20, 24, 0.82);
-      font-size: 0.82rem;
+      background: rgba(14, 12, 22, 0.78);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+      font-size: clamp(0.72rem, 1vw, 0.84rem);
       font-weight: 950;
+      line-height: 1;
       backdrop-filter: blur(10px);
+    }
+
+    .sound-toggle::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #69efbf;
+      box-shadow: 0 0 10px rgba(105, 239, 191, 0.8);
+    }
+
+    .stage-shell .top-row {
+      right: calc(var(--stage-inset) + var(--sound-slot));
+    }
+
+    .stage-shell .hud {
+      padding-right: var(--sound-slot);
     }
 
     .sound-toggle[aria-pressed="false"] {
@@ -444,11 +483,11 @@
     .play-layout {
       min-height: 0;
       display: grid;
-      grid-template-columns: minmax(286px, 0.72fr) minmax(500px, 1.28fr);
+      grid-template-columns: minmax(300px, 0.62fr) minmax(560px, 1fr);
       gap: 24px;
     }
 
-    .workshop-zone,
+    .fusion-side,
     .problem-panel {
       min-height: 0;
       border: 1px solid var(--line);
@@ -456,9 +495,178 @@
       background: rgba(255, 255, 255, 0.075);
     }
 
-    .workshop-zone {
+    .fusion-side {
       position: relative;
       display: grid;
+      grid-template-rows: 1fr auto auto;
+      align-items: end;
+      gap: 12px;
+      overflow: hidden;
+      padding: 18px;
+      isolation: isolate;
+      background: #151b1f;
+    }
+
+    .fusion-side::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(55, 214, 173, 0.18), transparent 0 28%, transparent 54%),
+        linear-gradient(180deg, rgba(8, 10, 14, 0.08), rgba(8, 10, 14, 0.5) 62%, rgba(8, 10, 14, 0.82));
+      pointer-events: none;
+    }
+
+    .fusion-side-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(0.86) brightness(0.78);
+      transform: scale(1.02);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .robot-shell {
+      position: relative;
+      z-index: 2;
+      align-self: center;
+      justify-self: center;
+      width: min(260px, 76%);
+      aspect-ratio: 1 / 1.08;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 6px;
+      filter: drop-shadow(0 22px 24px rgba(0, 0, 0, 0.34));
+    }
+
+    .robot-head {
+      display: grid;
+      place-items: center;
+      width: 44%;
+      aspect-ratio: 1;
+      border: 6px solid rgba(255, 255, 255, 0.72);
+      border-radius: 20px;
+      color: #251500;
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      font-size: 3.2rem;
+      font-weight: 1000;
+      box-shadow: 0 12px 0 rgba(106, 70, 23, 0.18), 0 0 28px rgba(255, 200, 87, 0.32);
+    }
+
+    .robot-body {
+      position: relative;
+      width: 58%;
+      aspect-ratio: 1.18 / 1;
+      border: 7px solid rgba(255, 255, 255, 0.7);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.68), transparent 0 11%, transparent 24%),
+        linear-gradient(145deg, rgba(80, 201, 222, 0.72), rgba(55, 214, 173, 0.84));
+      opacity: 0.54;
+      transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .fusion-side.has-one .robot-body {
+      opacity: 0.72;
+      box-shadow: 0 0 22px rgba(55, 214, 173, 0.22);
+    }
+
+    .fusion-side.has-two .robot-body {
+      opacity: 0.9;
+      transform: translateY(-4px);
+      box-shadow: 0 0 32px rgba(255, 200, 87, 0.28);
+    }
+
+    .side-parts {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .side-part,
+    .side-result {
+      display: grid;
+      place-items: center;
+      gap: 5px;
+      min-height: 72px;
+      padding: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.28);
+      border-radius: var(--radius);
+      color: #ffffff;
+      background: rgba(17, 20, 24, 0.64);
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .side-part small,
+    .side-result small {
+      color: #d8fff2;
+      font-size: 0.82rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .side-part strong,
+    .side-result strong {
+      font-size: 1.9rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .side-part.is-current {
+      border-color: rgba(255, 200, 87, 0.78);
+      box-shadow: 0 0 24px rgba(255, 200, 87, 0.18);
+    }
+
+    .side-part.is-done {
+      color: #10271f;
+      border-color: rgba(55, 214, 173, 0.86);
+      background: linear-gradient(180deg, #b8ffe9, #37d6ad);
+    }
+
+    .side-part.is-done small {
+      color: #10271f;
+    }
+
+    .side-result {
+      position: relative;
+      z-index: 3;
+      display: none;
+      color: #251500;
+      border-color: rgba(255, 200, 87, 0.36);
+      background: rgba(255, 200, 87, 0.16);
+    }
+
+    .side-result.is-done {
+      display: grid;
+      border-color: rgba(255, 200, 87, 0.86);
+      background: linear-gradient(180deg, #ffffff, #ffc857);
+      box-shadow: 0 0 30px rgba(255, 200, 87, 0.34);
+    }
+
+    .side-caption {
+      position: relative;
+      z-index: 3;
+      margin: 0;
+      color: #fff0c6;
+      font-size: 0.96rem;
+      font-weight: 950;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .workshop-zone {
+      position: relative;
+      display: none;
       grid-template-rows: 1fr auto;
       overflow: hidden;
       padding: 18px;
@@ -626,289 +834,109 @@
     }
 
     .problem-panel {
+      min-height: 0;
       display: grid;
-      grid-template-rows: auto auto auto 1fr auto;
-      gap: 12px;
-      padding: 18px;
+      grid-template-rows: auto minmax(158px, auto) minmax(0, 1fr) auto;
+      gap: 14px;
+      padding: clamp(18px, 2.4vw, 28px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 50% 16%, rgba(255, 200, 87, 0.12), transparent 0 30%, transparent 58%),
+        rgba(17, 20, 24, 0.48);
     }
 
     .problem-heading {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 12px;
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .split-text {
+      min-height: 38px;
+      display: inline-grid;
+      place-items: center;
+      padding: 6px 18px;
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      border-radius: 999px;
+      color: #fff0c6;
+      background: rgba(255, 200, 87, 0.09);
+      font-size: 1.15rem;
+      font-weight: 1000;
+      line-height: 1;
     }
 
     .problem-heading h2 {
       width: 100%;
       margin: 0;
       color: #ffffff;
-      font-size: 4rem;
+      font-size: clamp(3.6rem, 5.8vw, 5.6rem);
       line-height: 1;
       font-weight: 1000;
-      text-align: center;
       white-space: nowrap;
     }
 
-    .phase-label {
-      display: none;
-    }
-
-    .calc-stage {
+    .task-card {
       display: grid;
-      grid-template-columns: minmax(340px, 1fr) minmax(240px, 0.72fr);
-      gap: 12px;
-      align-items: stretch;
-    }
-
-    .fusion-board,
-    .step-panel {
-      min-height: 218px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: rgba(17, 20, 24, 0.44);
-    }
-
-    .fusion-board {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 12px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .fusion-input {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      min-height: 54px;
-      padding: 10px 12px;
-      border: 1px solid rgba(255, 200, 87, 0.28);
-      border-radius: var(--radius);
-      background: rgba(255, 200, 87, 0.1);
-    }
-
-    .fusion-input span {
-      color: #ffe7a4;
-      font-size: 0.9rem;
-      font-weight: 950;
-      white-space: nowrap;
-    }
-
-    .fusion-input strong {
-      color: #ffffff;
-      font-size: 1.5rem;
-      font-weight: 1000;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    .fusion-lane {
-      position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr) 28px minmax(0, 1.08fr);
-      align-items: center;
-      gap: 8px;
-      min-height: 106px;
-      padding: 12px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: var(--radius);
-      background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 12px, transparent 12px 26px),
-        linear-gradient(180deg, rgba(80, 201, 222, 0.12), rgba(17, 20, 24, 0.58));
-      background-size: 38px 100%, 100% 100%;
-      animation: belt-move 1.4s linear infinite;
-    }
-
-    .fusion-lane.is-fusing .fusion-part.is-done {
-      animation: slide-to-core 0.68s ease both;
-    }
-
-    .fusion-part,
-    .fusion-total {
-      position: relative;
-      z-index: 1;
-      min-height: 66px;
-      display: grid;
-      place-items: center;
-      padding: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: var(--radius);
-      color: #ffffff;
-      background: rgba(17, 20, 24, 0.66);
-      font-size: 1.32rem;
-      font-weight: 1000;
-      line-height: 1;
-      text-align: center;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
-    }
-
-    .fusion-part small,
-    .fusion-total small {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .fusion-part strong,
-    .fusion-total strong {
-      display: block;
-      font-size: 1.6rem;
-      line-height: 1;
-    }
-
-    .fusion-part.is-current,
-    .fusion-total.is-current {
-      border-color: rgba(255, 200, 87, 0.84);
-      box-shadow: inset 0 0 0 3px rgba(255, 200, 87, 0.38), 0 0 18px rgba(255, 200, 87, 0.22);
-    }
-
-    .fusion-part.is-done,
-    .fusion-total.is-done {
-      color: #10271f;
-      border-color: rgba(55, 214, 173, 0.82);
-      background: linear-gradient(180deg, #b8ffe9, #37d6ad);
-    }
-
-    .fusion-total.is-done {
-      color: #2a1700;
-      border-color: rgba(255, 200, 87, 0.86);
-      background: linear-gradient(180deg, #fff0a8, #ffc857);
-      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.22), 0 0 28px rgba(255, 200, 87, 0.34);
-    }
-
-    .fusion-symbol {
-      display: grid;
-      place-items: center;
-      color: #ffe7a4;
-      font-size: 1.7rem;
-      font-weight: 1000;
-    }
-
-    .fusion-rule {
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      padding: 9px 11px;
-      border: 1px solid rgba(55, 214, 173, 0.24);
-      border-radius: var(--radius);
-      color: #d8fff2;
-      background: rgba(55, 214, 173, 0.08);
-      font-size: 1rem;
-      font-weight: 900;
-      line-height: 1.32;
-    }
-
-    .step-panel {
-      display: grid;
-      grid-template-rows: auto minmax(96px, 1fr) auto;
-      gap: 10px;
-      border-color: rgba(255, 200, 87, 0.36);
-      background:
-        linear-gradient(150deg, rgba(255, 200, 87, 0.13), transparent 48%),
-        rgba(17, 20, 24, 0.5);
-    }
-
-    .step-track {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-
-    .step-chip {
-      min-height: 36px;
-      display: grid;
-      place-items: center;
-      padding: 6px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.06);
-      font-size: 0.86rem;
-      font-weight: 950;
-    }
-
-    .step-chip.is-current {
-      color: #231400;
-      background: var(--amber);
-      border-color: rgba(255, 200, 87, 0.86);
-    }
-
-    .step-chip.is-done {
-      color: #10271f;
-      background: #78f2c8;
-      border-color: rgba(55, 214, 173, 0.86);
-    }
-
-    .step-formula {
-      display: grid;
-      place-items: center;
-      min-height: 96px;
-      padding: 10px 12px;
-      border: 2px solid rgba(255, 200, 87, 0.72);
+      align-content: center;
+      justify-items: center;
+      gap: 14px;
+      min-height: 158px;
+      padding: clamp(18px, 2.5vw, 30px);
+      border: 2px solid rgba(255, 200, 87, 0.78);
       border-radius: var(--radius);
       color: #251500;
       background:
-        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.68), transparent 0 22%, transparent 48%),
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.72), transparent 0 22%, transparent 48%),
         linear-gradient(180deg, #fff0a8, #ffc857);
-      font-size: 2.35rem;
-      font-weight: 1000;
       text-align: center;
-      line-height: 1.08;
-      box-shadow: 0 12px 0 rgba(106, 70, 23, 0.22), 0 18px 34px rgba(0, 0, 0, 0.26);
+      box-shadow: 0 16px 0 rgba(106, 70, 23, 0.22), 0 24px 38px rgba(0, 0, 0, 0.26);
     }
 
     .step-meaning {
       margin: 0;
-      color: #fff0c6;
-      font-size: 1.04rem;
-      font-weight: 900;
-      line-height: 1.35;
+      font-size: clamp(1.42rem, 2.4vw, 2rem);
+      font-weight: 1000;
+      line-height: 1.15;
+    }
+
+    .step-formula {
+      font-size: clamp(3rem, 5.6vw, 5rem);
+      font-weight: 1000;
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
     }
 
     .prompt {
-      min-height: 46px;
-      display: flex;
-      align-items: center;
-      padding: 10px 12px;
-      border: 1px solid rgba(255, 200, 87, 0.26);
-      border-radius: var(--radius);
-      background: rgba(255, 200, 87, 0.08);
-      color: #fff0c6;
-      font-size: 1.12rem;
-      font-weight: 950;
-      line-height: 1.35;
+      margin: 0;
     }
 
     .choice-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      align-content: start;
-      gap: 10px;
+      align-content: stretch;
+      gap: 14px;
     }
 
     .choice-button {
-      min-height: 68px;
-      padding: 10px 12px;
+      min-height: 92px;
+      padding: 12px 16px;
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: var(--radius);
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.11);
       color: #ffffff;
-      font-size: 1.34rem;
+      font-size: clamp(2rem, 4vw, 3.2rem);
       font-weight: 1000;
-      line-height: 1.22;
+      line-height: 1;
       transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
     }
 
     .choice-button:hover {
       transform: translateY(-2px);
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.42);
     }
 
     .choice-button.is-correct {
@@ -924,11 +952,15 @@
     }
 
     .feedback {
-      min-height: 42px;
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
       color: #ffffff;
-      font-size: 1.04rem;
-      font-weight: 900;
-      line-height: 1.35;
+      font-size: 1.22rem;
+      font-weight: 1000;
+      line-height: 1.25;
+      text-align: center;
     }
 
     .feedback.good {
@@ -937,6 +969,134 @@
 
     .feedback.try {
       color: #ffe7a4;
+    }
+
+    .fusion-cutscene {
+      position: absolute;
+      z-index: 9;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(255, 200, 87, 0.3), transparent 0 30%, transparent 54%),
+        rgba(17, 20, 24, 0.84);
+      backdrop-filter: blur(8px);
+    }
+
+    .fusion-cutscene.is-visible {
+      display: grid;
+    }
+
+    .fusion-cut-card {
+      position: relative;
+      width: 100%;
+      min-height: 280px;
+      display: grid;
+      place-items: center;
+    }
+
+    .cut-part,
+    .cut-answer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      width: 158px;
+      min-height: 104px;
+      padding: 12px;
+      border: 4px solid rgba(255, 255, 255, 0.82);
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 22px 34px rgba(0, 0, 0, 0.34);
+    }
+
+    .cut-part {
+      color: #10271f;
+      background: linear-gradient(180deg, #b8ffe9, #37d6ad);
+    }
+
+    .cut-left {
+      transform: translate(calc(-50% - 112px), -50%) rotate(-4deg);
+    }
+
+    .cut-right {
+      transform: translate(calc(-50% + 112px), -50%) rotate(4deg);
+      background: linear-gradient(180deg, #ffeeb0, #ffb957);
+      color: #2a1700;
+    }
+
+    .fusion-cutscene.is-visible .cut-left {
+      animation: cut-left-merge 1.22s ease forwards;
+    }
+
+    .fusion-cutscene.is-visible .cut-right {
+      animation: cut-right-merge 1.22s ease forwards;
+    }
+
+    .cut-part small,
+    .cut-answer small {
+      font-size: 0.78rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .cut-part strong,
+    .cut-answer strong {
+      font-size: 2rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .cut-plus {
+      position: absolute;
+      top: calc(50% + 88px);
+      left: 50%;
+      color: #fff0c6;
+      font-size: 2.8rem;
+      font-weight: 1000;
+      transform: translate(-50%, -50%);
+    }
+
+    .fusion-cutscene.is-visible .cut-plus {
+      animation: cut-plus-hide 1.22s ease forwards;
+    }
+
+    .cut-flash {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      place-items: center;
+      width: 210px;
+      height: 78px;
+      border-radius: 999px;
+      color: #251500;
+      background: linear-gradient(180deg, #ffffff, #ffc857);
+      font-size: 2.1rem;
+      font-weight: 1000;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.72);
+      box-shadow: 0 0 44px rgba(255, 200, 87, 0.65);
+    }
+
+    .fusion-cutscene.is-visible .cut-flash {
+      animation: cut-flash 1.22s ease forwards;
+    }
+
+    .cut-answer {
+      z-index: 3;
+      color: #251500;
+      background: linear-gradient(180deg, #ffffff, #ffc857);
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.76);
+    }
+
+    .fusion-cutscene.is-visible .cut-answer {
+      animation: cut-answer-pop 1.22s ease forwards;
     }
 
     .reward-pop {
@@ -1346,13 +1506,77 @@
       }
     }
 
+    @keyframes cut-left-merge {
+      0% {
+        transform: translate(calc(-50% - 112px), -50%) rotate(-4deg);
+        opacity: 1;
+      }
+      68% {
+        transform: translate(calc(-50% - 18px), -50%) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50% - 8px), -50%) scale(0.9);
+        opacity: 0;
+      }
+    }
+
+    @keyframes cut-right-merge {
+      0% {
+        transform: translate(calc(-50% + 112px), -50%) rotate(4deg);
+        opacity: 1;
+      }
+      68% {
+        transform: translate(calc(-50% + 18px), -50%) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50% + 8px), -50%) scale(0.9);
+        opacity: 0;
+      }
+    }
+
+    @keyframes cut-flash {
+      0%,
+      54% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.72);
+      }
+      70% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.08);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.3);
+      }
+    }
+
+    @keyframes cut-plus-hide {
+      0%,
+      58% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes cut-answer-pop {
+      0%,
+      72% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.76);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
     @media (max-width: 960px) {
       .game {
         padding: 10px;
-      }
-
-      .screen {
-        min-height: calc(100dvh - 20px);
       }
 
       .cover,
@@ -1364,8 +1588,7 @@
       .cover-scene,
       .tutorial-layout,
       .play-layout,
-      .result-layout,
-      .calc-stage {
+      .result-layout {
         grid-template-columns: 1fr;
       }
 
@@ -1399,7 +1622,7 @@
       }
 
       .problem-heading h2 {
-        font-size: 3rem;
+        font-size: 3.6rem;
       }
     }
 
@@ -1448,9 +1671,9 @@
     </div>
   </div>
 
-  <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true">소리 켬</button>
-
-  <main class="game">
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+    <div class="stage-shell">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
     <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
       <img class="raster-bg" src="cover-robot-mathmon-generated.webp" alt="">
       <div class="top-row">
@@ -1475,22 +1698,22 @@
       <div class="tutorial-layout">
         <div class="tutorial-copy">
           <span class="mini-badge">어떻게 해요?</span>
-          <h2 id="tutorialTitle">부품을 둘로 나눠 합쳐요</h2>
+          <h2 id="tutorialTitle">두 자리 수를 나눠 곱해요</h2>
           <ol class="steps">
-            <li><b>1</b><span>일의 자리와 곱해 첫 부품을 만들어요.</span></li>
-            <li><b>2</b><span>십의 자리와 곱한 뒤 0을 붙여요.</span></li>
-            <li><b>3</b><span>두 부품을 더해 로봇 매스몬을 완성해요.</span></li>
+            <li><b>1</b><span>아랫수를 40과 5처럼 나눠 봐요.</span></li>
+            <li><b>2</b><span>각 수와 따로 곱해요.</span></li>
+            <li><b>3</b><span>두 값을 더해 답을 완성해요.</span></li>
           </ol>
           <button class="primary-button" id="tutorialNextButton" type="button">합체 시작</button>
         </div>
         <div class="example-board" aria-label="곱셈 부품 합체 예시">
           <p class="example-title">예시</p>
           <div class="mini-calculation">
-            <div class="mini-cell"><span>부품 1</span><strong>23 × 5 = 115</strong></div>
-            <div class="mini-cell"><span>부품 2</span><strong>23 × 40 = 920</strong></div>
-            <div class="mini-cell"><span>합체</span><strong>115 + 920 = 1,035</strong></div>
+            <div class="mini-cell"><span>아랫수 나누기</span><strong>45 = 40 + 5</strong></div>
+            <div class="mini-cell"><span>각각 곱하기</span><strong>23 × 5, 23 × 40</strong></div>
+            <div class="mini-cell"><span>더하기</span><strong>115 + 920 = 1,035</strong></div>
           </div>
-          <p class="prompt">45를 5와 40으로 나누어 곱한 뒤 두 값을 더해요.</p>
+          <p class="prompt">큰 곱셈은 아랫수를 나누면 계산하기 쉬워져요.</p>
         </div>
       </div>
     </section>
@@ -1507,56 +1730,58 @@
       </header>
 
       <div class="play-layout">
-        <aside class="workshop-zone" id="workshopZone" aria-label="합체 에너지 상태">
-          <img class="workshop-bg" src="fusion-workshop-generated.webp" alt="">
-          <div class="fusion-machine" id="fusionMachine" aria-hidden="true">
-            <div class="fusion-core-orb">×</div>
+        <aside class="fusion-side" id="fusionSide" aria-label="로봇 합체 화면">
+          <img class="fusion-side-bg" src="fusion-workshop-generated.webp" alt="">
+          <div class="robot-shell" aria-hidden="true">
+            <div class="robot-head">×</div>
+            <div class="robot-body"></div>
           </div>
-          <div class="energy-panel">
-            <div class="energy-readout">
-              <span>합체 에너지</span>
-              <strong id="energyPercentText">모으는 중</strong>
+          <div class="side-parts" aria-label="완성한 계산 조각">
+            <div class="side-part" id="sidePartOne">
+              <small id="sidePartOneLabel">첫 조각</small>
+              <strong>?</strong>
             </div>
-            <div class="energy-meter" aria-hidden="true">
-              <span class="energy-fill" id="energyMeterFill"></span>
+            <div class="side-part" id="sidePartTwo">
+              <small id="sidePartTwoLabel">둘째 조각</small>
+              <strong>?</strong>
             </div>
-            <div class="grade-panel">
-              <span id="gradeText">마지막에 측정</span>
+          </div>
+          <div class="side-result" id="sideResult">
+            <small>합체 답</small>
+            <strong>?</strong>
+          </div>
+          <p class="side-caption" id="sideCaption">두 조각을 모아 로봇을 완성해요.</p>
+
+          <div class="fusion-cutscene" id="fusionCutscene" aria-live="polite" aria-hidden="true">
+            <div class="fusion-cut-card">
+              <div class="cut-part cut-left">
+                <small id="cutPartOneLabel">첫 조각</small>
+                <strong id="cutPartOne">115</strong>
+              </div>
+              <div class="cut-plus" aria-hidden="true">+</div>
+              <div class="cut-part cut-right">
+                <small id="cutPartTwoLabel">둘째 조각</small>
+                <strong id="cutPartTwo">920</strong>
+              </div>
+              <div class="cut-flash">합체!</div>
+              <div class="cut-answer">
+                <small>완성 답</small>
+                <strong id="cutAnswer">1,035</strong>
+              </div>
             </div>
           </div>
         </aside>
 
         <section class="problem-panel" aria-live="polite">
           <div class="problem-heading">
+            <span class="split-text" id="fusionInput">45 = 40 + 5</span>
             <h2 id="questionText">23 × 45</h2>
-            <span class="phase-label" id="phaseLabel">부품 1</span>
           </div>
-          <div class="calc-stage">
-            <div class="fusion-board" aria-label="합체 계산판">
-              <div class="fusion-input">
-                <span>합체할 곱셈</span>
-                <strong id="fusionInput">23 × 45</strong>
-              </div>
-              <div class="fusion-lane" id="fusionLane">
-                <div class="fusion-part is-current" id="partialOne"><small>부품 1</small><strong>?</strong></div>
-                <div class="fusion-symbol" aria-hidden="true">+</div>
-                <div class="fusion-part" id="partialTwo"><small>부품 2</small><strong>?</strong></div>
-                <div class="fusion-symbol" aria-hidden="true">=</div>
-                <div class="fusion-total" id="fusionTotal"><small>합체</small><strong>?</strong></div>
-              </div>
-              <div class="fusion-rule" id="fusionRule">아랫수를 일의 자리와 십의 자리로 나누어 곱해요.</div>
-            </div>
-            <div class="step-panel">
-              <div class="step-track" aria-label="계산 순서">
-                <span class="step-chip is-current" id="stepChipPartialOne">부품 1</span>
-                <span class="step-chip" id="stepChipPartialTwo">부품 2</span>
-                <span class="step-chip" id="stepChipFusion">합체</span>
-              </div>
-              <div class="step-formula" id="stepFormula">23 × 5 = ?</div>
-              <p class="step-meaning" id="stepMeaning">일의 자리와 먼저 곱해요.</p>
-            </div>
+          <div class="task-card" id="taskCard">
+            <p class="step-meaning" id="stepMeaning">먼저 5와 곱해요.</p>
+            <div class="step-formula" id="stepFormula">23 × 5 = ?</div>
           </div>
-          <div class="prompt" id="promptText">첫 번째 부품을 골라요.</div>
+          <p class="prompt" id="promptText" hidden>답을 골라요.</p>
           <div class="choice-grid" id="choiceGrid"></div>
           <div class="feedback" id="feedbackText"></div>
         </section>
@@ -1614,6 +1839,7 @@
         </div>
       </div>
     </section>
+    </div>
   </main>
 
   <script>
@@ -1674,27 +1900,27 @@
       progressText: document.getElementById("progressText"),
       energyText: document.getElementById("energyText"),
       chainText: document.getElementById("chainText"),
-      workshopZone: document.getElementById("workshopZone"),
-      fusionMachine: document.getElementById("fusionMachine"),
-      energyPercentText: document.getElementById("energyPercentText"),
-      energyMeterFill: document.getElementById("energyMeterFill"),
-      gradeText: document.getElementById("gradeText"),
       questionText: document.getElementById("questionText"),
-      phaseLabel: document.getElementById("phaseLabel"),
       fusionInput: document.getElementById("fusionInput"),
-      fusionLane: document.getElementById("fusionLane"),
-      partialOne: document.getElementById("partialOne"),
-      partialTwo: document.getElementById("partialTwo"),
-      fusionTotal: document.getElementById("fusionTotal"),
-      fusionRule: document.getElementById("fusionRule"),
-      stepChipPartialOne: document.getElementById("stepChipPartialOne"),
-      stepChipPartialTwo: document.getElementById("stepChipPartialTwo"),
-      stepChipFusion: document.getElementById("stepChipFusion"),
+      taskCard: document.getElementById("taskCard"),
       stepFormula: document.getElementById("stepFormula"),
       stepMeaning: document.getElementById("stepMeaning"),
       promptText: document.getElementById("promptText"),
       choiceGrid: document.getElementById("choiceGrid"),
       feedbackText: document.getElementById("feedbackText"),
+      fusionSide: document.getElementById("fusionSide"),
+      sidePartOne: document.getElementById("sidePartOne"),
+      sidePartOneLabel: document.getElementById("sidePartOneLabel"),
+      sidePartTwo: document.getElementById("sidePartTwo"),
+      sidePartTwoLabel: document.getElementById("sidePartTwoLabel"),
+      sideResult: document.getElementById("sideResult"),
+      sideCaption: document.getElementById("sideCaption"),
+      fusionCutscene: document.getElementById("fusionCutscene"),
+      cutPartOneLabel: document.getElementById("cutPartOneLabel"),
+      cutPartOne: document.getElementById("cutPartOne"),
+      cutPartTwoLabel: document.getElementById("cutPartTwoLabel"),
+      cutPartTwo: document.getElementById("cutPartTwo"),
+      cutAnswer: document.getElementById("cutAnswer"),
       rewardPop: document.getElementById("rewardPop"),
       rewardTitle: document.getElementById("rewardTitle"),
       rewardDelta: document.getElementById("rewardDelta"),
@@ -1792,17 +2018,12 @@
       state.stepAttempts = 0;
       state.problemHadMistake = false;
       el.rewardPop.classList.remove("is-visible");
+      el.fusionCutscene.classList.remove("is-visible");
+      el.fusionCutscene.setAttribute("aria-hidden", "true");
       EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
       el.questionText.textContent = question;
-      el.fusionInput.textContent = question;
-      el.partialOne.className = "fusion-part is-current";
-      el.partialTwo.className = "fusion-part";
-      el.fusionTotal.className = "fusion-total";
-      el.partialOne.innerHTML = "<small>부품 1</small><strong>?</strong>";
-      el.partialTwo.innerHTML = "<small>부품 2</small><strong>?</strong>";
-      el.fusionTotal.innerHTML = "<small>합체</small><strong>?</strong>";
-      el.fusionLane.classList.remove("is-fusing");
-      el.fusionRule.textContent = "아랫수를 일의 자리와 십의 자리로 나누어 곱해요.";
+      el.fusionInput.textContent = `${problem.bottom} = ${problem.tensMul * 10} + ${problem.onesMul}`;
+      resetFusionSide(problem);
       el.feedbackText.textContent = "";
       el.feedbackText.className = "feedback";
       renderStatus();
@@ -1813,14 +2034,6 @@
       el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
       el.energyText.textContent = state.energy > 0 ? "합체 중" : "합체 준비";
       el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 측정" : "마지막에 측정";
-      const energy = getEnergy();
-      const charge = energy / MAX_ENERGY;
-      el.workshopZone.style.setProperty("--charge", charge.toFixed(3));
-      el.fusionMachine.style.setProperty("--charge", charge.toFixed(3));
-      el.workshopZone.classList.toggle("is-rainbow", state.rainbowCore);
-      el.energyPercentText.textContent = state.rainbowCore ? "무지개 코어" : "모으는 중";
-      el.energyMeterFill.style.setProperty("--energy-width", `${energy}%`);
-      el.gradeText.textContent = "마지막에 측정";
     }
 
     function getEnergy(energy = state.energy) {
@@ -1871,12 +2084,11 @@
     function renderStep() {
       const problem = currentProblem();
       const step = getCurrentStep(problem);
-      el.phaseLabel.textContent = step.label;
+      el.fusionInput.textContent = step.split;
       el.stepFormula.textContent = step.formula;
       el.stepMeaning.textContent = step.meaning;
       el.promptText.textContent = step.prompt;
-      updateStepChips();
-      updateCurrentBoardCell();
+      updateFusionSideCurrent(step.id);
       el.feedbackText.textContent = "";
       el.feedbackText.className = "feedback";
       const options = buildStepOptions(step);
@@ -1895,13 +2107,14 @@
       return [
         {
           id: "partial1",
-          label: "부품 1",
+          label: `×${problem.onesMul}`,
+          split: `${problem.bottom} = ${problem.tensMul * 10} + ${problem.onesMul}`,
           formula: `${problem.top} × ${problem.onesMul} = ?`,
           correct: problem.partial1,
-          prompt: "일의 자리와 곱한 첫 번째 부품을 골라요.",
-          meaning: `${problem.bottom}의 일의 자리 ${problem.onesMul}와 먼저 곱해요.`,
-          hint: `${problem.top}에 ${problem.onesMul}을 곱해요. 10이 넘으면 받아올림을 생각해요.`,
-          explain: `${problem.top} × ${problem.onesMul} = ${formatNumber(problem.partial1)}. 첫 번째 부품이 완성됐어요.`,
+          prompt: "답을 골라요.",
+          meaning: `먼저 ${withGwa(problem.onesMul)} 곱해요.`,
+          hint: `${problem.top}에 ${withEul(problem.onesMul)} 곱해요. 10이 넘으면 받아올림을 생각해요.`,
+          explain: "정답!",
           distractors: [
             problem.top * Math.max(1, problem.onesMul - 1),
             problem.top * Math.min(9, problem.onesMul + 1),
@@ -1911,13 +2124,14 @@
         },
         {
           id: "partial2",
-          label: "부품 2",
+          label: `×${problem.tensMul * 10}`,
+          split: `${problem.bottom} = ${problem.tensMul * 10} + ${problem.onesMul}`,
           formula: `${problem.top} × ${problem.tensMul}0 = ?`,
           correct: problem.partial2,
-          prompt: "십의 자리와 곱한 뒤 0을 붙인 부품을 골라요.",
-          meaning: `${problem.bottom}의 십의 자리 ${problem.tensMul}은 ${problem.tensMul * 10}을 뜻해요.`,
-          hint: `${problem.top} × ${problem.tensMul} = ${formatNumber(problem.partial2Core)}를 먼저 생각하고 0을 붙여요.`,
-          explain: `${problem.top} × ${problem.tensMul} = ${formatNumber(problem.partial2Core)}, 0을 붙여 ${formatNumber(problem.partial2)}예요.`,
+          prompt: "답을 골라요.",
+          meaning: `이제 ${withGwa(problem.tensMul * 10)} 곱해요.`,
+          hint: `${problem.tensMul * 10}은 십의 자리 수라 0이 붙어요.`,
+          explain: "정답!",
           distractors: [
             problem.partial2Core,
             problem.partial2 + 100,
@@ -1927,13 +2141,14 @@
         },
         {
           id: "fusion",
-          label: "합체",
+          label: "더하기",
+          split: "합체하기",
           formula: `${formatNumber(problem.partial1)} + ${formatNumber(problem.partial2)} = ?`,
           correct: problem.answer,
-          prompt: "두 부품을 더해 완성한 큰 곱을 골라요.",
-          meaning: "두 번 곱한 값을 자리 맞춰 더하면 최종 곱이 돼요.",
-          hint: `${formatNumber(problem.partial2)}는 십의 자리 부품이라 0이 붙어 있어요.`,
-          explain: `${formatNumber(problem.partial1)} + ${formatNumber(problem.partial2)} = ${formatNumber(problem.answer)}. 로봇 합체 완성!`,
+          prompt: "답을 골라요.",
+          meaning: "마지막으로 더해요.",
+          hint: `${formatNumber(problem.partial2)}의 0을 빠뜨리지 않아요.`,
+          explain: "합체!",
           distractors: [
             problem.misplacedSum,
             problem.answer + 10,
@@ -1943,28 +2158,6 @@
           ]
         }
       ];
-    }
-
-    function updateStepChips() {
-      [
-        [el.stepChipPartialOne, 0],
-        [el.stepChipPartialTwo, 1],
-        [el.stepChipFusion, 2]
-      ].forEach(([chip, index]) => {
-        chip.classList.toggle("is-current", state.stepIndex === index);
-        chip.classList.toggle("is-done", state.stepIndex > index);
-      });
-    }
-
-    function updateCurrentBoardCell() {
-      [el.partialOne, el.partialTwo, el.fusionTotal].forEach((cell) => cell.classList.remove("is-current"));
-      if (state.stepIndex === 0) {
-        el.partialOne.classList.add("is-current");
-      } else if (state.stepIndex === 1) {
-        el.partialTwo.classList.add("is-current");
-      } else {
-        el.fusionTotal.classList.add("is-current");
-      }
     }
 
     function buildStepOptions(step) {
@@ -2012,9 +2205,8 @@
     function completeStep(step, revealed) {
       const problem = currentProblem();
       const steps = buildSteps(problem);
-      applyStepToBoard(step, problem);
       renderStatus();
-      animateMachine();
+      completeFusionSideStep(step, problem);
       if (!revealed) {
         el.feedbackText.textContent = step.explain;
         el.feedbackText.className = "feedback good";
@@ -2022,7 +2214,7 @@
       }
       window.setTimeout(() => {
         if (state.stepIndex >= steps.length - 1) {
-          completeProblem();
+          showFusionCutscene(problem, completeProblem);
           return;
         }
         state.stepIndex += 1;
@@ -2031,32 +2223,65 @@
       }, revealed ? 1000 : 760);
     }
 
-    function applyStepToBoard(step, problem) {
-      if (step.id === "partial1") {
-        setSlot(el.partialOne, "부품 1", problem.partial1);
-        el.partialOne.classList.add("is-done");
-        el.fusionRule.textContent = `첫 부품 ${formatNumber(problem.partial1)} 완성. 이제 십의 자리 부품을 만들어요.`;
-      } else if (step.id === "partial2") {
-        setSlot(el.partialTwo, "부품 2", problem.partial2);
-        el.partialTwo.classList.add("is-done");
-        el.fusionRule.textContent = `두 번째 부품 ${formatNumber(problem.partial2)} 완성. 0을 붙였는지 확인했어요.`;
+    function resetFusionSide(problem) {
+      el.fusionSide.className = "fusion-side";
+      el.sidePartOneLabel.textContent = `${withGwa(problem.onesMul)} 곱한 값`;
+      el.sidePartOne.querySelector("strong").textContent = "?";
+      el.sidePartTwoLabel.textContent = `${withGwa(problem.tensMul * 10)} 곱한 값`;
+      el.sidePartTwo.querySelector("strong").textContent = "?";
+      el.sideResult.querySelector("strong").textContent = "?";
+      el.sideCaption.textContent = "두 조각을 모아 로봇을 완성해요.";
+      [el.sidePartOne, el.sidePartTwo, el.sideResult].forEach((node) => {
+        node.classList.remove("is-current", "is-done");
+      });
+    }
+
+    function updateFusionSideCurrent(stepId) {
+      [el.sidePartOne, el.sidePartTwo, el.sideResult].forEach((node) => node.classList.remove("is-current"));
+      if (stepId === "partial1") {
+        el.sidePartOne.classList.add("is-current");
+        el.sideCaption.textContent = "첫 조각을 만드는 중";
+      } else if (stepId === "partial2") {
+        el.sidePartTwo.classList.add("is-current");
+        el.sideCaption.textContent = "둘째 조각을 만드는 중";
       } else {
-        setSlot(el.fusionTotal, "합체", problem.answer);
-        el.fusionLane.classList.add("is-fusing");
-        el.fusionTotal.classList.add("is-done");
-        el.fusionRule.textContent = `${formatNumber(problem.partial1)}와 ${formatNumber(problem.partial2)}를 합쳐 ${formatNumber(problem.answer)} 완성!`;
+        el.sideResult.classList.add("is-current");
+        el.sideCaption.textContent = "두 조각을 합체해요.";
       }
-      updateCurrentBoardCell();
     }
 
-    function setSlot(node, label, value) {
-      node.innerHTML = `<small>${label}</small><strong>${formatNumber(value)}</strong>`;
+    function completeFusionSideStep(step, problem) {
+      if (step.id === "partial1") {
+        el.sidePartOne.querySelector("strong").textContent = formatNumber(problem.partial1);
+        el.sidePartOne.classList.add("is-done");
+        el.fusionSide.classList.add("has-one");
+      } else if (step.id === "partial2") {
+        el.sidePartTwo.querySelector("strong").textContent = formatNumber(problem.partial2);
+        el.sidePartTwo.classList.add("is-done");
+        el.fusionSide.classList.add("has-two");
+      }
     }
 
-    function animateMachine() {
-      el.fusionMachine.classList.remove("is-boosting");
-      void el.fusionMachine.offsetWidth;
-      el.fusionMachine.classList.add("is-boosting");
+    function showFusionCutscene(problem, done) {
+      el.sideResult.querySelector("strong").textContent = formatNumber(problem.answer);
+      el.sideResult.classList.add("is-done");
+      el.fusionSide.classList.add("has-two", "is-fusing");
+      el.cutPartOneLabel.textContent = `${withGwa(problem.onesMul)} 곱한 값`;
+      el.cutPartOne.textContent = formatNumber(problem.partial1);
+      el.cutPartTwoLabel.textContent = `${withGwa(problem.tensMul * 10)} 곱한 값`;
+      el.cutPartTwo.textContent = formatNumber(problem.partial2);
+      el.cutAnswer.textContent = formatNumber(problem.answer);
+      el.fusionCutscene.classList.remove("is-visible");
+      void el.fusionCutscene.offsetWidth;
+      el.fusionCutscene.setAttribute("aria-hidden", "false");
+      el.fusionCutscene.classList.add("is-visible");
+      window.setTimeout(() => {
+        el.fusionCutscene.classList.remove("is-visible");
+        el.fusionCutscene.setAttribute("aria-hidden", "true");
+        el.fusionSide.classList.remove("is-fusing");
+        el.sideCaption.textContent = "로봇 합체 완료!";
+        done();
+      }, 1700);
     }
 
     function completeProblem() {
@@ -2220,7 +2445,6 @@
 
     function finishProblem(result) {
       renderStatus();
-      animateMachine();
       EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
       el.rewardPop.classList.add(`fuel-event--${result.id}`);
       el.rewardTitle.textContent = result.title;
@@ -2354,6 +2578,23 @@
       return Number(value).toLocaleString("ko-KR");
     }
 
+    function hasNumberBatchim(value) {
+      return [0, 1, 3, 6, 7, 8].includes(Math.abs(Number(value)) % 10);
+    }
+
+    function withGwa(value) {
+      return `${formatNumber(value)}${hasNumberBatchim(value) ? "과" : "와"}`;
+    }
+
+    function withEul(value) {
+      return `${formatNumber(value)}${hasNumberBatchim(value) ? "을" : "를"}`;
+    }
+
+    function withEuro(value) {
+      const digit = Math.abs(Number(value)) % 10;
+      return `${formatNumber(value)}${[0, 3, 6].includes(digit) ? "으로" : "로"}`;
+    }
+
     function initAudio() {
       if (state.audio) {
         return;
@@ -2413,7 +2654,8 @@
     });
     el.soundToggle.addEventListener("click", () => {
       state.soundsOn = !state.soundsOn;
-      el.soundToggle.textContent = state.soundsOn ? "소리 켬" : "소리 끔";
+      el.soundToggle.textContent = "소리";
+      el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
       el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
       if (state.soundsOn) {
         playSound("next");

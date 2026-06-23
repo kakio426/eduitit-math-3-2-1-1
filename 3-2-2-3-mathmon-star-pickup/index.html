@@ -1,0 +1,2670 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3학년 2학기 2단원 · 매스몬 별 줍기 | 에듀잇티</title>
+  <style>
+    :root {
+      --page: #090d1e;
+      --panel: #111a35;
+      --panel-soft: #18264a;
+      --ink: #fff8e8;
+      --muted: #d9e3ff;
+      --line: rgba(255, 255, 255, 0.16);
+      --mint: #4df0bd;
+      --amber: #ffc857;
+      --rose: #ff647f;
+      --sky: #69d7ff;
+      --violet: #b88cff;
+      --green: #89e27f;
+      --deep: #060a18;
+      --radius: 8px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(105, 215, 255, 0.08) 0 1px, transparent 1px 80px),
+        linear-gradient(90deg, rgba(255, 200, 87, 0.07) 0 1px, transparent 1px 96px),
+        linear-gradient(135deg, #0b122d 0%, #1c2147 42%, #07101e 100%);
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+    }
+
+    .phone-blocker {
+      display: none;
+    }
+
+    .game {
+      --stage-padding: clamp(10px, 2vw, 24px);
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: var(--stage-padding);
+    }
+
+    .stage-shell {
+      --stage-inset: clamp(14px, 2vw, 22px);
+      --sound-slot: clamp(64px, 6vw, 78px);
+      position: relative;
+      width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+      aspect-ratio: 16 / 10;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: auto;
+      aspect-ratio: 16 / 10;
+      display: none;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.06), transparent 34%),
+        linear-gradient(180deg, #17244a, #081124);
+      box-shadow: var(--shadow);
+    }
+
+    .screen.is-active {
+      display: grid;
+    }
+
+    .raster-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .top-row {
+      position: absolute;
+      inset: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) auto clamp(14px, 2vw, 22px);
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .brand-badge,
+    .unit-badge,
+    .lesson-badge,
+    .mini-badge,
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(6, 10, 24, 0.74);
+      color: #ffffff;
+      font-size: 0.86rem;
+      font-weight: 900;
+      line-height: 1.1;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-badge img {
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
+      border-radius: 6px;
+    }
+
+    .unit-badge {
+      border-color: rgba(105, 215, 255, 0.52);
+      color: #d7f4ff;
+    }
+
+    .lesson-badge {
+      position: absolute;
+      left: clamp(14px, 2vw, 22px);
+      bottom: clamp(14px, 2vw, 22px);
+      z-index: 4;
+      border-color: rgba(255, 200, 87, 0.58);
+      color: #ffe0a3;
+    }
+
+    .primary-button,
+    .ghost-button {
+      min-height: 58px;
+      padding: 0 28px;
+      border: 0;
+      border-radius: var(--radius);
+      font-size: clamp(1.05rem, 2.4vw, 1.32rem);
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 14px 0 rgba(87, 61, 16, 0.34), 0 22px 38px rgba(0, 0, 0, 0.32);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    }
+
+    .primary-button {
+      color: #261700;
+      background: linear-gradient(180deg, #fff08a, #ffbd42);
+    }
+
+    .ghost-button {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .primary-button:hover,
+    .ghost-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .primary-button:active,
+    .ghost-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 0 rgba(87, 61, 16, 0.28), 0 12px 22px rgba(0, 0, 0, 0.3);
+    }
+
+    .primary-button:focus-visible,
+    .ghost-button:focus-visible,
+    .choice-button:focus-visible,
+    .hint-toggle:focus-visible,
+    .sound-toggle:focus-visible {
+      outline: 4px solid rgba(255, 255, 255, 0.86);
+      outline-offset: 4px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .sound-toggle {
+      position: absolute;
+      top: var(--stage-inset);
+      right: var(--stage-inset);
+      z-index: 60;
+      display: inline-grid;
+      place-items: center;
+      width: clamp(54px, 5.3vw, 66px);
+      min-width: 0;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      border: 1px solid rgba(255, 200, 87, 0.55);
+      border-radius: 999px;
+      color: #ffe3a5;
+      background: rgba(14, 12, 22, 0.78);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+      font-size: clamp(0.72rem, 1vw, 0.84rem);
+      font-weight: 950;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .sound-toggle::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #69efbf;
+      box-shadow: 0 0 10px rgba(105, 239, 191, 0.8);
+    }
+
+    .stage-shell .top-row {
+      right: calc(var(--stage-inset) + var(--sound-slot));
+    }
+
+    .stage-shell .hud {
+      padding-right: var(--sound-slot);
+    }
+
+    .sound-toggle[aria-pressed="false"] {
+      border-color: rgba(217, 227, 255, 0.34);
+      color: var(--muted);
+    }
+
+    .cover {
+      align-items: center;
+      padding: clamp(78px, 10vw, 104px) clamp(24px, 5vw, 70px);
+      background: #081124;
+    }
+
+    .cover::after,
+    .tutorial::after,
+    .result::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .cover::after {
+      background:
+        linear-gradient(90deg, rgba(5, 10, 28, 0.88) 0%, rgba(5, 10, 28, 0.5) 38%, transparent 70%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), transparent 42%);
+    }
+
+    .cover-scene {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.95fr) minmax(320px, 1fr);
+      gap: clamp(20px, 4vw, 54px);
+      align-items: center;
+    }
+
+    .hero-copy {
+      display: grid;
+      justify-items: start;
+      gap: 18px;
+      max-width: 640px;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(3.1rem, 8vw, 6.9rem);
+      line-height: 0.95;
+      font-weight: 1000;
+      text-shadow: 0 6px 26px rgba(0, 0, 0, 0.5);
+      letter-spacing: 0;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      max-width: 520px;
+      color: #fff2bd;
+      font-size: clamp(1.12rem, 2.6vw, 1.56rem);
+      line-height: 1.35;
+      font-weight: 950;
+      text-shadow: 0 5px 20px rgba(0, 0, 0, 0.44);
+    }
+
+    .cover-visual {
+      position: relative;
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+    }
+
+    .cover-star {
+      width: min(330px, 56vw);
+      filter: drop-shadow(0 0 34px rgba(255, 218, 82, 0.55));
+      animation: star-float 2.8s ease-in-out infinite;
+    }
+
+    .cover-mathmon {
+      position: absolute;
+      right: 5%;
+      bottom: 3%;
+      width: min(190px, 26vw);
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.34));
+    }
+
+    .tutorial {
+      align-items: center;
+      padding: clamp(78px, 10vw, 104px) clamp(24px, 5vw, 70px);
+      background: #081124;
+    }
+
+    .tutorial::after {
+      background:
+        linear-gradient(90deg, rgba(5, 10, 28, 0.82) 0%, rgba(5, 10, 28, 0.48) 46%, transparent 82%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), transparent 44%);
+    }
+
+    .tutorial-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.95fr) minmax(320px, 1fr);
+      gap: clamp(20px, 4vw, 54px);
+      align-items: center;
+    }
+
+    .tutorial-copy {
+      display: grid;
+      justify-items: start;
+      gap: 18px;
+      max-width: 620px;
+    }
+
+    .tutorial-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.35rem, 5.8vw, 4.6rem);
+      line-height: 1;
+      font-weight: 1000;
+      text-shadow: 0 6px 24px rgba(0, 0, 0, 0.48);
+    }
+
+    .steps {
+      width: min(590px, 100%);
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      align-items: center;
+      gap: 12px;
+      min-height: 64px;
+      padding: 10px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(6, 10, 24, 0.58);
+      backdrop-filter: blur(10px);
+    }
+
+    .steps b {
+      display: grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: #221600;
+      background: var(--amber);
+      font-size: 1.22rem;
+      font-weight: 1000;
+    }
+
+    .steps span {
+      color: #ffffff;
+      font-size: clamp(1rem, 2.2vw, 1.22rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .tutorial-example {
+      position: relative;
+      z-index: 2;
+      min-height: 430px;
+      display: grid;
+      place-items: center;
+    }
+
+    .example-card {
+      width: min(420px, 100%);
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(7, 14, 34, 0.62);
+      backdrop-filter: blur(10px);
+    }
+
+    .example-card strong {
+      color: #ffffff;
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      line-height: 1;
+      font-weight: 1000;
+      text-align: center;
+    }
+
+    .example-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .example-row span {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff3c8;
+      font-size: 1.08rem;
+      font-weight: 1000;
+      text-align: center;
+      line-height: 1.15;
+    }
+
+    .play {
+      grid-template-rows: auto 1fr;
+      background: #081124;
+    }
+
+    .play::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: rgba(4, 8, 22, 0.22);
+      pointer-events: none;
+    }
+
+    .hud {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: minmax(180px, auto) 1fr minmax(120px, auto);
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .hud-center {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .stat-pill {
+      min-width: max-content;
+      color: #ffffff;
+      background: rgba(6, 10, 24, 0.66);
+    }
+
+    .play-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(260px, 0.72fr) minmax(500px, 1.28fr);
+      gap: 14px;
+      padding: 0 14px 14px;
+      min-height: 0;
+    }
+
+    .star-zone,
+    .problem-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(7, 14, 34, 0.68);
+      backdrop-filter: blur(10px);
+    }
+
+    .star-zone {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 12px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .star-zone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 70% 24%, rgba(255, 200, 87, 0.22), transparent 0 28%, transparent 54%),
+        radial-gradient(circle at 24% 68%, rgba(77, 240, 189, 0.16), transparent 0 30%, transparent 56%);
+      pointer-events: none;
+    }
+
+    .star-zone > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .star-readout {
+      display: grid;
+      gap: 8px;
+    }
+
+    .star-readout span {
+      color: #d7f4ff;
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .star-readout strong {
+      color: #ffffff;
+      font-size: clamp(2rem, 4.2vw, 3.4rem);
+      line-height: 1;
+      font-weight: 1000;
+    }
+
+    .star-meter {
+      position: relative;
+      height: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .star-meter-fill {
+      display: block;
+      width: var(--star-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.78) 0 4px, transparent 5px),
+        linear-gradient(90deg, #4df0bd, #ffc857 58%, #ffdf76);
+      box-shadow: 0 0 28px rgba(255, 200, 87, 0.44);
+      transition: width 0.5s ease;
+    }
+
+    .star-zone.is-rainbow .star-meter-fill {
+      background:
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.78) 0 4px, transparent 5px),
+        linear-gradient(90deg, #ff647f, #ffc857, #4df0bd, #69d7ff, #b88cff, #ff647f);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.4s linear infinite;
+    }
+
+    .star-note {
+      margin: 0;
+      color: #d9e3ff;
+      font-size: 0.92rem;
+      font-weight: 850;
+      line-height: 1.36;
+    }
+
+    .star-hero {
+      display: grid;
+      place-items: center;
+      min-height: 210px;
+    }
+
+    .star-hero img {
+      width: min(230px, 70%);
+      filter: drop-shadow(0 0 34px rgba(255, 218, 82, 0.46));
+      animation: star-float 2.8s ease-in-out infinite;
+    }
+
+    .grade-panel {
+      display: grid;
+      gap: 8px;
+    }
+
+    .grade-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #fff0c6;
+      font-size: 0.9rem;
+      font-weight: 950;
+    }
+
+    .grade-title strong {
+      color: #ffffff;
+    }
+
+    .grade-track {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .result-grade-track {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .grade-chip {
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      color: rgba(255, 255, 255, 0.62);
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 0.84rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .grade-chip.is-reached {
+      border-color: rgba(77, 240, 189, 0.6);
+      color: #07171b;
+      background: linear-gradient(180deg, #d8fff2, #4df0bd);
+    }
+
+    .grade-chip.is-target {
+      border-color: rgba(255, 200, 87, 0.9);
+      color: #261700;
+      background: linear-gradient(180deg, #fff08a, #ffc857);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.2), 0 0 26px rgba(255, 200, 87, 0.3);
+    }
+
+    .grade-chip.is-secret {
+      border-color: rgba(184, 140, 255, 0.62);
+      color: #ffeaff;
+      background: linear-gradient(135deg, rgba(255, 100, 127, 0.25), rgba(105, 215, 255, 0.2), rgba(184, 140, 255, 0.25));
+    }
+
+    .grade-chip.is-secret.is-target,
+    .grade-chip.is-secret.is-reached {
+      color: #24132b;
+      background: linear-gradient(135deg, #ff88a0, #ffdf76, #69d7ff, #c8a9ff);
+      box-shadow: 0 0 0 3px rgba(184, 140, 255, 0.24), 0 0 30px rgba(105, 215, 255, 0.34);
+    }
+
+    .problem-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto auto;
+      gap: 12px;
+      padding: clamp(14px, 2vw, 20px);
+    }
+
+    .problem-heading {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .problem-heading h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.4rem, 6.4vw, 5.1rem);
+      line-height: 1;
+      font-weight: 1000;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .phase-label {
+      min-height: 34px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #261700;
+      background: var(--amber);
+      font-size: 0.88rem;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .work-stage {
+      display: grid;
+      grid-template-columns: minmax(320px, 1fr) minmax(220px, 0.56fr);
+      gap: 12px;
+      min-height: 0;
+      align-items: stretch;
+    }
+
+    .division-board,
+    .step-panel {
+      min-height: 270px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(6, 10, 24, 0.54);
+    }
+
+    .division-board {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 12px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .board-total {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      min-height: 58px;
+      padding: 10px 12px;
+      border: 1px solid rgba(105, 215, 255, 0.3);
+      border-radius: var(--radius);
+      background: rgba(105, 215, 255, 0.08);
+    }
+
+    .board-total span {
+      color: #d7f4ff;
+      font-size: 1rem;
+      font-weight: 900;
+    }
+
+    .board-total strong {
+      color: #ffffff;
+      font-size: clamp(2.25rem, 4.8vw, 3.6rem);
+      line-height: 1;
+      font-weight: 1000;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .division-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .flow-card {
+      min-height: 86px;
+      display: grid;
+      align-content: center;
+      gap: 5px;
+      padding: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+    }
+
+    .flow-card span {
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .flow-card strong {
+      color: #ffffff;
+      font-size: clamp(1.26rem, 3vw, 2rem);
+      line-height: 1.05;
+      font-weight: 1000;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .flow-card.is-active {
+      border-color: rgba(255, 200, 87, 0.78);
+      background: rgba(255, 200, 87, 0.12);
+      box-shadow: inset 0 0 0 3px rgba(255, 200, 87, 0.2), 0 0 22px rgba(255, 200, 87, 0.18);
+    }
+
+    .flow-card.is-done {
+      border-color: rgba(77, 240, 189, 0.58);
+      background: rgba(77, 240, 189, 0.1);
+    }
+
+    .remainder-field {
+      min-height: 130px;
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      padding: 12px;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.16);
+      text-align: center;
+    }
+
+    .remainder-field p {
+      margin: 0;
+      color: #fff0c6;
+      font-size: clamp(1rem, 2.1vw, 1.18rem);
+      font-weight: 950;
+      line-height: 1.32;
+    }
+
+    .remainder-stars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 7px;
+      min-height: 42px;
+    }
+
+    .star-dot {
+      width: 28px;
+      height: 28px;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 56%, 80% 92%, 50% 70%, 20% 92%, 32% 56%, 2% 35%, 39% 35%);
+      background: linear-gradient(180deg, #fff6b8, #ffc857);
+      filter: drop-shadow(0 0 9px rgba(255, 200, 87, 0.48));
+      animation: star-pop 0.34s ease both;
+    }
+
+    .check-preview {
+      min-height: 54px;
+      display: grid;
+      place-items: center;
+      padding: 10px 12px;
+      border: 1px solid rgba(77, 240, 189, 0.26);
+      border-radius: var(--radius);
+      color: #c8ffe9;
+      background: rgba(77, 240, 189, 0.08);
+      font-size: clamp(1.05rem, 2.4vw, 1.55rem);
+      font-weight: 1000;
+      line-height: 1.18;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .check-preview.is-complete {
+      color: #07171b;
+      background: linear-gradient(180deg, #dbfff3, #4df0bd);
+      box-shadow: 0 0 24px rgba(77, 240, 189, 0.22);
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      align-content: center;
+      padding: 14px;
+      border-color: rgba(255, 255, 255, 0.16);
+      background:
+        linear-gradient(150deg, rgba(255, 200, 87, 0.07), transparent 48%),
+        rgba(6, 10, 24, 0.58);
+    }
+
+    .step-panel:not(.is-open) {
+      place-items: center;
+    }
+
+    .step-panel:not(.is-open) .step-focus-label,
+    .step-panel:not(.is-open) .step-formula,
+    .step-panel:not(.is-open) .step-meaning,
+    .step-panel:not(.is-open) #stepHintContent {
+      display: none;
+    }
+
+    #stepHintContent {
+      display: grid;
+      gap: 9px;
+    }
+
+    .hint-toggle {
+      justify-self: end;
+      min-width: 70px;
+      min-height: 46px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255, 200, 87, 0.52);
+      border-radius: var(--radius);
+      color: #261700;
+      background: linear-gradient(180deg, #fff08a, #ffc857);
+      font-size: 0.98rem;
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 8px 0 rgba(87, 61, 16, 0.22), 0 12px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .step-panel.is-open .hint-toggle {
+      min-width: 58px;
+      min-height: 34px;
+      padding: 6px 10px;
+      color: #ffe7a4;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+
+    .step-track {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-chip {
+      min-height: 32px;
+      display: grid;
+      place-items: center;
+      padding: 6px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.82rem;
+      font-weight: 950;
+    }
+
+    .step-chip.is-current {
+      color: #261700;
+      background: var(--amber);
+      border-color: rgba(255, 200, 87, 0.86);
+    }
+
+    .step-chip.is-done {
+      color: #07171b;
+      background: #8ef4ce;
+      border-color: rgba(77, 240, 189, 0.86);
+    }
+
+    .step-focus-label {
+      margin: 0;
+      color: #ffe7a4;
+      font-size: 0.88rem;
+      font-weight: 1000;
+      letter-spacing: 0;
+    }
+
+    .step-formula {
+      display: grid;
+      place-items: center;
+      min-height: 82px;
+      padding: 10px;
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      border-radius: var(--radius);
+      color: #fff0c6;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 200, 87, 0.16), transparent 0 22%, transparent 48%),
+        rgba(255, 200, 87, 0.08);
+      font-size: clamp(1.28rem, 2.5vw, 1.95rem);
+      font-weight: 1000;
+      text-align: center;
+      line-height: 1.12;
+    }
+
+    .step-meaning {
+      margin: 0;
+      color: rgba(255, 240, 198, 0.84);
+      font-size: clamp(0.9rem, 1.55vw, 1rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .prompt {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 200, 87, 0.26);
+      border-radius: var(--radius);
+      background: rgba(255, 200, 87, 0.08);
+      color: #fff0c6;
+      font-size: clamp(1.02rem, 2.1vw, 1.22rem);
+      font-weight: 950;
+      line-height: 1.35;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      gap: 10px;
+    }
+
+    .choice-button {
+      min-height: 78px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-size: clamp(1.12rem, 2.5vw, 1.62rem);
+      font-weight: 1000;
+      line-height: 1.18;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .choice-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .choice-button.is-correct {
+      color: #07171b;
+      border-color: rgba(77, 240, 189, 0.86);
+      background: linear-gradient(180deg, #caffee, #4df0bd);
+    }
+
+    .choice-button.is-wrong {
+      color: #ffffff;
+      border-color: rgba(255, 100, 127, 0.78);
+      background: rgba(255, 100, 127, 0.32);
+    }
+
+    .feedback {
+      min-height: 42px;
+      color: #ffffff;
+      font-size: clamp(0.98rem, 2vw, 1.14rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .feedback.good {
+      color: #caffee;
+    }
+
+    .feedback.try {
+      color: #ffe7a4;
+    }
+
+    .feedback.wrong {
+      color: #ffc0cd;
+    }
+
+    .reward-pop {
+      position: absolute;
+      z-index: 10;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(6, 10, 24, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .reward-pop.is-visible {
+      display: grid;
+    }
+
+    .reward-card {
+      width: min(580px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 14px;
+      padding: clamp(14px, 3vw, 22px);
+      border: 0;
+      border-radius: 12px;
+      background: rgba(6, 10, 24, 0.36);
+      text-align: center;
+      box-shadow: none;
+      animation: reward-pop 0.22s ease both;
+    }
+
+    .reward-art {
+      position: relative;
+      width: min(420px, 82vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(255, 200, 87, 0.28), transparent 0 26%, transparent 52%),
+        linear-gradient(180deg, rgba(17, 26, 53, 0.92), rgba(6, 10, 24, 0.96));
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 34px rgba(255, 200, 87, 0.12);
+    }
+
+    .reward-art img {
+      width: 64%;
+      filter: drop-shadow(0 0 30px rgba(255, 218, 82, 0.58));
+      animation: star-float 2.2s ease-in-out infinite;
+    }
+
+    .reward-art::before,
+    .reward-art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .reward-art::before {
+      background:
+        radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.18) 0 3px, transparent 4px),
+        radial-gradient(circle at 72% 20%, rgba(255, 255, 255, 0.16) 0 2px, transparent 3px),
+        radial-gradient(circle at 82% 72%, rgba(255, 255, 255, 0.16) 0 3px, transparent 4px);
+    }
+
+    .reward-art--meteor::after {
+      background:
+        linear-gradient(132deg, transparent 0 38%, rgba(255, 225, 128, 0.72) 39% 42%, transparent 43%),
+        linear-gradient(136deg, transparent 0 54%, rgba(105, 215, 255, 0.46) 55% 58%, transparent 59%);
+      animation: streak-move 0.9s ease-in-out infinite alternate;
+    }
+
+    .reward-art--cloud::after {
+      background: radial-gradient(circle at 50% 55%, rgba(150, 166, 190, 0.7), transparent 0 42%, transparent 65%);
+      filter: blur(18px);
+      animation: cloud-drift 1.4s ease-in-out infinite alternate;
+    }
+
+    .reward-art--dark::after {
+      background: rgba(0, 0, 0, 0.62);
+    }
+
+    .reward-art--shooting::after {
+      background:
+        conic-gradient(from 0deg at 50% 50%, transparent, rgba(255, 240, 156, 0.8), transparent, rgba(105, 215, 255, 0.6), transparent);
+      animation: spin 1.4s linear infinite;
+    }
+
+    .reward-art--rainbow::after {
+      background:
+        conic-gradient(from 0deg at 50% 50%, rgba(255, 100, 127, 0.46), rgba(255, 200, 87, 0.46), rgba(77, 240, 189, 0.46), rgba(105, 215, 255, 0.46), rgba(184, 140, 255, 0.46), rgba(255, 100, 127, 0.46));
+      mix-blend-mode: screen;
+      animation: spin 2s linear infinite;
+    }
+
+    .reward-delta {
+      position: absolute;
+      left: 50%;
+      bottom: 28px;
+      z-index: 2;
+      display: inline-grid;
+      place-items: center;
+      min-width: 178px;
+      min-height: 76px;
+      padding: 10px 20px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 16px;
+      color: #261700;
+      background: linear-gradient(180deg, rgba(255, 240, 138, 0.96), rgba(255, 189, 66, 0.96));
+      font-size: clamp(1.55rem, 4.4vw, 2.8rem);
+      font-weight: 1000;
+      line-height: 1;
+      letter-spacing: 0;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .reward-card p {
+      margin: 0;
+      color: #fff8e8;
+      font-size: clamp(1.15rem, 2.6vw, 1.44rem);
+      font-weight: 1000;
+      line-height: 1.35;
+    }
+
+    .reward-card .reward-bonus {
+      color: #caffee;
+      font-size: clamp(0.98rem, 2vw, 1.12rem);
+      font-weight: 900;
+    }
+
+    .result {
+      align-items: center;
+      padding: clamp(72px, 9vw, 96px) clamp(22px, 4vw, 54px) clamp(22px, 4vw, 54px);
+      background: #081124;
+    }
+
+    .result::after {
+      background:
+        linear-gradient(90deg, rgba(5, 10, 28, 0.72) 0%, rgba(5, 10, 28, 0.32) 44%, rgba(5, 10, 28, 0.66) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.28));
+    }
+
+    .result-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.86fr) minmax(390px, 1.14fr);
+      gap: clamp(18px, 3.4vw, 44px);
+      align-items: center;
+    }
+
+    .result-art-wrap {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+    }
+
+    .result-star-art {
+      width: min(420px, 100%);
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      background: rgba(6, 10, 24, 0.55);
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 34px rgba(255, 200, 87, 0.18);
+    }
+
+    .result-star-art img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .result-mathmon {
+      width: min(160px, 36vw);
+      filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.32));
+    }
+
+    .result-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.55rem, 6vw, 5.2rem);
+      line-height: 0.98;
+      font-weight: 1000;
+      text-shadow: 0 5px 18px rgba(0, 0, 0, 0.42);
+    }
+
+    .praise {
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.12rem, 2.3vw, 1.42rem);
+      font-weight: 950;
+      line-height: 1.35;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
+    }
+
+    .result-measure {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(105, 215, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(6, 10, 24, 0.6);
+      box-shadow: 0 0 30px rgba(105, 215, 255, 0.1);
+    }
+
+    .result-measure::after {
+      content: "";
+      position: absolute;
+      inset: -40% auto -40% -30%;
+      width: 26%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+      transform: skewX(-18deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .result.is-measuring .result-measure::after {
+      opacity: 1;
+      animation: scan-sweep 1.35s ease-in-out infinite;
+    }
+
+    .measure-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      color: #ffffff;
+      font-weight: 1000;
+    }
+
+    .measure-top span {
+      color: #d7f4ff;
+      font-size: 0.96rem;
+    }
+
+    .measure-top strong {
+      color: #caffee;
+      font-size: clamp(1.32rem, 2.8vw, 2.05rem);
+      line-height: 1;
+    }
+
+    .measure-tube {
+      position: relative;
+      height: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .measure-fill {
+      display: block;
+      width: var(--measure-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(90deg, #4df0bd, #ffc857 58%, #ffdf76);
+      box-shadow: 0 0 28px rgba(255, 200, 87, 0.46);
+      transition: width 1.7s cubic-bezier(0.18, 0.9, 0.2, 1);
+    }
+
+    .result.is-rainbow-result .measure-fill {
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(90deg, #ff647f, #ffc857, #4df0bd, #69d7ff, #b88cff, #ff647f);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.45s linear infinite;
+      box-shadow: 0 0 30px rgba(255, 200, 87, 0.42), 0 0 28px rgba(105, 215, 255, 0.4);
+    }
+
+    .measure-scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+      opacity: 0;
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
+
+    .result.is-measuring .measure-scan {
+      opacity: 1;
+      animation: meter-scan 1.2s ease-in-out infinite;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result-stat {
+      min-height: 92px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .result-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-top: 6px;
+      color: #ffffff;
+      font-size: clamp(1.32rem, 2.8vw, 2.05rem);
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .result-actions [hidden] {
+      display: none;
+    }
+
+    .result.is-measuring .result-actions {
+      visibility: hidden;
+    }
+
+    @keyframes star-float {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+      50% {
+        transform: translateY(-12px) rotate(2deg);
+      }
+    }
+
+    @keyframes star-pop {
+      from {
+        transform: scale(0.64) rotate(-14deg);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+
+    @keyframes reward-pop {
+      from {
+        transform: scale(0.94);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes streak-move {
+      from {
+        transform: translateX(8%) translateY(-5%);
+      }
+      to {
+        transform: translateX(-8%) translateY(5%);
+      }
+    }
+
+    @keyframes cloud-drift {
+      from {
+        transform: translateX(-10px);
+      }
+      to {
+        transform: translateX(12px);
+      }
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes rainbow-flow {
+      from {
+        background-position: 0% 50%;
+      }
+      to {
+        background-position: 200% 50%;
+      }
+    }
+
+    @keyframes scan-sweep {
+      0% {
+        transform: translateX(0) skewX(-18deg);
+      }
+      100% {
+        transform: translateX(560%) skewX(-18deg);
+      }
+    }
+
+    @keyframes meter-scan {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (max-width: 920px) {
+
+      .cover,
+      .tutorial,
+      .result {
+        padding-top: 80px;
+      }
+
+      .cover-scene,
+      .tutorial-layout,
+      .play-layout,
+      .result-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .cover-visual,
+      .tutorial-example {
+        min-height: 280px;
+        order: -1;
+      }
+
+      .cover-star {
+        width: min(240px, 48vw);
+      }
+
+      .cover-mathmon {
+        width: 118px;
+      }
+
+      .hud {
+        grid-template-columns: 1fr;
+      }
+
+      .hud-center {
+        justify-content: flex-start;
+      }
+
+      .work-stage {
+        grid-template-columns: 1fr;
+      }
+
+      .star-zone {
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+      }
+
+      .star-hero {
+        min-height: 160px;
+      }
+    }
+
+    @media (max-width: 720px) and (orientation: portrait) {
+      .game,
+      .sound-toggle {
+        display: none;
+      }
+
+      .phone-blocker {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .phone-blocker div {
+        width: min(420px, 100%);
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+      }
+
+      .phone-blocker h1 {
+        margin: 0 0 10px;
+        font-size: 1.7rem;
+      }
+
+      .phone-blocker p {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 850;
+        line-height: 1.45;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-blocker" aria-hidden="true">
+    <div>
+      <h1>가로 화면에서 플레이해요</h1>
+      <p>태블릿이나 컴퓨터 화면에서 별 줍기를 시작할 수 있어요.</p>
+    </div>
+  </div>
+
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+    <div class="stage-shell">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+    <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
+      <img class="raster-bg" src="cover-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 2단원 3차시</span>
+      </div>
+      <span class="lesson-badge">나머지가 있는 나눗셈</span>
+      <div class="cover-scene">
+        <div class="hero-copy">
+          <h1 id="coverTitle">매스몬 별 줍기</h1>
+          <p>똑같이 나누고 남는 별을 주워 보자!</p>
+          <button class="primary-button" id="startButton" type="button">시작</button>
+        </div>
+        <div class="cover-visual" aria-hidden="true">
+          <img class="cover-star" src="star.webp" alt="">
+          <img class="cover-mathmon" src="mathmon-8-unicornmon.webp" alt="">
+        </div>
+      </div>
+    </section>
+
+    <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle">
+      <img class="raster-bg" src="tutorial-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 2단원 3차시</span>
+      </div>
+      <div class="tutorial-layout">
+        <div class="tutorial-copy">
+          <span class="mini-badge">어떻게 해요?</span>
+          <h2 id="tutorialTitle">나누고 남은 별을 확인해요.</h2>
+          <ol class="steps">
+            <li><b>1</b><span>전체 별을 보고 몇 묶음인지 골라요.</span></li>
+            <li><b>2</b><span>남는 별 수를 골라요. 나머지는 나누는 수보다 작아요.</span></li>
+            <li><b>3</b><span>검산을 보면 별빛 보상이 나타나요.</span></li>
+          </ol>
+          <button class="primary-button" id="tutorialNextButton" type="button">별 줍기</button>
+        </div>
+        <div class="tutorial-example" aria-hidden="true">
+          <div class="example-card">
+            <strong>47 ÷ 5</strong>
+            <div class="example-row">
+              <span>9묶음</span>
+              <span>남은 별 2개</span>
+              <span>9 × 5 + 2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen play" id="playScreen" aria-labelledby="questionText">
+      <img class="raster-bg" src="board-night.webp" alt="">
+      <header class="hud">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <div class="hud-center">
+          <span class="stat-pill" id="progressText">문제 1/10</span>
+          <span class="stat-pill" id="energyText">별빛 모으는 중</span>
+          <span class="stat-pill" id="chainText">결과에서 측정</span>
+        </div>
+        <span class="unit-badge">별 줍기</span>
+      </header>
+
+      <div class="play-layout">
+        <aside class="star-zone" id="starZone" aria-label="주운 별빛">
+          <div class="star-readout">
+            <span>주운 별빛</span>
+            <strong id="starScoreText">모으는 중</strong>
+            <div class="star-meter" aria-hidden="true">
+              <span class="star-meter-fill" id="starMeterFill"></span>
+            </div>
+            <p class="star-note" id="starNote">정답으로 확인한 나머지 별은 결과에서 보너스 별빛이 돼요.</p>
+          </div>
+          <div class="star-hero" aria-hidden="true">
+            <img src="star.webp" alt="">
+          </div>
+          <div class="grade-panel">
+            <div class="grade-title">
+              <span>별 등급</span>
+              <strong id="gradeText">마지막에 측정</strong>
+            </div>
+            <div class="grade-track" id="gradeTrack" aria-label="별 등급"></div>
+          </div>
+        </aside>
+
+        <section class="problem-panel" aria-live="polite">
+          <div class="problem-heading">
+            <h2 id="questionText">47 ÷ 5</h2>
+            <span class="phase-label" id="phaseLabel">몫 고르기</span>
+          </div>
+          <div class="work-stage">
+            <div class="division-board" aria-label="나눗셈 계산판">
+              <div class="board-total">
+                <span>전체 별</span>
+                <strong id="boardDividend">47</strong>
+              </div>
+              <div class="division-flow">
+                <div class="flow-card" id="divisorCard">
+                  <span>한 묶음</span>
+                  <strong id="boardDivisor">5개씩</strong>
+                </div>
+                <div class="flow-card" id="quotientCard">
+                  <span>만든 묶음</span>
+                  <strong id="boardQuotient">?</strong>
+                </div>
+                <div class="flow-card" id="remainderCard">
+                  <span>남은 별</span>
+                  <strong id="boardRemainder">?</strong>
+                </div>
+              </div>
+              <div class="remainder-field">
+                <p id="remainderMessage">몫을 먼저 고르면 남는 별을 찾을 수 있어요.</p>
+                <div class="remainder-stars" id="remainderStars" aria-hidden="true"></div>
+              </div>
+              <div class="check-preview" id="checkPreview">몫 × 나누는 수 + 나머지 = 전체 별</div>
+            </div>
+
+            <div class="step-panel" id="stepPanel">
+              <button class="hint-toggle" id="hintToggleButton" type="button" aria-expanded="false" aria-controls="stepHintContent">힌트</button>
+              <div class="step-track" aria-label="계산 순서">
+                <span class="step-chip is-current" id="stepChipQuotient">몫</span>
+                <span class="step-chip" id="stepChipRemainder">나머지</span>
+                <span class="step-chip" id="stepChipCheck">검산</span>
+              </div>
+              <div id="stepHintContent">
+                <p class="step-focus-label">지금 생각할 것</p>
+                <div class="step-formula" id="stepFormula">47개를 5개씩 묶으면?</div>
+                <p class="step-meaning" id="stepMeaning">5개씩 묶을 수 있는 횟수를 찾아요.</p>
+              </div>
+            </div>
+          </div>
+          <div class="prompt" id="promptText">몫을 골라요.</div>
+          <div class="choice-grid" id="choiceGrid"></div>
+          <div class="feedback" id="feedbackText"></div>
+        </section>
+      </div>
+
+      <div class="reward-pop" id="rewardPop" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+        <div class="reward-card">
+          <div class="reward-art" id="rewardArt" aria-hidden="true">
+            <img src="star.webp" alt="">
+            <div class="reward-delta" id="rewardDelta">별빛 +5</div>
+          </div>
+          <h3 class="visually-hidden" id="rewardTitle">별빛 보상</h3>
+          <p id="rewardMessage">정답! 별빛이 늘었어요.</p>
+          <p class="reward-bonus" id="rewardBonus">나머지 별도 확인했어요.</p>
+          <button class="primary-button" id="rewardNextButton" type="button">다음</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen result" id="resultScreen" aria-labelledby="resultTitle">
+      <img class="raster-bg" id="resultRaster" src="result-stage.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 2단원 3차시</span>
+      </div>
+      <div class="result-layout">
+        <div class="result-art-wrap" aria-hidden="true">
+          <div class="result-star-art">
+            <img id="resultStarImage" src="result-star-dust.webp" alt="">
+          </div>
+          <img class="result-mathmon" src="mathmon-8-unicornmon.webp" alt="">
+        </div>
+        <div class="result-copy">
+          <h2 id="resultTitle">별빛 측정 준비</h2>
+          <p class="praise" id="praiseText">정답으로 확인한 나머지 별을 보고 있어요.</p>
+          <div class="result-measure" id="resultMeasure" aria-label="별빛 측정 결과">
+            <div class="measure-top">
+              <span id="measureStatus">별빛 측정 중</span>
+              <strong id="measurePercent">별빛 0</strong>
+            </div>
+            <div class="measure-tube" aria-hidden="true">
+              <span class="measure-fill" id="measureFill"></span>
+              <span class="measure-scan"></span>
+            </div>
+            <div class="result-grade-track" id="resultGradeTrack" aria-label="별 등급 측정"></div>
+          </div>
+          <div class="result-stats">
+            <div class="result-stat">
+              <span>별빛</span>
+              <strong id="finalEnergyText">0</strong>
+            </div>
+            <div class="result-stat">
+              <span>맞힌 문제</span>
+              <strong id="finalCorrectText">0/10</strong>
+            </div>
+            <div class="result-stat">
+              <span>별 등급</span>
+              <strong id="finalDestinationText">별먼지</strong>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="primary-button" id="restartButton" type="button">다시하기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <script>
+    const TOTAL_QUESTIONS = 10;
+    const MAX_STARS = 100;
+    const GRADES = [
+      { id: "dust", short: "먼", name: "별먼지", min: 0, max: 18, correctMin: 0, image: "result-star-dust.webp" },
+      { id: "small", short: "작", name: "작은별", min: 19, max: 34, correctMin: 2, image: "result-star-small.webp" },
+      { id: "constellation", short: "별", name: "별자리", min: 35, max: 52, correctMin: 4, image: "result-star-constellation.webp" },
+      { id: "galaxy", short: "은", name: "은하", min: 53, max: 74, correctMin: 6, image: "result-star-galaxy.webp" },
+      { id: "universe", short: "우", name: "대우주", min: 75, max: 100, correctMin: 8, image: "result-star-universe.webp" }
+    ];
+    const SECRET_GRADE = {
+      id: "rainbow",
+      short: "초",
+      name: "무지개 초신성",
+      min: 100,
+      max: 100,
+      correctMin: 1,
+      image: "result-star-rainbow.webp",
+      secret: true
+    };
+    const ALL_GRADES = [...GRADES, SECRET_GRADE];
+    const REWARD_ART_CLASSES = [
+      "reward-art--meteor",
+      "reward-art--cloud",
+      "reward-art--dark",
+      "reward-art--shooting",
+      "reward-art--rainbow"
+    ];
+
+    const state = {
+      screen: "cover",
+      problems: [],
+      index: 0,
+      starScore: 0,
+      remainderStars: 0,
+      correct: 0,
+      chain: 0,
+      stepIndex: 0,
+      stepAttempts: 0,
+      problemHadMistake: false,
+      problemHadReveal: false,
+      hintOpen: false,
+      rainbowStar: false,
+      lastStarEvent: null,
+      autoTimer: null,
+      soundsOn: true,
+      audio: null
+    };
+
+    const el = {
+      coverScreen: document.getElementById("coverScreen"),
+      tutorialScreen: document.getElementById("tutorialScreen"),
+      playScreen: document.getElementById("playScreen"),
+      resultScreen: document.getElementById("resultScreen"),
+      startButton: document.getElementById("startButton"),
+      tutorialNextButton: document.getElementById("tutorialNextButton"),
+      soundToggle: document.getElementById("soundToggle"),
+      progressText: document.getElementById("progressText"),
+      energyText: document.getElementById("energyText"),
+      chainText: document.getElementById("chainText"),
+      starZone: document.getElementById("starZone"),
+      starScoreText: document.getElementById("starScoreText"),
+      starMeterFill: document.getElementById("starMeterFill"),
+      starNote: document.getElementById("starNote"),
+      gradeText: document.getElementById("gradeText"),
+      gradeTrack: document.getElementById("gradeTrack"),
+      questionText: document.getElementById("questionText"),
+      phaseLabel: document.getElementById("phaseLabel"),
+      boardDividend: document.getElementById("boardDividend"),
+      boardDivisor: document.getElementById("boardDivisor"),
+      boardQuotient: document.getElementById("boardQuotient"),
+      boardRemainder: document.getElementById("boardRemainder"),
+      divisorCard: document.getElementById("divisorCard"),
+      quotientCard: document.getElementById("quotientCard"),
+      remainderCard: document.getElementById("remainderCard"),
+      remainderMessage: document.getElementById("remainderMessage"),
+      remainderStars: document.getElementById("remainderStars"),
+      checkPreview: document.getElementById("checkPreview"),
+      stepPanel: document.getElementById("stepPanel"),
+      hintToggleButton: document.getElementById("hintToggleButton"),
+      stepChipQuotient: document.getElementById("stepChipQuotient"),
+      stepChipRemainder: document.getElementById("stepChipRemainder"),
+      stepChipCheck: document.getElementById("stepChipCheck"),
+      stepFormula: document.getElementById("stepFormula"),
+      stepMeaning: document.getElementById("stepMeaning"),
+      promptText: document.getElementById("promptText"),
+      choiceGrid: document.getElementById("choiceGrid"),
+      feedbackText: document.getElementById("feedbackText"),
+      rewardPop: document.getElementById("rewardPop"),
+      rewardArt: document.getElementById("rewardArt"),
+      rewardTitle: document.getElementById("rewardTitle"),
+      rewardDelta: document.getElementById("rewardDelta"),
+      rewardMessage: document.getElementById("rewardMessage"),
+      rewardBonus: document.getElementById("rewardBonus"),
+      rewardNextButton: document.getElementById("rewardNextButton"),
+      resultRaster: document.getElementById("resultRaster"),
+      resultStarImage: document.getElementById("resultStarImage"),
+      measureStatus: document.getElementById("measureStatus"),
+      measurePercent: document.getElementById("measurePercent"),
+      measureFill: document.getElementById("measureFill"),
+      resultGradeTrack: document.getElementById("resultGradeTrack"),
+      praiseText: document.getElementById("praiseText"),
+      finalEnergyText: document.getElementById("finalEnergyText"),
+      finalCorrectText: document.getElementById("finalCorrectText"),
+      finalDestinationText: document.getElementById("finalDestinationText"),
+      restartButton: document.getElementById("restartButton")
+    };
+
+    function showScreen(name) {
+      state.screen = name;
+      [el.coverScreen, el.tutorialScreen, el.playScreen, el.resultScreen].forEach((screen) => {
+        screen.classList.remove("is-active");
+      });
+      document.getElementById(`${name}Screen`).classList.add("is-active");
+    }
+
+    function startGame() {
+      state.problems = buildProblems();
+      state.index = 0;
+      state.starScore = 0;
+      state.remainderStars = 0;
+      state.correct = 0;
+      state.chain = 0;
+      state.rainbowStar = false;
+      state.lastStarEvent = null;
+      clearAutoTimer();
+      playSound("start");
+      showScreen("play");
+      renderProblem();
+    }
+
+    function buildProblems() {
+      const problems = [];
+      const used = new Set();
+      while (problems.length < TOTAL_QUESTIONS) {
+        const divisor = randomInt(3, 9);
+        const maxQuotient = Math.floor((99 - (divisor - 1)) / divisor);
+        const quotient = randomInt(2, maxQuotient);
+        const remainder = randomInt(1, divisor - 1);
+        const dividend = quotient * divisor + remainder;
+        if (dividend < 20 || dividend > 99) {
+          continue;
+        }
+        const key = `${dividend}-${divisor}`;
+        if (used.has(key)) {
+          continue;
+        }
+        used.add(key);
+        problems.push({ dividend, divisor, quotient, remainder });
+      }
+      return shuffle(problems);
+    }
+
+    function renderProblem() {
+      const problem = currentProblem();
+      clearAutoTimer();
+      state.stepIndex = 0;
+      state.stepAttempts = 0;
+      state.problemHadMistake = false;
+      state.problemHadReveal = false;
+      el.rewardPop.classList.remove("is-visible");
+      REWARD_ART_CLASSES.forEach((className) => el.rewardArt.classList.remove(className));
+      el.questionText.textContent = `${problem.dividend} ÷ ${problem.divisor}`;
+      el.boardDividend.textContent = problem.dividend;
+      el.boardDivisor.textContent = `${problem.divisor}개씩`;
+      el.boardQuotient.textContent = "?";
+      el.boardRemainder.textContent = "?";
+      el.remainderMessage.textContent = "몫을 먼저 고르면 남는 별을 찾을 수 있어요.";
+      el.remainderStars.innerHTML = "";
+      el.checkPreview.textContent = "몫 × 나누는 수 + 나머지 = 전체 별";
+      el.checkPreview.classList.remove("is-complete");
+      [el.divisorCard, el.quotientCard, el.remainderCard].forEach((card) => {
+        card.classList.remove("is-active", "is-done");
+      });
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      renderStatus();
+      renderStep();
+    }
+
+    function renderStatus() {
+      const totalStars = getTotalStars();
+      const currentGrade = getGradeByStars(totalStars, state.correct, state.rainbowStar);
+      el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
+      el.energyText.textContent = state.rainbowStar ? "무지개 별" : "별빛 모으는 중";
+      el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 측정" : "결과에서 측정";
+      el.starZone.classList.toggle("is-rainbow", state.rainbowStar);
+      el.starScoreText.textContent = state.rainbowStar ? "무지개 별" : "모으는 중";
+      el.starMeterFill.style.setProperty("--star-width", `${state.rainbowStar ? 100 : totalStars}%`);
+      el.starNote.textContent = "정답으로 확인한 나머지 별은 결과에서 보너스 별빛이 돼요.";
+      el.gradeText.textContent = state.screen === "play" ? "마지막에 측정" : currentGrade.name;
+      renderGradeTrack(el.gradeTrack, { targetIndex: -1, reachedIndex: -1, includeSecret: false });
+    }
+
+    function getTotalStars() {
+      return clamp(Math.round(state.starScore + state.remainderStars), 0, MAX_STARS);
+    }
+
+    function renderStep() {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      state.hintOpen = false;
+      el.phaseLabel.textContent = step.label;
+      el.stepFormula.textContent = step.formula;
+      el.stepMeaning.textContent = step.meaning;
+      el.promptText.textContent = step.prompt;
+      renderHintPanel();
+      updateStepChips();
+      updateBoardFocus();
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+
+      if (step.auto) {
+        el.choiceGrid.innerHTML = "";
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button is-correct";
+        button.disabled = true;
+        button.textContent = "검산 중";
+        el.choiceGrid.appendChild(button);
+        el.feedbackText.textContent = "몫과 나머지를 넣어 전체 별 수가 맞는지 봐요.";
+        el.feedbackText.className = "feedback good";
+        state.autoTimer = window.setTimeout(() => completeStep(step, false), 940);
+        return;
+      }
+
+      const options = buildStepOptions(step);
+      renderChoices(options.map((option) => ({
+        label: step.format(option.value),
+        value: option,
+        correct: option.value === step.correct
+      })), handleStepChoice);
+    }
+
+    function renderHintPanel() {
+      el.stepPanel.classList.toggle("is-open", state.hintOpen);
+      el.hintToggleButton.textContent = state.hintOpen ? "닫기" : "힌트";
+      el.hintToggleButton.setAttribute("aria-expanded", String(state.hintOpen));
+    }
+
+    function getCurrentStep(problem) {
+      return buildSteps(problem)[state.stepIndex];
+    }
+
+    function buildSteps(problem) {
+      const grouped = problem.quotient * problem.divisor;
+      const tooSoonRemainder = problem.remainder + problem.divisor;
+      return [
+        {
+          id: "quotient",
+          label: "몫 고르기",
+          formula: `${problem.dividend}개를 ${problem.divisor}개씩 묶으면?`,
+          correct: problem.quotient,
+          representativeWrong: problem.quotient - 1,
+          prompt: "똑같이 나눌 수 있는 묶음 수를 골라요.",
+          meaning: `${problem.divisor}개씩 묶을 수 있는 횟수를 찾아요.`,
+          hint: `${problem.divisor} × 몫이 ${problem.dividend}를 넘지 않아야 해요.`,
+          explain: `${problem.divisor}개씩 ${problem.quotient}묶음을 만들면 ${grouped}개를 나눠요.`,
+          wrongExplain: `${problem.quotient - 1}묶음이면 ${tooSoonRemainder}개가 남아서 한 묶음을 더 만들 수 있어요.`,
+          format: (value) => `${value}묶음`
+        },
+        {
+          id: "remainder",
+          label: "나머지 고르기",
+          formula: `${problem.dividend} - ${problem.divisor} × ${problem.quotient} = ?`,
+          correct: problem.remainder,
+          representativeWrong: problem.remainder + problem.divisor,
+          prompt: "나누고 남는 별 수를 골라요.",
+          meaning: `${grouped}개를 나누고 남은 별을 세요.`,
+          hint: `나머지는 ${problem.divisor}보다 작아야 해요.`,
+          explain: `${problem.dividend} - ${grouped} = ${problem.remainder}이라서 나머지는 ${problem.remainder}예요.`,
+          wrongExplain: `${problem.remainder + problem.divisor}개가 남으면 ${problem.divisor}개씩 한 묶음을 더 만들 수 있어요.`,
+          format: (value) => `${value}개`
+        },
+        {
+          id: "check",
+          label: "검산 보기",
+          formula: `${problem.quotient} × ${problem.divisor} + ${problem.remainder} = ${problem.dividend}`,
+          prompt: "검산으로 전체 별 수가 맞는지 확인해요.",
+          meaning: "몫과 나누는 수를 곱한 뒤 나머지를 더해요.",
+          auto: true,
+          explain: `${problem.quotient} × ${problem.divisor} + ${problem.remainder} = ${problem.dividend}, 딱 맞아요.`
+        }
+      ];
+    }
+
+    function updateStepChips() {
+      [
+        [el.stepChipQuotient, 0],
+        [el.stepChipRemainder, 1],
+        [el.stepChipCheck, 2]
+      ].forEach(([chip, index]) => {
+        chip.classList.toggle("is-current", state.stepIndex === index);
+        chip.classList.toggle("is-done", state.stepIndex > index);
+      });
+    }
+
+    function updateBoardFocus() {
+      [el.divisorCard, el.quotientCard, el.remainderCard].forEach((card) => {
+        card.classList.remove("is-active");
+      });
+      if (state.stepIndex === 0) {
+        el.quotientCard.classList.add("is-active");
+      } else if (state.stepIndex === 1) {
+        el.remainderCard.classList.add("is-active");
+      } else {
+        [el.divisorCard, el.quotientCard, el.remainderCard].forEach((card) => card.classList.add("is-done"));
+      }
+    }
+
+    function buildStepOptions(step) {
+      if (step.auto) {
+        return [];
+      }
+      const values = [step.correct, step.representativeWrong];
+      const nearby = step.id === "quotient"
+        ? [step.correct + 1, step.correct - 2, step.correct + 2, step.correct + 3]
+        : [step.correct + 1, step.correct - 1, step.correct + 2, step.representativeWrong + 1];
+      nearby.forEach((value) => {
+        if (value >= 0 && !values.includes(value)) {
+          values.push(value);
+        }
+      });
+      while (values.length < 4) {
+        const value = Math.max(0, step.correct + randomInt(-4, 5));
+        if (!values.includes(value)) {
+          values.push(value);
+        }
+      }
+      return shuffle(values.slice(0, 4).map((value) => ({ value })));
+    }
+
+    function handleStepChoice(option, button) {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      if (option.correct) {
+        button.classList.add("is-correct");
+        setButtonsDisabled(true);
+        completeStep(step, false);
+        return;
+      }
+
+      state.stepAttempts += 1;
+      state.problemHadMistake = true;
+      button.classList.add("is-wrong");
+      playSound("try");
+      if (state.stepAttempts === 1) {
+        el.feedbackText.textContent = `다시 골라요. ${step.hint}`;
+        el.feedbackText.className = "feedback try";
+        button.disabled = true;
+        return;
+      }
+
+      state.problemHadReveal = true;
+      setButtonsDisabled(true);
+      el.feedbackText.textContent = `정답은 ${step.format(step.correct)}예요. ${step.wrongExplain || step.explain}`;
+      el.feedbackText.className = "feedback try";
+      completeStep(step, true);
+    }
+
+    function completeStep(step, revealed) {
+      const problem = currentProblem();
+      applyStepToBoard(step, problem);
+      renderStatus();
+      if (!revealed && !step.auto) {
+        el.feedbackText.textContent = step.explain;
+        el.feedbackText.className = "feedback good";
+        playSound("correct");
+      }
+      if (step.auto) {
+        el.feedbackText.textContent = step.explain;
+        el.feedbackText.className = "feedback good";
+        playSound("correct");
+      }
+      window.setTimeout(() => {
+        if (state.stepIndex >= 2) {
+          completeProblem();
+          return;
+        }
+        state.stepIndex += 1;
+        state.stepAttempts = 0;
+        renderStep();
+      }, step.auto ? 740 : revealed ? 980 : 720);
+    }
+
+    function applyStepToBoard(step, problem) {
+      if (step.id === "quotient") {
+        el.boardQuotient.textContent = `${problem.quotient}묶음`;
+        el.quotientCard.classList.add("is-done");
+        el.remainderMessage.textContent = `${problem.divisor}개씩 ${problem.quotient}묶음이면 ${problem.quotient * problem.divisor}개를 나눴어요.`;
+      } else if (step.id === "remainder") {
+        el.boardRemainder.textContent = `${problem.remainder}개`;
+        el.remainderCard.classList.add("is-done");
+        renderRemainderStars(problem.remainder);
+        el.remainderMessage.textContent = `남은 별 ${problem.remainder}개를 주웠어요.`;
+        el.checkPreview.textContent = `${problem.quotient} × ${problem.divisor} + ${problem.remainder} = ?`;
+      } else if (step.id === "check") {
+        el.checkPreview.textContent = `${problem.quotient} × ${problem.divisor} + ${problem.remainder} = ${problem.dividend}`;
+        el.checkPreview.classList.add("is-complete");
+      }
+      updateBoardFocus();
+    }
+
+    function renderRemainderStars(count) {
+      el.remainderStars.innerHTML = "";
+      for (let index = 0; index < count; index += 1) {
+        const star = document.createElement("span");
+        star.className = "star-dot";
+        star.style.animationDelay = `${index * 45}ms`;
+        el.remainderStars.appendChild(star);
+      }
+    }
+
+    function completeProblem() {
+      clearAutoTimer();
+      const problem = currentProblem();
+      const perfect = !state.problemHadMistake;
+      if (perfect) {
+        state.correct += 1;
+        state.chain += 1;
+        state.remainderStars += problem.remainder;
+      } else {
+        state.chain = 0;
+      }
+      const event = perfect ? rollStarEvent() : createCloudEvent();
+      applyStarEvent(event, problem.remainder, perfect);
+      renderStatus();
+      finishProblem(state.lastStarEvent);
+      playSound("reward");
+    }
+
+    function pickStarEventForRoll(roll, amountPicker = randomInt) {
+      if (roll < 72) {
+        const amount = amountPicker(4, 8);
+        return {
+          id: "meteor",
+          amount,
+          title: "유성우가 지나가요",
+          message: "별빛이 늘었어요.",
+          art: "meteor"
+        };
+      }
+      if (roll < 84) {
+        const amount = -amountPicker(5, 10);
+        return {
+          id: "cloud",
+          amount,
+          title: "구름이 별을 가려요",
+          message: "별빛 감소",
+          art: "cloud"
+        };
+      }
+      if (roll < 94) {
+        const amount = amountPicker(12, 20);
+        return {
+          id: "bigMeteor",
+          amount,
+          title: "큰 유성우!",
+          message: "별빛이 많이 늘었어요.",
+          art: "meteor"
+        };
+      }
+      if (roll < 97) {
+        return {
+          id: "shooting",
+          amount: 6,
+          title: "별똥별이 번쩍!",
+          message: "바로 별 등급을 보러 가요.",
+          art: "shooting",
+          finishes: true
+        };
+      }
+      if (roll < 99.8) {
+        return {
+          id: "dark",
+          amount: 0,
+          title: "깜깜해졌어요",
+          message: "별빛이 잠깐 가려졌어요.",
+          art: "dark",
+          emptiesSky: true
+        };
+      }
+      return {
+        id: "rainbow",
+        amount: 10,
+        title: "무지개 별 발견!",
+        message: "하늘이 무지개빛으로 반짝여요.",
+        art: "rainbow",
+        rainbow: true
+      };
+    }
+
+    function rollStarEvent() {
+      return pickStarEventForRoll(Math.random() * 100);
+    }
+
+    function createCloudEvent() {
+      const amount = -randomInt(8, 18);
+      return {
+        id: "cloud",
+        amount,
+        title: "구름이 몰려와요",
+        message: "별빛 감소",
+        art: "cloud"
+      };
+    }
+
+    function applyStarEvent(event, remainderBonus, perfect) {
+      const before = state.starScore;
+      if (event.emptiesSky) {
+        state.starScore = 0;
+      } else {
+        state.starScore = clamp(state.starScore + event.amount, 0, MAX_STARS);
+      }
+      if (event.rainbow) {
+        state.rainbowStar = true;
+      }
+      const actualDelta = state.starScore - before;
+      const feedback = getStarEventFeedback(event, actualDelta, before);
+      state.lastStarEvent = {
+        ...event,
+        actualDelta,
+        remainderBonus,
+        perfect,
+        ...feedback
+      };
+    }
+
+    function getStarEventFeedback(event, actualDelta, before) {
+      if (event.rainbow) {
+        return {
+          title: "무지개 별 발견!",
+          message: "무지개 별",
+          art: "rainbow"
+        };
+      }
+      if (event.finishes) {
+        return {
+          title: "별똥별이 번쩍!",
+          message: "바로 별 등급을 보러 가요.",
+          art: "shooting"
+        };
+      }
+      if (event.emptiesSky) {
+        return {
+          title: before > 0 ? "별빛이 가려졌어요" : "하늘이 이미 깜깜해요",
+          message: "별빛 0",
+          art: "dark"
+        };
+      }
+      if (actualDelta > 0) {
+        if (actualDelta <= 8) {
+          return {
+            title: "유성우가 지나가요",
+            message: "별빛이 늘었어요.",
+            art: "meteor"
+          };
+        }
+        return {
+          title: "큰 유성우!",
+          message: "별빛이 많이 늘었어요.",
+          art: "meteor"
+        };
+      }
+      if (actualDelta < 0) {
+        const loss = Math.abs(actualDelta);
+        return {
+          title: loss <= 8 ? "구름이 살짝 가려요" : "구름이 크게 가려요",
+          message: "별빛 감소",
+          art: "cloud"
+        };
+      }
+      if (event.amount < 0) {
+        return {
+          title: "구름이 지나갔어요",
+          message: "별빛 0",
+          art: "cloud"
+        };
+      }
+      return {
+        title: "별빛이 가득 찼어요",
+        message: "별빛 가득",
+        art: "meteor"
+      };
+    }
+
+    function getStarEventDeltaLabel(event) {
+      if (event.rainbow) {
+        return "초신성!";
+      }
+      if (event.finishes) {
+        return "별똥별!";
+      }
+      if (event.emptiesSky) {
+        return "별빛 0";
+      }
+      const actualDelta = typeof event.actualDelta === "number" ? event.actualDelta : event.amount;
+      if (actualDelta > 0) {
+        return `별빛 +${actualDelta}`;
+      }
+      if (actualDelta < 0) {
+        return `별빛 ${actualDelta}`;
+      }
+      if (event.amount < 0) {
+        return "별빛 0";
+      }
+      if (event.amount > 0) {
+        return "별빛 가득";
+      }
+      return "별빛 0";
+    }
+
+    function renderChoices(options, handler) {
+      el.choiceGrid.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.textContent = option.label;
+        button.addEventListener("click", () => handler(option, button));
+        el.choiceGrid.appendChild(button);
+      });
+    }
+
+    function finishProblem(result) {
+      REWARD_ART_CLASSES.forEach((className) => el.rewardArt.classList.remove(className));
+      if (result.art) {
+        el.rewardArt.classList.add(`reward-art--${result.art}`);
+      }
+      el.rewardTitle.textContent = result.title;
+      el.rewardDelta.textContent = getStarEventDeltaLabel(result);
+      el.rewardMessage.textContent = result.message;
+      el.rewardBonus.textContent = result.perfect
+        ? `나머지 별 ${result.remainderBonus}개도 별빛에 보탰어요.`
+        : `남은 별 ${result.remainderBonus}개를 확인했어요. 다음엔 별빛에 보태 봐요.`;
+      el.rewardNextButton.textContent = result.finishes
+        ? "등급 보기"
+        : state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
+      window.setTimeout(() => {
+        el.rewardPop.classList.add("is-visible");
+        el.rewardNextButton.focus();
+      }, 560);
+    }
+
+    function nextAfterReward() {
+      if (state.lastStarEvent?.finishes || state.index + 1 >= TOTAL_QUESTIONS) {
+        showResult();
+        return;
+      }
+      state.index += 1;
+      playSound("next");
+      renderProblem();
+    }
+
+    function getGradeByStars(totalStars = getTotalStars(), correct = state.correct, rainbow = state.rainbowStar) {
+      if (rainbow) {
+        return { ...SECRET_GRADE, index: GRADES.length };
+      }
+      const score = clamp(totalStars, 0, MAX_STARS);
+      let grade = GRADES[0];
+      GRADES.forEach((candidate, index) => {
+        if (score >= candidate.min && correct >= candidate.correctMin) {
+          grade = { ...candidate, index };
+        }
+      });
+      return grade;
+    }
+
+    function getNextGrade(grade) {
+      if (!grade || grade.secret) {
+        return GRADES[0];
+      }
+      return GRADES[Math.min(grade.index + 1, GRADES.length - 1)];
+    }
+
+    function renderGradeTrack(container, { targetIndex = -1, reachedIndex = -1, includeSecret = false } = {}) {
+      container.innerHTML = "";
+      const grades = includeSecret ? ALL_GRADES : GRADES;
+      grades.forEach((grade, index) => {
+        const chip = document.createElement("span");
+        chip.className = "grade-chip";
+        chip.textContent = grade.short;
+        chip.title = grade.name;
+        if (grade.secret) {
+          chip.classList.add("is-secret");
+        }
+        if (index <= reachedIndex) {
+          chip.classList.add("is-reached");
+        }
+        if (index === targetIndex) {
+          chip.classList.add("is-target");
+        }
+        container.appendChild(chip);
+      });
+    }
+
+    function showResult() {
+      const totalStars = getTotalStars();
+      const grade = getGradeByStars(totalStars, state.correct, state.rainbowStar);
+      const measureLabel = state.rainbowStar ? "무지개 별" : `별빛 ${totalStars}`;
+      el.resultRaster.src = "result-stage.webp";
+      el.resultStarImage.src = grade.image;
+      el.resultStarImage.alt = grade.name;
+      el.resultScreen.classList.add("is-measuring");
+      el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowStar);
+      document.getElementById("resultTitle").textContent = "별빛 측정 중";
+      el.finalEnergyText.textContent = "측정 중";
+      el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.finalDestinationText.textContent = "측정 중";
+      el.praiseText.textContent = "정답으로 모은 별빛과 나머지 별을 함께 재고 있어요.";
+      el.measureStatus.textContent = "별빛 측정 중";
+      el.measurePercent.textContent = "별빛 0";
+      el.measureFill.style.setProperty("--measure-width", "0%");
+      renderGradeTrack(el.resultGradeTrack, { targetIndex: -1, reachedIndex: -1, includeSecret: true });
+      el.restartButton.hidden = true;
+      el.restartButton.disabled = true;
+      el.restartButton.textContent = "다시하기";
+      playSound("scan");
+      showScreen("result");
+      window.setTimeout(() => {
+        el.measureStatus.textContent = "별 등급 찾는 중";
+        el.measurePercent.textContent = measureLabel;
+        el.measureFill.style.setProperty("--measure-width", `${state.rainbowStar ? 100 : totalStars}%`);
+        el.finalEnergyText.textContent = measureLabel;
+        renderGradeTrack(el.resultGradeTrack, {
+          targetIndex: grade.index,
+          reachedIndex: grade.index,
+          includeSecret: true
+        });
+        playSound("measure");
+      }, 140);
+      window.setTimeout(() => {
+        el.resultScreen.classList.remove("is-measuring");
+        el.measureStatus.textContent = "별 등급 완료";
+        document.getElementById("resultTitle").textContent = `${grade.name} 완성!`;
+        el.finalDestinationText.textContent = grade.name;
+        el.praiseText.textContent = getPraise(grade);
+        el.restartButton.hidden = false;
+        el.restartButton.disabled = false;
+        el.restartButton.focus();
+        playSound("finish");
+      }, 2500);
+    }
+
+    function getPraise(grade) {
+      if (grade.secret) {
+        return "무지개 별이 번쩍였어요. 오늘은 초신성까지 닿았어요!";
+      }
+      if (grade.id === "universe") {
+        return "대우주까지 별길이 열렸어요. 몫과 나머지를 끝까지 잘 살폈어요.";
+      }
+      if (grade.id === "galaxy") {
+        return "은하까지 별빛이 모였어요. 다음엔 대우주까지 가 볼까요?";
+      }
+      if (grade.id === "constellation") {
+        return "별자리가 만들어졌어요. 다음엔 은하까지 별을 더 주워 봐요.";
+      }
+      if (grade.id === "small") {
+        return "작은별이 반짝여요. 나머지가 나누는 수보다 작은지 다시 살펴봐요.";
+      }
+      const next = getNextGrade(grade);
+      return `별먼지가 모였어요. 다음엔 ${next.name}까지 가 볼 수 있어요.`;
+    }
+
+    function setButtonsDisabled(disabled) {
+      [...el.choiceGrid.querySelectorAll("button")].forEach((button) => {
+        button.disabled = disabled;
+      });
+    }
+
+    function currentProblem() {
+      return state.problems[state.index];
+    }
+
+    function clearAutoTimer() {
+      if (state.autoTimer) {
+        window.clearTimeout(state.autoTimer);
+        state.autoTimer = null;
+      }
+    }
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let index = array.length - 1; index > 0; index -= 1) {
+        const swapIndex = Math.floor(Math.random() * (index + 1));
+        [array[index], array[swapIndex]] = [array[swapIndex], array[index]];
+      }
+      return array;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function initAudio() {
+      if (state.audio || !state.soundsOn) {
+        return;
+      }
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        return;
+      }
+      state.audio = new AudioContext();
+    }
+
+    function playSound(type) {
+      if (!state.soundsOn) {
+        return;
+      }
+      initAudio();
+      const audio = state.audio;
+      if (!audio) {
+        return;
+      }
+      if (audio.state === "suspended") {
+        audio.resume();
+      }
+      const now = audio.currentTime;
+      const notes = {
+        start: [392, 523, 659],
+        correct: [523, 659],
+        try: [196, 174],
+        reward: [659, 784, 988],
+        next: [440, 587],
+        scan: [330, 392, 494],
+        measure: [587, 740],
+        finish: [523, 659, 784, 1046]
+      }[type] || [440];
+      notes.forEach((frequency, index) => {
+        const oscillator = audio.createOscillator();
+        const gain = audio.createGain();
+        oscillator.type = type === "try" ? "triangle" : "sine";
+        oscillator.frequency.setValueAtTime(frequency, now + index * 0.08);
+        gain.gain.setValueAtTime(0.0001, now + index * 0.08);
+        gain.gain.exponentialRampToValueAtTime(type === "try" ? 0.065 : 0.09, now + index * 0.08 + 0.018);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.16);
+        oscillator.connect(gain).connect(audio.destination);
+        oscillator.start(now + index * 0.08);
+        oscillator.stop(now + index * 0.08 + 0.18);
+      });
+    }
+
+    el.startButton.addEventListener("click", () => {
+      initAudio();
+      playSound("next");
+      showScreen("tutorial");
+      el.tutorialNextButton.focus();
+    });
+
+    el.tutorialNextButton.addEventListener("click", () => {
+      startGame();
+    });
+
+    el.rewardNextButton.addEventListener("click", () => {
+      el.rewardPop.classList.remove("is-visible");
+      nextAfterReward();
+    });
+
+    el.restartButton.addEventListener("click", () => {
+      startGame();
+    });
+
+    el.hintToggleButton.addEventListener("click", () => {
+      state.hintOpen = !state.hintOpen;
+      renderHintPanel();
+    });
+
+    el.soundToggle.addEventListener("click", () => {
+      state.soundsOn = !state.soundsOn;
+      el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
+      el.soundToggle.textContent = "소리";
+      el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
+      if (state.soundsOn) {
+        initAudio();
+        playSound("next");
+      }
+    });
+
+    renderGradeTrack(el.gradeTrack, { includeSecret: false });
+    renderGradeTrack(el.resultGradeTrack, { includeSecret: true });
+  </script>
+</body>
+</html>

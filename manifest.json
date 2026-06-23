@@ -56,6 +56,54 @@
       "learningGoal": "(몇)×(몇십몇), (몇십몇)×(몇십몇)을 두 번 곱하고 더해 계산한다.",
       "entryFile": "index.html",
       "deploymentCopy": "static/eduitit_math_3-2-1-4"
+    },
+    {
+      "id": "3-2-2-1",
+      "folder": "3-2-2-1-mathmon-divide-farm",
+      "title": "매스몬 나누기 농장",
+      "grade": 3,
+      "semester": 2,
+      "unit": 2,
+      "lesson": 1,
+      "subject": "수학",
+      "learningGoal": "내림 없는 몇십몇 나누기 몇을 십의 자리와 일의 자리로 나누어 계산한다.",
+      "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-2-2",
+      "folder": "3-2-2-2-mathmon-elevator",
+      "title": "매스몬 엘리베이터",
+      "grade": 3,
+      "semester": 2,
+      "unit": 2,
+      "lesson": 2,
+      "subject": "수학",
+      "learningGoal": "내림 있는 두 자리 수와 한 자리 수의 나눗셈을 계산한다.",
+      "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-2-3",
+      "folder": "3-2-2-3-mathmon-star-pickup",
+      "title": "매스몬 별 줍기",
+      "grade": 3,
+      "semester": 2,
+      "unit": 2,
+      "lesson": 3,
+      "subject": "수학",
+      "learningGoal": "나머지가 있는 나눗셈에서 몫과 나머지를 구하고, 나머지는 나누는 수보다 작다는 뜻을 익힌다.",
+      "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-2-4",
+      "folder": "3-2-2-4-mathmon-check-lock",
+      "title": "매스몬 검산 자물쇠",
+      "grade": 3,
+      "semester": 2,
+      "unit": 2,
+      "lesson": 4,
+      "subject": "수학",
+      "learningGoal": "몫과 나누는 수를 곱한 뒤 나머지를 더해 나눗셈 결과를 검산한다.",
+      "entryFile": "index.html"
     }
   ]
 }

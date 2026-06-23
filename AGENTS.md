@@ -21,8 +21,8 @@
 - 스마트폰 세로 화면은 기본 지원 범위가 아닙니다.
 - 첫 화면은 제목, 한 줄 목표, 시작 버튼이 가장 먼저 보여야 합니다.
 - 첫 화면과 마지막 결과 화면은 이미지 생성 기반 RasterStage로 제작하고, 매 판 달라지는 텍스트·점수·버튼은 HTML 오버레이로 얹습니다.
-- 모든 차시는 `16:10` Stage, 기준 제작 크기 `1280×800`을 지킵니다. `index.html`의 `<main class="game">`에는 `data-stage-ratio="16:10"`과 `data-stage-size="1280x800"`을 두고, 기본 `.screen`은 `aspect-ratio: 16 / 10`을 유지합니다.
-- `소리 켬` 같은 전역 조작 버튼은 Stage 밖 viewport 하단에 따로 고정하지 않고, Stage 우하단 안전영역을 따라가게 배치합니다.
+- 모든 차시는 `16:10` Stage, 기준 제작 크기 `1280×800`을 지킵니다. `index.html`의 `<main class="game">`에는 `data-stage-ratio="16:10"`과 `data-stage-size="1280x800"`을 두고, `.stage-shell`이 contain 폭과 비율을 담당하게 합니다.
+- `소리` 같은 전역 조작 버튼은 Stage 밖 viewport에 fixed로 띄우지 않고, `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 둡니다. `top-row`/`hud`는 그 공간만큼 비워 버튼이 배지·문제·선택지를 가리지 않게 합니다.
 - 차시를 만들거나 화면을 크게 바꾼 뒤에는 루트에서 `node scripts/check-stage-ratio.mjs`를 실행해 Stage 비율 계약을 통과해야 합니다.
 - 문제와 선택지는 장식보다 항상 우선합니다.
 - 보상은 하나의 중심 구조로 유지합니다. 여러 보상 체계를 동시에 전면 배치하지 않습니다.

@@ -1,0 +1,2398 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3학년 2학기 2단원 · 매스몬 엘리베이터 | 에듀잇티</title>
+  <style>
+    :root {
+      --page: #101417;
+      --panel: #15282d;
+      --panel-strong: #1d353a;
+      --ink: #fff8ea;
+      --muted: #cfe1dd;
+      --line: rgba(255, 255, 255, 0.16);
+      --teal: #35d6c7;
+      --sky: #70d7ff;
+      --amber: #ffc857;
+      --coral: #ff6b63;
+      --leaf: #6ee28f;
+      --violet: #b58cff;
+      --deep: #0c171b;
+      --radius: 8px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(255, 200, 87, 0.08) 0 1px, transparent 1px 80px),
+        linear-gradient(90deg, rgba(112, 215, 255, 0.07) 0 1px, transparent 1px 96px),
+        linear-gradient(135deg, #101417 0%, #153136 46%, #131a21 100%);
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+    }
+
+    .phone-blocker {
+      display: none;
+    }
+
+    .game {
+      --stage-padding: clamp(10px, 2vw, 24px);
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: var(--stage-padding);
+    }
+
+    .stage-shell {
+      --stage-inset: clamp(14px, 2vw, 22px);
+      --sound-slot: clamp(64px, 6vw, 78px);
+      position: relative;
+      width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+      aspect-ratio: 16 / 10;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: auto;
+      aspect-ratio: 16 / 10;
+      display: none;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.06), transparent 34%),
+        linear-gradient(180deg, #1d353a, #11191f);
+      box-shadow: var(--shadow);
+    }
+
+    .screen.is-active {
+      display: grid;
+    }
+
+    .raster-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .top-row {
+      position: absolute;
+      inset: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) auto clamp(14px, 2vw, 22px);
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .brand-badge,
+    .unit-badge,
+    .lesson-badge,
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(12, 23, 27, 0.74);
+      color: #ffffff;
+      font-size: 0.86rem;
+      font-weight: 900;
+      line-height: 1.1;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-badge img {
+      width: 22px;
+      height: 22px;
+      margin-right: 8px;
+      border-radius: 6px;
+    }
+
+    .unit-badge {
+      border-color: rgba(112, 215, 255, 0.5);
+      color: #d8f6ff;
+    }
+
+    .lesson-badge {
+      position: absolute;
+      left: clamp(14px, 2vw, 22px);
+      bottom: clamp(14px, 2vw, 22px);
+      z-index: 4;
+      border-color: rgba(255, 200, 87, 0.58);
+      color: #ffe1a6;
+    }
+
+    .primary-button,
+    .ghost-button {
+      min-height: 58px;
+      padding: 0 28px;
+      border: 0;
+      border-radius: var(--radius);
+      font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.34), 0 22px 38px rgba(0, 0, 0, 0.3);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    }
+
+    .primary-button {
+      color: #2a1700;
+      background: linear-gradient(180deg, #ffe27a, #ffb83d);
+    }
+
+    .ghost-button {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .primary-button:hover,
+    .ghost-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .primary-button:active,
+    .ghost-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 0 rgba(106, 70, 23, 0.28), 0 12px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .primary-button:focus-visible,
+    .ghost-button:focus-visible,
+    .choice-button:focus-visible,
+    .hint-toggle:focus-visible,
+    .sound-toggle:focus-visible {
+      outline: 4px solid rgba(255, 255, 255, 0.86);
+      outline-offset: 4px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .sound-toggle {
+      position: absolute;
+      top: var(--stage-inset);
+      right: var(--stage-inset);
+      z-index: 60;
+      display: inline-grid;
+      place-items: center;
+      width: clamp(54px, 5.3vw, 66px);
+      min-width: 0;
+      height: 34px;
+      min-height: 34px;
+      padding: 0;
+      border: 1px solid rgba(255, 200, 87, 0.55);
+      border-radius: 999px;
+      color: #ffe3a5;
+      background: rgba(14, 12, 22, 0.78);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
+      font-size: clamp(0.72rem, 1vw, 0.84rem);
+      font-weight: 950;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .sound-toggle::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #69efbf;
+      box-shadow: 0 0 10px rgba(105, 239, 191, 0.8);
+    }
+
+    .stage-shell .top-row {
+      right: calc(var(--stage-inset) + var(--sound-slot));
+    }
+
+    .stage-shell .hud {
+      padding-right: var(--sound-slot);
+    }
+
+    .sound-toggle[aria-pressed="false"] {
+      border-color: rgba(207, 225, 221, 0.34);
+      color: var(--muted);
+    }
+
+    .cover,
+    .tutorial,
+    .result {
+      align-items: center;
+      padding: clamp(76px, 10vw, 100px) clamp(24px, 5vw, 70px) clamp(46px, 6vw, 72px);
+      background: #121b20;
+    }
+
+    .cover::after,
+    .tutorial::after,
+    .result::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .cover::after {
+      background:
+        linear-gradient(90deg, rgba(11, 20, 24, 0.82) 0%, rgba(11, 20, 24, 0.52) 43%, transparent 75%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), transparent 38%);
+    }
+
+    .tutorial::after {
+      background:
+        linear-gradient(90deg, rgba(9, 18, 22, 0.88) 0%, rgba(9, 18, 22, 0.76) 38%, rgba(9, 18, 22, 0.24) 72%, rgba(9, 18, 22, 0.08) 100%),
+        linear-gradient(180deg, rgba(8, 12, 14, 0.16), rgba(8, 12, 14, 0.18));
+    }
+
+    .result::after {
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(9, 16, 20, 0.25) 44%, rgba(9, 16, 20, 0.82) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.26));
+    }
+
+    .cover-scene,
+    .tutorial-layout,
+    .result-layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(310px, 0.9fr) minmax(360px, 1.1fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 58px);
+    }
+
+    .hero-copy,
+    .tutorial-copy,
+    .result-copy {
+      display: grid;
+      justify-items: start;
+      gap: 18px;
+    }
+
+    .hero-copy h1,
+    .result-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(3rem, 7vw, 6.3rem);
+      line-height: 0.94;
+      font-weight: 1000;
+      text-shadow: 0 7px 0 rgba(0, 0, 0, 0.2), 0 0 28px rgba(112, 215, 255, 0.22);
+    }
+
+    .hero-copy h1 {
+      max-width: 8.4em;
+    }
+
+    .hero-copy p,
+    .praise {
+      max-width: 560px;
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.15rem, 2.6vw, 1.62rem);
+      font-weight: 930;
+      line-height: 1.35;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.36);
+    }
+
+    .cover-space,
+    .tutorial-space {
+      min-height: clamp(300px, 42vw, 520px);
+    }
+
+    .tutorial-copy {
+      max-width: 710px;
+    }
+
+    .tutorial-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.02;
+      font-weight: 1000;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(12, 23, 27, 0.7);
+      color: #ffffff;
+      font-size: clamp(1.04rem, 2.3vw, 1.34rem);
+      font-weight: 950;
+      line-height: 1.28;
+      backdrop-filter: blur(10px);
+    }
+
+    .steps b {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      color: #201000;
+      background: var(--amber);
+      font-size: 1.2rem;
+    }
+
+    .play {
+      grid-template-rows: auto 1fr;
+      padding: clamp(16px, 2.4vw, 24px);
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: minmax(210px, auto) 1fr auto;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .hud .brand-badge,
+    .hud .unit-badge {
+      position: static;
+      pointer-events: auto;
+    }
+
+    .hud-center {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      min-width: 112px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.92rem;
+      font-weight: 950;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    #progressText {
+      min-height: 48px;
+      min-width: 172px;
+      padding: 10px 22px;
+      border-color: rgba(255, 200, 87, 0.52);
+      color: #231400;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      font-size: clamp(1.08rem, 2.2vw, 1.42rem);
+      box-shadow: 0 10px 0 rgba(106, 70, 23, 0.2), 0 16px 26px rgba(0, 0, 0, 0.18);
+    }
+
+    .play-layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(272px, 0.76fr) minmax(470px, 1.24fr);
+      gap: clamp(16px, 2.8vw, 28px);
+    }
+
+    .elevator-zone,
+    .problem-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .elevator-zone {
+      position: relative;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      overflow: hidden;
+      padding: 18px;
+      isolation: isolate;
+      --power: 0;
+      background: #142428;
+    }
+
+    .elevator-zone::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(180deg, rgba(7, 16, 19, 0.08), rgba(7, 16, 19, 0.58) 78%),
+        repeating-linear-gradient(90deg, transparent 0 34px, rgba(255, 255, 255, 0.05) 35px 36px, transparent 37px 68px);
+      opacity: calc(0.58 + var(--power) * 0.22);
+      pointer-events: none;
+    }
+
+    .shaft-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(calc(0.88 + var(--power) * 0.25)) brightness(calc(0.8 + var(--power) * 0.16));
+      transform: scale(1.015);
+      transition: filter 0.7s ease;
+    }
+
+    .tower-visual {
+      position: relative;
+      z-index: 2;
+      min-height: 384px;
+      display: grid;
+      align-items: stretch;
+    }
+
+    .floor-track {
+      position: absolute;
+      left: 10px;
+      top: 12px;
+      bottom: 12px;
+      z-index: 4;
+      display: grid;
+      grid-template-rows: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      width: 88px;
+    }
+
+    .floor-chip {
+      display: grid;
+      place-items: center;
+      min-height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      color: rgba(255, 255, 255, 0.72);
+      background: rgba(11, 20, 24, 0.56);
+      font-size: 0.82rem;
+      font-weight: 1000;
+      line-height: 1.05;
+      text-align: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .floor-chip.is-reached {
+      color: #10281f;
+      background: linear-gradient(180deg, #b8ffe9, #35d6c7);
+      border-color: rgba(53, 214, 199, 0.86);
+    }
+
+    .floor-chip.is-target {
+      color: #211300;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      border-color: rgba(255, 200, 87, 0.92);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.22), 0 0 24px rgba(255, 200, 87, 0.28);
+    }
+
+    .elevator-car {
+      position: absolute;
+      left: 50%;
+      bottom: calc(24px + var(--power) * 210px);
+      z-index: 3;
+      width: min(170px, 56%);
+      aspect-ratio: 0.72;
+      transform: translateX(-50%);
+      border: 4px solid rgba(255, 247, 215, 0.7);
+      border-radius: 24px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 28%, transparent 29% 48%, rgba(255, 255, 255, 0.14) 49% 72%, transparent 73%),
+        linear-gradient(180deg, #5ee5dd, #2098a7);
+      box-shadow: 0 24px 34px rgba(0, 0, 0, 0.38), 0 0 calc(12px + var(--power) * 30px) rgba(53, 214, 199, 0.36);
+      transition: bottom 0.78s cubic-bezier(0.18, 0.9, 0.22, 1.08), box-shadow 0.7s ease;
+    }
+
+    .elevator-car::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -18px;
+      width: 74%;
+      height: 30px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe27a, #ffb83d);
+      box-shadow: 0 0 22px rgba(255, 200, 87, calc(0.16 + var(--power) * 0.34));
+    }
+
+    .elevator-car::after {
+      content: "";
+      position: absolute;
+      inset: 22% 16% 18%;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 50% 72%, #ffe27a 0 10%, transparent 11%),
+        linear-gradient(90deg, rgba(12, 23, 27, 0.38) 0 49%, rgba(255, 255, 255, 0.34) 50% 51%, rgba(12, 23, 27, 0.38) 52% 100%);
+      border: 2px solid rgba(255, 255, 255, 0.32);
+    }
+
+    .elevator-car.is-boosting {
+      animation: car-boost 0.72s ease;
+    }
+
+    .elevator-zone.is-rainbow .elevator-car {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.14) 0 28%, transparent 29% 48%, rgba(255, 255, 255, 0.14) 49% 72%, transparent 73%),
+        linear-gradient(135deg, #ff7a9a, #ffe27a, #45f2b8, #70d7ff, #b58cff);
+      background-size: 220% 100%;
+      animation: rainbow-flow 1.3s linear infinite;
+    }
+
+    .power-panel {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(12, 23, 27, 0.72);
+      backdrop-filter: blur(10px);
+    }
+
+    .power-readout {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      color: #ffffff;
+      font-size: 0.94rem;
+      font-weight: 950;
+    }
+
+    .power-readout strong {
+      color: #b8fff2;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .power-meter {
+      height: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .power-meter-fill {
+      display: block;
+      width: var(--power-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.42), transparent 22%),
+        linear-gradient(180deg, #dcfff8, #35d6c7 62%, #10968c);
+      box-shadow: 0 0 20px rgba(53, 214, 199, 0.48);
+      transition: width 0.7s cubic-bezier(0.18, 0.9, 0.26, 1.15);
+    }
+
+    .problem-panel {
+      display: grid;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 14px;
+      padding: clamp(16px, 2.6vw, 24px);
+      background:
+        linear-gradient(150deg, rgba(255, 200, 87, 0.06), transparent 42%),
+        rgba(10, 20, 24, 0.72);
+    }
+
+    .problem-heading h2 {
+      width: 100%;
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.8rem, 7vw, 5.6rem);
+      line-height: 1;
+      font-weight: 1000;
+      text-align: center;
+      white-space: nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .division-board {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.94fr) minmax(210px, 0.66fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .quotient-stage,
+    .step-panel {
+      min-height: 230px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.065);
+    }
+
+    .quotient-stage {
+      display: grid;
+      gap: 12px;
+      align-content: center;
+      border-color: rgba(53, 214, 199, 0.28);
+      background:
+        radial-gradient(circle at 82% 78%, rgba(53, 214, 199, 0.12), transparent 0 24%, transparent 56%),
+        rgba(12, 23, 27, 0.58);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .answer-strip {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 310px;
+      margin-inline: auto;
+    }
+
+    .answer-cell {
+      display: grid;
+      place-items: center;
+      min-height: clamp(58px, 7vw, 74px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.09);
+      font-size: clamp(2rem, 4.8vw, 3rem);
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .answer-cell.is-current {
+      color: #241500;
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      border-color: rgba(255, 200, 87, 0.86);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.2), 0 0 24px rgba(255, 200, 87, 0.22);
+    }
+
+    .long-division {
+      display: grid;
+      grid-template-columns: 74px 1fr;
+      gap: 10px;
+      align-items: center;
+      width: min(420px, 100%);
+      margin-inline: auto;
+    }
+
+    .divisor-box,
+    .dividend-box {
+      display: grid;
+      place-items: center;
+      min-height: clamp(64px, 8vw, 86px);
+      border-radius: var(--radius);
+      color: #ffffff;
+      font-size: clamp(2rem, 4.8vw, 3.2rem);
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .divisor-box {
+      border: 1px solid rgba(255, 200, 87, 0.36);
+      background: rgba(255, 200, 87, 0.12);
+    }
+
+    .dividend-box {
+      position: relative;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      padding: 8px 12px;
+      border-top: 5px solid rgba(255, 255, 255, 0.64);
+      border-left: 5px solid rgba(255, 255, 255, 0.64);
+      border-radius: 0 0 var(--radius) 0;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .digit-box,
+    .down-box {
+      display: grid;
+      place-items: center;
+      min-height: 54px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .digit-box.is-active,
+    .down-box.is-active {
+      color: #231400;
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      border-color: rgba(255, 200, 87, 0.86);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.18);
+    }
+
+    .down-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+      color: #ffe8ba;
+      font-size: clamp(1.2rem, 2.6vw, 1.72rem);
+      font-weight: 1000;
+      text-align: center;
+    }
+
+    .down-row span {
+      min-width: 40px;
+    }
+
+    .down-box {
+      min-height: 48px;
+      color: #b8fff2;
+      border-color: rgba(53, 214, 199, 0.22);
+      background: rgba(53, 214, 199, 0.09);
+    }
+
+    .step-panel {
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      align-content: center;
+      background:
+        linear-gradient(150deg, rgba(255, 200, 87, 0.06), transparent 46%),
+        rgba(12, 23, 27, 0.46);
+    }
+
+    .hint-toggle {
+      justify-self: end;
+      min-width: 64px;
+      min-height: 38px;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 200, 87, 0.52);
+      border-radius: var(--radius);
+      color: #231400;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      font-size: 0.94rem;
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 8px 0 rgba(106, 70, 23, 0.22), 0 12px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .step-track {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-chip {
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      padding: 6px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.82rem;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .step-chip.is-current {
+      color: #231400;
+      background: var(--amber);
+      border-color: rgba(255, 200, 87, 0.86);
+    }
+
+    .step-chip.is-done {
+      color: #10271f;
+      background: #78f2c8;
+      border-color: rgba(53, 214, 199, 0.86);
+    }
+
+    .step-formula {
+      display: grid;
+      place-items: center;
+      min-height: 78px;
+      padding: 10px;
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      border-radius: var(--radius);
+      color: #fff0c6;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 200, 87, 0.16), transparent 0 22%, transparent 48%),
+        rgba(255, 200, 87, 0.08);
+      font-size: clamp(1.32rem, 2.6vw, 2rem);
+      font-weight: 1000;
+      text-align: center;
+      line-height: 1.12;
+    }
+
+    .step-meaning {
+      margin: 0;
+      color: rgba(255, 240, 198, 0.84);
+      font-size: clamp(0.9rem, 1.65vw, 1rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .prompt {
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 200, 87, 0.26);
+      border-radius: var(--radius);
+      background: rgba(255, 200, 87, 0.08);
+      color: #fff0c6;
+      font-size: clamp(1rem, 2.1vw, 1.2rem);
+      font-weight: 950;
+      line-height: 1.35;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: start;
+      gap: 10px;
+    }
+
+    .choice-button {
+      min-height: 78px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-size: clamp(1.02rem, 2.1vw, 1.34rem);
+      font-weight: 1000;
+      line-height: 1.22;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .choice-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .choice-button.is-correct {
+      color: #10271f;
+      border-color: rgba(53, 214, 199, 0.86);
+      background: linear-gradient(180deg, #b8fff2, #35d6c7);
+    }
+
+    .choice-button.is-wrong {
+      color: #ffffff;
+      border-color: rgba(255, 107, 99, 0.78);
+      background: rgba(255, 107, 99, 0.34);
+    }
+
+    .feedback {
+      min-height: 42px;
+      color: #ffffff;
+      font-size: clamp(0.98rem, 2vw, 1.14rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .feedback.good {
+      color: #b8fff2;
+    }
+
+    .feedback.try {
+      color: #ffe7a4;
+    }
+
+    .feedback.wrong {
+      color: #ffc4c0;
+    }
+
+    .reward-pop {
+      position: absolute;
+      z-index: 10;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(9, 18, 22, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .reward-pop.is-visible {
+      display: grid;
+    }
+
+    .reward-card {
+      width: min(560px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+      padding: clamp(16px, 3vw, 24px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 14px;
+      background: rgba(12, 23, 27, 0.82);
+      text-align: center;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+    }
+
+    .reward-visual {
+      position: relative;
+      width: min(360px, 82vw);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background:
+        radial-gradient(circle at 50% 55%, rgba(53, 214, 199, 0.26), transparent 0 38%, transparent 62%),
+        linear-gradient(180deg, #20383d, #0f1d22);
+    }
+
+    .reward-visual::before {
+      content: "";
+      width: 44%;
+      height: 60%;
+      border: 4px solid rgba(255, 247, 215, 0.72);
+      border-radius: 22px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 48%, rgba(255, 255, 255, 0.48) 49% 51%, rgba(255, 255, 255, 0.16) 52%),
+        linear-gradient(180deg, #58ddd4, #1e9baa);
+      box-shadow: 0 0 34px rgba(53, 214, 199, 0.24);
+    }
+
+    .reward-visual::after {
+      content: "";
+      position: absolute;
+      inset: 16% 22%;
+      border-radius: 999px;
+      border: 3px solid rgba(255, 200, 87, 0.52);
+      opacity: 0.56;
+      animation: reward-ring 1.4s ease-in-out infinite;
+    }
+
+    .reward-pop.reward-art--loss .reward-visual,
+    .reward-pop.reward-art--empty .reward-visual {
+      background:
+        radial-gradient(circle at 50% 55%, rgba(255, 107, 99, 0.24), transparent 0 38%, transparent 62%),
+        linear-gradient(180deg, #3b2428, #171217);
+      animation: tank-shake 0.5s ease both;
+    }
+
+    .reward-pop.reward-art--mega .reward-visual,
+    .reward-pop.reward-art--express .reward-visual {
+      background:
+        radial-gradient(circle at 50% 55%, rgba(255, 200, 87, 0.3), transparent 0 38%, transparent 62%),
+        linear-gradient(180deg, #3b3420, #172729);
+    }
+
+    .reward-pop.reward-art--rainbow .reward-visual {
+      background:
+        linear-gradient(135deg, rgba(255, 107, 99, 0.26), rgba(255, 200, 87, 0.28), rgba(53, 214, 199, 0.28), rgba(112, 215, 255, 0.26), rgba(181, 140, 255, 0.26)),
+        linear-gradient(180deg, #263342, #111827);
+    }
+
+    .reward-pop.reward-art--rainbow .reward-visual::before {
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 48%, rgba(255, 255, 255, 0.48) 49% 51%, rgba(255, 255, 255, 0.16) 52%),
+        linear-gradient(135deg, #ff7a9a, #ffe27a, #45f2b8, #70d7ff, #b58cff);
+      background-size: 220% 100%;
+      animation: rainbow-flow 1.2s linear infinite;
+    }
+
+    .reward-delta {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      z-index: 2;
+      display: inline-grid;
+      place-items: center;
+      min-width: 170px;
+      min-height: 78px;
+      padding: 10px 20px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 14px;
+      color: #241500;
+      background: linear-gradient(180deg, rgba(255, 231, 128, 0.96), rgba(255, 184, 61, 0.96));
+      font-size: clamp(1.55rem, 4.4vw, 2.7rem);
+      font-weight: 1000;
+      line-height: 1;
+      white-space: nowrap;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.28), 0 22px 30px rgba(0, 0, 0, 0.28);
+    }
+
+    .reward-pop.reward-art--loss .reward-delta,
+    .reward-pop.reward-art--empty .reward-delta {
+      color: #ffffff;
+      background: linear-gradient(180deg, rgba(255, 142, 135, 0.96), rgba(255, 107, 99, 0.96));
+      box-shadow: 0 16px 0 rgba(116, 31, 27, 0.28);
+    }
+
+    .reward-pop.reward-art--rainbow .reward-delta {
+      color: #24132b;
+      background: linear-gradient(90deg, #ff8ca6, #ffe27a, #45f2b8, #70d7ff, #c59bff);
+      box-shadow: 0 16px 0 rgba(72, 38, 104, 0.28), 0 0 28px rgba(112, 215, 255, 0.36);
+    }
+
+    .reward-card h3 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(1.8rem, 4.2vw, 3rem);
+      line-height: 1.05;
+      font-weight: 1000;
+    }
+
+    .reward-card p {
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.02rem, 2vw, 1.22rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .result-layout {
+      grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.05fr);
+    }
+
+    .arrival-visual {
+      position: relative;
+      min-height: 468px;
+      display: grid;
+      place-items: center;
+    }
+
+    .arrival-floor {
+      position: absolute;
+      left: 10%;
+      top: 50%;
+      display: grid;
+      place-items: center;
+      min-width: 190px;
+      min-height: 190px;
+      padding: 24px;
+      transform: translateY(-50%);
+      border: 3px solid rgba(255, 255, 255, 0.28);
+      border-radius: 24px;
+      background: rgba(11, 20, 24, 0.52);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.34), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
+    }
+
+    .arrival-floor strong {
+      color: #ffffff;
+      font-size: clamp(3rem, 7vw, 5.8rem);
+      font-weight: 1000;
+      line-height: 0.92;
+      text-align: center;
+      text-shadow: 0 5px 18px rgba(0, 0, 0, 0.44);
+    }
+
+    .arrival-floor span {
+      margin-top: 8px;
+      color: #ffe8ba;
+      font-size: 1.06rem;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .result-copy {
+      justify-items: stretch;
+      gap: 14px;
+    }
+
+    .result-measure {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(112, 215, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(12, 23, 27, 0.58);
+      box-shadow: 0 0 30px rgba(112, 215, 255, 0.1);
+    }
+
+    .measure-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      color: #ffffff;
+      font-weight: 1000;
+    }
+
+    .measure-top span {
+      color: #d8f6ff;
+      font-size: 0.96rem;
+    }
+
+    .measure-top strong {
+      color: #b8fff2;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      line-height: 1;
+    }
+
+    .measure-tube {
+      position: relative;
+      height: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .measure-fill {
+      display: block;
+      width: var(--measure-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(180deg, #dcfff8, #45e2d0 42%, #12a49a);
+      box-shadow: 0 0 28px rgba(53, 214, 199, 0.56);
+      transition: width 1.7s cubic-bezier(0.18, 0.9, 0.2, 1);
+    }
+
+    .result.is-rainbow-result .measure-fill {
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(90deg, #ff6b63, #ffc857, #45f2b8, #70d7ff, #b58cff, #ff6b63);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.45s linear infinite;
+    }
+
+    .result-floor-track {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .result-floor-track .floor-chip {
+      min-height: 40px;
+      width: auto;
+      font-size: 0.9rem;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result-stat {
+      min-height: 94px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .result-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-top: 6px;
+      color: #ffffff;
+      font-size: clamp(1.28rem, 2.6vw, 2.05rem);
+      font-weight: 1000;
+      line-height: 1.02;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .result-actions [hidden] {
+      display: none;
+    }
+
+    .result.is-measuring .result-actions {
+      visibility: hidden;
+    }
+
+    @keyframes car-boost {
+      0%,
+      100% {
+        transform: translateX(-50%);
+      }
+      35% {
+        transform: translateX(-50%) translateY(-14px) rotate(-1.4deg);
+      }
+      70% {
+        transform: translateX(-50%) translateY(4px) rotate(1deg);
+      }
+    }
+
+    @keyframes reward-ring {
+      0%,
+      100% {
+        transform: scale(0.8);
+        opacity: 0.38;
+      }
+      50% {
+        transform: scale(1.08);
+        opacity: 0.78;
+      }
+    }
+
+    @keyframes tank-shake {
+      0%,
+      100% {
+        transform: translateX(0) rotate(0deg);
+      }
+      22% {
+        transform: translateX(-10px) rotate(-1deg);
+      }
+      44% {
+        transform: translateX(9px) rotate(1deg);
+      }
+      66% {
+        transform: translateX(-5px) rotate(-0.5deg);
+      }
+    }
+
+    @keyframes rainbow-flow {
+      from {
+        background-position: 0% 50%;
+      }
+      to {
+        background-position: 200% 50%;
+      }
+    }
+
+    @media (max-width: 930px) {
+
+      .cover-scene,
+      .tutorial-layout,
+      .play-layout,
+      .result-layout,
+      .division-board {
+        grid-template-columns: 1fr;
+      }
+
+      .cover-space,
+      .tutorial-space {
+        min-height: 230px;
+        order: -1;
+      }
+
+      .hud {
+        grid-template-columns: 1fr;
+      }
+
+      .hud-center {
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+
+      .elevator-zone {
+        min-height: 380px;
+      }
+
+      .result-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) and (orientation: portrait) {
+      .game,
+      .sound-toggle {
+        display: none;
+      }
+
+      .phone-blocker {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .phone-blocker div {
+        width: min(420px, 100%);
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+      }
+
+      .phone-blocker h1 {
+        margin: 0 0 10px;
+        font-size: 1.7rem;
+      }
+
+      .phone-blocker p {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 850;
+        line-height: 1.45;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-blocker" aria-hidden="true">
+    <div>
+      <h1>가로 화면에서 플레이해요</h1>
+      <p>태블릿이나 컴퓨터 화면에서 매스몬 엘리베이터를 시작할 수 있어요.</p>
+    </div>
+  </div>
+
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+    <div class="stage-shell">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+    <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
+      <img class="raster-bg" src="cover-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 2단원 2차시</span>
+      </div>
+      <span class="lesson-badge">내림 있는 두 자리 수 ÷ 한 자리 수</span>
+      <div class="cover-scene">
+        <div class="hero-copy">
+          <h1 id="coverTitle">매스몬 엘리베이터</h1>
+          <p>십의 자리부터 한 층씩 내려가며 나눠 보자!</p>
+          <button class="primary-button" id="startButton" type="button">시작</button>
+        </div>
+        <div class="cover-space" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle">
+      <img class="raster-bg" src="board-shaft-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 2단원 2차시</span>
+      </div>
+      <div class="tutorial-layout">
+        <div class="tutorial-copy">
+          <span class="mini-badge">어떻게 해요?</span>
+          <h2 id="tutorialTitle">남은 십을 아래로 내려요.</h2>
+          <ol class="steps">
+            <li><b>1</b><span>십의 자리부터 나누고, 남은 십을 봐요.</span></li>
+            <li><b>2</b><span>남은 십을 일의 자리로 내려 합쳐요.</span></li>
+            <li><b>3</b><span>내린 수를 나누면 도착 층이 올라가요.</span></li>
+          </ol>
+          <button class="primary-button" id="tutorialNextButton" type="button">나누기 시작</button>
+        </div>
+        <div class="tutorial-space" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="screen play" id="playScreen" aria-labelledby="questionText">
+      <header class="hud">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <div class="hud-center">
+          <span class="stat-pill" id="progressText">문제 1/10</span>
+          <span class="stat-pill" id="powerText">동력 모으는 중</span>
+          <span class="stat-pill" id="chainText">마지막에 도착</span>
+        </div>
+        <span class="unit-badge">엘리베이터 나누기</span>
+      </header>
+
+      <div class="play-layout">
+        <aside class="elevator-zone" id="elevatorZone" aria-label="엘리베이터 도착 동력">
+          <img class="shaft-bg" src="board-shaft-generated.webp" alt="">
+          <div class="tower-visual" aria-hidden="true">
+            <div class="floor-track" id="floorTrack"></div>
+            <div class="elevator-car" id="elevatorCar"></div>
+          </div>
+          <div class="power-panel">
+            <div class="power-readout">
+              <span>도착 동력</span>
+              <strong id="powerPercentText">모으는 중</strong>
+            </div>
+            <div class="power-meter" aria-hidden="true">
+              <span class="power-meter-fill" id="powerMeterFill"></span>
+            </div>
+          </div>
+        </aside>
+
+        <section class="problem-panel" aria-live="polite">
+          <div class="problem-heading">
+            <h2 id="questionText">52 ÷ 4</h2>
+          </div>
+
+          <div class="division-board">
+            <div class="quotient-stage" aria-label="나눗셈 계산판">
+              <div class="answer-strip">
+                <span class="answer-cell is-current" id="tensAnswer">?</span>
+                <span class="answer-cell" id="onesAnswer">?</span>
+              </div>
+              <div class="long-division">
+                <span class="divisor-box" id="divisorText">4</span>
+                <div class="dividend-box">
+                  <span class="digit-box is-active" id="tensDigit">5</span>
+                  <span class="digit-box" id="onesDigit">2</span>
+                </div>
+              </div>
+              <div class="down-row">
+                <div class="down-box" id="remainderBox">남은 십 ?</div>
+                <span>↓</span>
+                <div class="down-box" id="downNumberBox">내린 수 ?</div>
+              </div>
+            </div>
+
+            <div class="step-panel" id="stepPanel">
+              <button class="hint-toggle" id="hintToggleButton" type="button" aria-expanded="false">힌트</button>
+              <div class="step-track" aria-label="계산 순서">
+                <span class="step-chip is-current" id="stepChipTens">십</span>
+                <span class="step-chip" id="stepChipDown">내리기</span>
+                <span class="step-chip" id="stepChipOnes">일</span>
+              </div>
+              <div class="step-formula" id="stepFormula">5 ÷ 4 = ?</div>
+              <p class="step-meaning" id="stepMeaning">십의 자리부터 나눠요.</p>
+            </div>
+          </div>
+
+          <div class="prompt" id="promptText">알맞은 계산을 골라요.</div>
+          <div class="choice-grid" id="choiceGrid"></div>
+          <div class="feedback" id="feedbackText"></div>
+        </section>
+      </div>
+
+      <div class="reward-pop" id="rewardPop" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+        <div class="reward-card">
+          <div class="reward-visual" aria-hidden="true">
+            <div class="reward-delta" id="rewardDelta">동력 +5</div>
+          </div>
+          <h3 id="rewardTitle">가속 모터!</h3>
+          <p id="rewardMessage">엘리베이터가 더 힘차게 움직여요.</p>
+          <button class="primary-button" id="rewardNextButton" type="button">다음</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen result" id="resultScreen" aria-labelledby="resultTitle">
+      <img class="raster-bg" src="result-stage-generated.webp" alt="">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 2단원 2차시</span>
+      </div>
+      <div class="result-layout">
+        <div class="arrival-visual" aria-hidden="true">
+          <div class="arrival-floor">
+            <strong id="arrivalShort">?</strong>
+            <span id="arrivalName">도착 준비</span>
+          </div>
+        </div>
+        <div class="result-copy">
+          <h2 id="resultTitle">도착 층 확인 중</h2>
+          <p class="praise" id="praiseText">엘리베이터가 모은 동력을 살펴보고 있어요.</p>
+          <div class="result-measure" id="resultMeasure" aria-label="도착 동력 결과">
+            <div class="measure-top">
+              <span id="measureStatus">동력 측정 중</span>
+              <strong id="measurePercent">동력 0</strong>
+            </div>
+            <div class="measure-tube" aria-hidden="true">
+              <span class="measure-fill" id="measureFill"></span>
+            </div>
+            <div class="result-floor-track" id="resultFloorTrack" aria-label="도착 층"></div>
+          </div>
+          <div class="result-stats">
+            <div class="result-stat">
+              <span>도착 동력</span>
+              <strong id="finalPowerText">0</strong>
+            </div>
+            <div class="result-stat">
+              <span>맞힌 문제</span>
+              <strong id="finalCorrectText">0/10</strong>
+            </div>
+            <div class="result-stat">
+              <span>도착한 곳</span>
+              <strong id="finalDestinationText">다시 도전</strong>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="primary-button" id="restartButton" type="button">다시하기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <script>
+    const TOTAL_QUESTIONS = 10;
+    const MAX_POWER = 100;
+    const FLOORS = [
+      { id: "basement", short: "지하", name: "지하 정비층", min: 1, max: 18, requiredCorrect: 1 },
+      { id: "first", short: "1층", name: "1층 로비", min: 19, max: 38, requiredCorrect: 3 },
+      { id: "middle", short: "중간", name: "중간층", min: 39, max: 58, requiredCorrect: 5 },
+      { id: "view", short: "전망", name: "전망층", min: 59, max: 78, requiredCorrect: 7 },
+      { id: "roof", short: "옥상", name: "옥상 정원", min: 79, max: 100, requiredCorrect: 9 }
+    ];
+    const SECRET_FLOOR = {
+      id: "rainbow",
+      short: "무지개",
+      name: "꼭대기 전망대",
+      min: 100,
+      max: 100,
+      requiredCorrect: 7,
+      secret: true
+    };
+    const ALL_FLOORS = [...FLOORS, SECRET_FLOOR];
+    const REWARD_ART_CLASSES = [
+      "reward-art--normal",
+      "reward-art--mega",
+      "reward-art--loss",
+      "reward-art--empty",
+      "reward-art--express",
+      "reward-art--rainbow"
+    ];
+
+    const state = {
+      screen: "cover",
+      problems: [],
+      index: 0,
+      power: 0,
+      correct: 0,
+      chain: 0,
+      stepIndex: 0,
+      stepAttempts: 0,
+      problemHadMistake: false,
+      problemHadReveal: false,
+      hintOpen: false,
+      rainbowPower: false,
+      lastPowerEvent: null,
+      express: false,
+      soundsOn: true,
+      audio: null
+    };
+
+    const el = {
+      coverScreen: document.getElementById("coverScreen"),
+      tutorialScreen: document.getElementById("tutorialScreen"),
+      playScreen: document.getElementById("playScreen"),
+      resultScreen: document.getElementById("resultScreen"),
+      startButton: document.getElementById("startButton"),
+      tutorialNextButton: document.getElementById("tutorialNextButton"),
+      soundToggle: document.getElementById("soundToggle"),
+      progressText: document.getElementById("progressText"),
+      powerText: document.getElementById("powerText"),
+      chainText: document.getElementById("chainText"),
+      elevatorZone: document.getElementById("elevatorZone"),
+      elevatorCar: document.getElementById("elevatorCar"),
+      floorTrack: document.getElementById("floorTrack"),
+      powerPercentText: document.getElementById("powerPercentText"),
+      powerMeterFill: document.getElementById("powerMeterFill"),
+      questionText: document.getElementById("questionText"),
+      tensAnswer: document.getElementById("tensAnswer"),
+      onesAnswer: document.getElementById("onesAnswer"),
+      divisorText: document.getElementById("divisorText"),
+      tensDigit: document.getElementById("tensDigit"),
+      onesDigit: document.getElementById("onesDigit"),
+      remainderBox: document.getElementById("remainderBox"),
+      downNumberBox: document.getElementById("downNumberBox"),
+      hintToggleButton: document.getElementById("hintToggleButton"),
+      stepChipTens: document.getElementById("stepChipTens"),
+      stepChipDown: document.getElementById("stepChipDown"),
+      stepChipOnes: document.getElementById("stepChipOnes"),
+      stepFormula: document.getElementById("stepFormula"),
+      stepMeaning: document.getElementById("stepMeaning"),
+      promptText: document.getElementById("promptText"),
+      choiceGrid: document.getElementById("choiceGrid"),
+      feedbackText: document.getElementById("feedbackText"),
+      rewardPop: document.getElementById("rewardPop"),
+      rewardTitle: document.getElementById("rewardTitle"),
+      rewardDelta: document.getElementById("rewardDelta"),
+      rewardMessage: document.getElementById("rewardMessage"),
+      rewardNextButton: document.getElementById("rewardNextButton"),
+      arrivalShort: document.getElementById("arrivalShort"),
+      arrivalName: document.getElementById("arrivalName"),
+      resultTitle: document.getElementById("resultTitle"),
+      resultMeasure: document.getElementById("resultMeasure"),
+      measureStatus: document.getElementById("measureStatus"),
+      measurePercent: document.getElementById("measurePercent"),
+      measureFill: document.getElementById("measureFill"),
+      resultFloorTrack: document.getElementById("resultFloorTrack"),
+      praiseText: document.getElementById("praiseText"),
+      finalPowerText: document.getElementById("finalPowerText"),
+      finalCorrectText: document.getElementById("finalCorrectText"),
+      finalDestinationText: document.getElementById("finalDestinationText"),
+      restartButton: document.getElementById("restartButton")
+    };
+
+    function showScreen(name) {
+      state.screen = name;
+      [el.coverScreen, el.tutorialScreen, el.playScreen, el.resultScreen].forEach((screen) => {
+        screen.classList.remove("is-active");
+      });
+      document.getElementById(`${name}Screen`).classList.add("is-active");
+    }
+
+    function startGame() {
+      state.problems = buildProblems();
+      state.index = 0;
+      state.power = 0;
+      state.correct = 0;
+      state.chain = 0;
+      state.rainbowPower = false;
+      state.lastPowerEvent = null;
+      state.express = false;
+      playSound("start");
+      showScreen("play");
+      renderProblem();
+    }
+
+    function buildProblems() {
+      const candidates = [];
+      for (let divisor = 2; divisor <= 8; divisor += 1) {
+        for (let quotient = 10; quotient <= 49; quotient += 1) {
+          const dividend = divisor * quotient;
+          if (dividend < 20 || dividend > 99) {
+            continue;
+          }
+          const tensDigit = Math.floor(dividend / 10);
+          const onesDigit = dividend % 10;
+          const tensQuot = Math.floor(tensDigit / divisor);
+          const remainderTens = tensDigit % divisor;
+          const downNumber = remainderTens * 10 + onesDigit;
+          if (tensQuot < 1 || remainderTens === 0 || downNumber % divisor !== 0) {
+            continue;
+          }
+          candidates.push({
+            dividend,
+            divisor,
+            quotient,
+            tensDigit,
+            onesDigit,
+            tensQuot,
+            remainderTens,
+            carryDown: remainderTens * 10,
+            downNumber,
+            onesQuot: downNumber / divisor
+          });
+        }
+      }
+      return shuffle(candidates).slice(0, TOTAL_QUESTIONS);
+    }
+
+    function renderProblem() {
+      const problem = currentProblem();
+      state.stepIndex = 0;
+      state.stepAttempts = 0;
+      state.problemHadMistake = false;
+      state.problemHadReveal = false;
+      state.hintOpen = false;
+      el.rewardPop.classList.remove("is-visible");
+      REWARD_ART_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      el.questionText.textContent = `${problem.dividend} ÷ ${problem.divisor}`;
+      el.tensAnswer.textContent = "?";
+      el.onesAnswer.textContent = "?";
+      el.divisorText.textContent = problem.divisor;
+      el.tensDigit.textContent = problem.tensDigit;
+      el.onesDigit.textContent = problem.onesDigit;
+      el.remainderBox.textContent = "남은 십 ?";
+      el.downNumberBox.textContent = "내린 수 ?";
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      renderStatus();
+      renderStep();
+    }
+
+    function renderStatus() {
+      const power = getPower();
+      const charge = power / MAX_POWER;
+      el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
+      el.powerText.textContent = state.power > 0 || state.rainbowPower ? "동력 모으는 중" : "동력 준비";
+      el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 도착" : "마지막에 도착";
+      el.elevatorZone.style.setProperty("--power", charge.toFixed(3));
+      el.elevatorZone.classList.toggle("is-rainbow", state.rainbowPower);
+      el.powerPercentText.textContent = state.rainbowPower ? "무지개 동력" : "모으는 중";
+      el.powerMeterFill.style.setProperty("--power-width", `${power}%`);
+      const destination = getDestinationByPower(state.power, state.rainbowPower);
+      renderFloorTrack(el.floorTrack, {
+        targetIndex: destination ? destination.index : -1,
+        reachedIndex: destination ? destination.index : -1
+      });
+    }
+
+    function getPower(power = state.power) {
+      return clamp(Math.round(power), 0, MAX_POWER);
+    }
+
+    function getMaxFloorIndexByCorrect(correct = state.correct) {
+      if (correct >= 9) {
+        return 4;
+      }
+      if (correct >= 7) {
+        return 3;
+      }
+      if (correct >= 5) {
+        return 2;
+      }
+      if (correct >= 3) {
+        return 1;
+      }
+      if (correct >= 1) {
+        return 0;
+      }
+      return -1;
+    }
+
+    function getDestinationByPower(power = state.power, rainbowPower = state.rainbowPower) {
+      if (rainbowPower && state.correct >= SECRET_FLOOR.requiredCorrect) {
+        return { ...SECRET_FLOOR, index: FLOORS.length, started: true };
+      }
+      const currentPower = getPower(power);
+      if (currentPower <= 0) {
+        return null;
+      }
+      const powerIndex = FLOORS.findIndex((floor) => currentPower >= floor.min && currentPower <= floor.max);
+      const gatedIndex = Math.min(Math.max(powerIndex, 0), getMaxFloorIndexByCorrect());
+      if (gatedIndex < 0) {
+        return null;
+      }
+      const floor = FLOORS[gatedIndex];
+      return { ...floor, index: gatedIndex, started: true };
+    }
+
+    function getDestination() {
+      return getDestinationByPower(state.power, state.rainbowPower);
+    }
+
+    function getNextFloor(destination) {
+      if (!destination) {
+        return FLOORS[0];
+      }
+      return FLOORS[Math.min(destination.index + 1, FLOORS.length - 1)];
+    }
+
+    function renderFloorTrack(container, { targetIndex = -1, reachedIndex = -1, includeSecret = false } = {}) {
+      container.innerHTML = "";
+      const floors = includeSecret ? ALL_FLOORS : [...FLOORS].reverse();
+      floors.forEach((floor) => {
+        const originalIndex = floor.secret ? FLOORS.length : FLOORS.indexOf(floor);
+        const chip = document.createElement("span");
+        chip.className = "floor-chip";
+        chip.textContent = floor.short;
+        chip.title = floor.name;
+        if (floor.secret) {
+          chip.classList.add("is-secret");
+        }
+        if (originalIndex <= reachedIndex) {
+          chip.classList.add("is-reached");
+        }
+        if (originalIndex === targetIndex) {
+          chip.classList.add("is-target");
+        }
+        container.appendChild(chip);
+      });
+    }
+
+    function renderStep() {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      el.stepFormula.textContent = state.hintOpen ? step.hint : step.formula;
+      el.stepMeaning.textContent = step.meaning;
+      el.promptText.textContent = step.prompt;
+      el.hintToggleButton.textContent = state.hintOpen ? "닫기" : "힌트";
+      el.hintToggleButton.setAttribute("aria-expanded", String(state.hintOpen));
+      updateStepChips();
+      updateBoardFocus();
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      renderChoices(buildStepOptions(step), handleStepChoice);
+    }
+
+    function getCurrentStep(problem) {
+      return buildSteps(problem)[state.stepIndex];
+    }
+
+    function buildSteps(problem) {
+      const noCarryQuotient = Math.floor(problem.onesDigit / problem.divisor);
+      return [
+        {
+          id: "tens",
+          label: "십의 자리",
+          formula: `${problem.tensDigit} ÷ ${problem.divisor}`,
+          correctKey: `tens:${problem.tensQuot}:${problem.remainderTens}`,
+          prompt: "십의 자리 몫과 남은 십을 골라요.",
+          meaning: "십의 자리부터 나누고 남은 십을 기억해요.",
+          hint: `${problem.tensDigit} 안에 ${problem.divisor}가 ${problem.tensQuot}번 들어가고, ${problem.remainderTens}십이 남아요.`,
+          explain: `${problem.tensDigit} ÷ ${problem.divisor} = ${problem.tensQuot}, 남은 십은 ${problem.remainderTens}이에요.`,
+          options: [
+            { key: `tens:${problem.tensQuot}:${problem.remainderTens}`, label: `${problem.tensQuot}, 남은 ${problem.remainderTens}십` },
+            { key: `tens:${problem.tensQuot}:0`, label: `${problem.tensQuot}, 남은 십 없음` },
+            {
+              key: `tens:${problem.tensQuot + 1}:${Math.max(0, problem.tensDigit - (problem.tensQuot + 1) * problem.divisor)}`,
+              label: `${problem.tensQuot + 1}, 남은 ${Math.max(0, problem.tensDigit - (problem.tensQuot + 1) * problem.divisor)}십`
+            },
+            {
+              key: `tens:${Math.max(0, problem.tensQuot - 1)}:${problem.remainderTens + problem.divisor}`,
+              label: `${Math.max(0, problem.tensQuot - 1)}, 남은 ${problem.remainderTens + problem.divisor}십`
+            }
+          ]
+        },
+        {
+          id: "down",
+          label: "내리기",
+          formula: `${problem.remainderTens}십 + ${problem.onesDigit}`,
+          correctKey: `down:${problem.downNumber}`,
+          prompt: "남은 십을 일의 자리로 내린 수를 골라요.",
+          meaning: "남은 십을 그냥 버리지 않고 아래로 내려요.",
+          hint: `남은 ${problem.remainderTens}십은 ${problem.carryDown}이에요. ${problem.carryDown} + ${problem.onesDigit}를 해요.`,
+          explain: `남은 ${problem.remainderTens}십을 내리면 ${problem.carryDown} + ${problem.onesDigit} = ${problem.downNumber}이에요.`,
+          options: [
+            { key: `down:${problem.downNumber}`, label: `${problem.carryDown} + ${problem.onesDigit} = ${problem.downNumber}` },
+            { key: `down:${problem.onesDigit}`, label: `일의 자리만 ${problem.onesDigit}` },
+            { key: `down:${problem.carryDown}`, label: `남은 십만 ${problem.carryDown}` },
+            { key: `down:${problem.downNumber + problem.divisor}`, label: `${problem.downNumber + problem.divisor}` }
+          ]
+        },
+        {
+          id: "ones",
+          label: "일의 자리",
+          formula: `${problem.downNumber} ÷ ${problem.divisor}`,
+          correctKey: `ones:${problem.onesQuot}`,
+          prompt: "내린 수를 나누어 일의 자리 몫을 골라요.",
+          meaning: "이제 일의 자리 몫을 찾아 답을 완성해요.",
+          hint: `${problem.downNumber} 안에 ${problem.divisor}가 몇 번 들어가는지 봐요.`,
+          explain: `${problem.downNumber} ÷ ${problem.divisor} = ${problem.onesQuot}, 그래서 답은 ${problem.quotient}이에요.`,
+          options: [
+            { key: `ones:${problem.onesQuot}`, label: `${problem.onesQuot}` },
+            { key: `ones:${noCarryQuotient}`, label: `${noCarryQuotient}` },
+            { key: `ones:${problem.onesQuot + 1}`, label: `${problem.onesQuot + 1}` },
+            { key: `ones:${Math.max(0, problem.onesQuot - 1)}`, label: `${Math.max(0, problem.onesQuot - 1)}` }
+          ]
+        }
+      ];
+    }
+
+    function updateStepChips() {
+      [
+        [el.stepChipTens, 0],
+        [el.stepChipDown, 1],
+        [el.stepChipOnes, 2]
+      ].forEach(([chip, index]) => {
+        chip.classList.toggle("is-current", state.stepIndex === index);
+        chip.classList.toggle("is-done", state.stepIndex > index);
+      });
+    }
+
+    function updateBoardFocus() {
+      [el.tensAnswer, el.onesAnswer, el.tensDigit, el.onesDigit, el.remainderBox, el.downNumberBox].forEach((item) => {
+        item.classList.remove("is-current", "is-active");
+      });
+      if (state.stepIndex === 0) {
+        el.tensAnswer.classList.add("is-current");
+        el.tensDigit.classList.add("is-active");
+      } else if (state.stepIndex === 1) {
+        el.remainderBox.classList.add("is-active");
+        el.onesDigit.classList.add("is-active");
+      } else {
+        el.onesAnswer.classList.add("is-current");
+        el.downNumberBox.classList.add("is-active");
+      }
+    }
+
+    function buildStepOptions(step) {
+      const unique = [];
+      step.options.forEach((option) => {
+        if (!unique.some((item) => item.key === option.key || item.label === option.label)) {
+          unique.push(option);
+        }
+      });
+      while (unique.length < 4) {
+        const label = String(randomInt(0, 18));
+        const key = `${step.id}:extra:${label}`;
+        if (!unique.some((item) => item.key === key || item.label === label)) {
+          unique.push({ key, label });
+        }
+      }
+      return shuffle(unique.slice(0, 4).map((option) => ({
+        ...option,
+        correct: option.key === step.correctKey
+      })));
+    }
+
+    function renderChoices(options, handler) {
+      el.choiceGrid.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.textContent = option.label;
+        button.addEventListener("click", () => handler(option, button));
+        el.choiceGrid.appendChild(button);
+      });
+    }
+
+    function handleStepChoice(option, button) {
+      const step = getCurrentStep(currentProblem());
+      if (option.correct) {
+        button.classList.add("is-correct");
+        setButtonsDisabled(true);
+        completeStep(step, false);
+        return;
+      }
+
+      state.stepAttempts += 1;
+      state.problemHadMistake = true;
+      button.classList.add("is-wrong");
+      playSound("try");
+      if (state.stepAttempts === 1) {
+        el.feedbackText.textContent = `다시 골라요. ${step.hint}`;
+        el.feedbackText.className = "feedback try";
+        button.disabled = true;
+        return;
+      }
+
+      state.problemHadReveal = true;
+      setButtonsDisabled(true);
+      el.feedbackText.textContent = `정답은 ${getCorrectLabel(step)}예요. ${step.explain}`;
+      el.feedbackText.className = "feedback try";
+      completeStep(step, true);
+    }
+
+    function getCorrectLabel(step) {
+      const correct = step.options.find((option) => option.key === step.correctKey);
+      return correct ? correct.label : "";
+    }
+
+    function completeStep(step, revealed) {
+      const problem = currentProblem();
+      applyStepToBoard(step, problem);
+      el.elevatorCar.classList.remove("is-boosting");
+      void el.elevatorCar.offsetWidth;
+      el.elevatorCar.classList.add("is-boosting");
+      if (!revealed) {
+        el.feedbackText.textContent = step.explain;
+        el.feedbackText.className = "feedback good";
+        playSound("correct");
+      }
+      window.setTimeout(() => {
+        if (state.stepIndex >= 2) {
+          completeProblem();
+          return;
+        }
+        state.stepIndex += 1;
+        state.stepAttempts = 0;
+        state.hintOpen = false;
+        renderStep();
+      }, revealed ? 1000 : 760);
+    }
+
+    function applyStepToBoard(step, problem) {
+      if (step.id === "tens") {
+        el.tensAnswer.textContent = problem.tensQuot;
+        el.remainderBox.textContent = `남은 ${problem.remainderTens}십`;
+      } else if (step.id === "down") {
+        el.downNumberBox.textContent = problem.downNumber;
+      } else {
+        el.onesAnswer.textContent = problem.onesQuot;
+      }
+      updateBoardFocus();
+    }
+
+    function completeProblem() {
+      const perfect = !state.problemHadMistake;
+      if (perfect) {
+        state.correct += 1;
+        state.chain += 1;
+      } else {
+        state.chain = 0;
+      }
+      const event = perfect ? rollPowerEvent() : createBlackoutEvent();
+      applyPowerEvent(event);
+      renderStatus();
+      finishProblem(state.lastPowerEvent);
+      playSound("reward");
+    }
+
+    function pickPowerEventForRoll(roll, amountPicker = randomInt) {
+      if (roll < 76.45) {
+        return {
+          id: "motor",
+          amount: amountPicker(5, 9),
+          title: "가속 모터!",
+          message: "엘리베이터가 더 힘차게 움직여요."
+        };
+      }
+      if (roll < 88.45) {
+        return {
+          id: "blackout",
+          amount: -amountPicker(5, 10),
+          title: "정전!",
+          message: "동력이 줄었어요."
+        };
+      }
+      if (roll < 97.45) {
+        return {
+          id: "superMotor",
+          amount: amountPicker(13, 22),
+          title: "슈퍼 모터!",
+          message: "엘리베이터가 크게 올라가요."
+        };
+      }
+      if (roll < 97.95) {
+        return {
+          id: "express",
+          amount: 8,
+          title: "급행 운행!",
+          message: "바로 도착 층을 확인해요.",
+          express: true
+        };
+      }
+      if (roll < 99.95) {
+        return {
+          id: "stop",
+          amount: 0,
+          title: "멈춤!",
+          message: "동력이 0이 되었어요.",
+          emptiesPower: true
+        };
+      }
+      return {
+        id: "rainbow",
+        amount: 12,
+        title: "무지개 동력!",
+        message: "꼭대기 전망대가 반짝여요.",
+        rainbow: true
+      };
+    }
+
+    function rollPowerEvent() {
+      return pickPowerEventForRoll(Math.random() * 100);
+    }
+
+    function createBlackoutEvent() {
+      return {
+        id: "blackout",
+        amount: -randomInt(8, 18),
+        title: "정전!",
+        message: "중간에 헷갈려 동력이 줄었어요."
+      };
+    }
+
+    function applyPowerEvent(event) {
+      const before = state.power;
+      if (event.emptiesPower) {
+        state.power = 0;
+      } else {
+        state.power = clamp(state.power + event.amount, 0, MAX_POWER);
+      }
+      if (event.rainbow) {
+        state.rainbowPower = true;
+      }
+      if (event.express) {
+        state.express = true;
+      }
+      const actualDelta = state.power - before;
+      const feedback = getPowerEventFeedback(event, actualDelta, before);
+      state.lastPowerEvent = {
+        ...event,
+        actualDelta,
+        ...feedback
+      };
+    }
+
+    function getPowerEventFeedback(event, actualDelta, before) {
+      if (event.rainbow) {
+        return { title: "무지개 동력!", message: "꼭대기 전망대가 반짝여요.", art: "rainbow" };
+      }
+      if (event.express) {
+        return { title: "급행 운행!", message: "바로 도착 층을 확인해요.", art: "express" };
+      }
+      if (event.emptiesPower) {
+        return { title: before > 0 ? "동력이 꺼졌어요" : "아직 동력이 없어요", message: "동력 0", art: "empty" };
+      }
+      if (actualDelta > 0) {
+        return actualDelta >= 13
+          ? { title: "슈퍼 모터!", message: "동력이 크게 늘었어요.", art: "mega" }
+          : { title: "가속 모터!", message: "동력이 늘었어요.", art: "normal" };
+      }
+      if (actualDelta < 0) {
+        return { title: "정전!", message: "동력이 줄었어요.", art: "loss" };
+      }
+      return { title: "잠깐 멈춤", message: "동력 변화 없음", art: "empty" };
+    }
+
+    function getPowerEventDeltaLabel(event) {
+      if (event.rainbow) {
+        return "무지개!";
+      }
+      if (event.express) {
+        return "급행!";
+      }
+      if (event.emptiesPower) {
+        return "동력 0";
+      }
+      const actualDelta = typeof event.actualDelta === "number" ? event.actualDelta : event.amount;
+      if (actualDelta > 0) {
+        return `동력 +${actualDelta}`;
+      }
+      if (actualDelta < 0) {
+        return `동력 ${actualDelta}`;
+      }
+      return "변화 없음";
+    }
+
+    function finishProblem(result) {
+      REWARD_ART_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      if (result.art) {
+        el.rewardPop.classList.add(`reward-art--${result.art}`);
+      }
+      el.rewardTitle.textContent = result.title;
+      el.rewardDelta.textContent = getPowerEventDeltaLabel(result);
+      el.rewardMessage.textContent = result.message;
+      el.rewardNextButton.textContent = result.express
+        ? "도착하기"
+        : state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
+      window.setTimeout(() => {
+        el.rewardPop.classList.add("is-visible");
+        el.rewardNextButton.focus();
+      }, 560);
+    }
+
+    function nextAfterReward() {
+      if (state.lastPowerEvent?.express || state.index + 1 >= TOTAL_QUESTIONS) {
+        showResult();
+        return;
+      }
+      state.index += 1;
+      playSound("next");
+      renderProblem();
+    }
+
+    function showResult() {
+      const destination = getDestination();
+      const arrived = Boolean(destination);
+      const power = getPower();
+      const powerLabel = state.rainbowPower ? "무지개 동력" : `동력 ${power}`;
+      el.resultScreen.classList.add("is-measuring");
+      el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowPower);
+      el.resultTitle.textContent = "도착 층 확인 중";
+      el.arrivalShort.textContent = "?";
+      el.arrivalName.textContent = "도착 준비";
+      el.finalPowerText.textContent = "측정 중";
+      el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.finalDestinationText.textContent = "측정 중";
+      el.praiseText.textContent = "엘리베이터가 모은 동력을 살펴보고 있어요.";
+      el.measureStatus.textContent = "동력 측정 중";
+      el.measurePercent.textContent = "동력 0";
+      el.measureFill.style.setProperty("--measure-width", "0%");
+      renderFloorTrack(el.resultFloorTrack, { targetIndex: -1, reachedIndex: -1, includeSecret: true });
+      el.restartButton.hidden = true;
+      el.restartButton.disabled = true;
+      playSound("scan");
+      showScreen("result");
+      window.setTimeout(() => {
+        el.measureStatus.textContent = "도착 층 계산 중";
+        el.measurePercent.textContent = powerLabel;
+        el.measureFill.style.setProperty("--measure-width", `${power}%`);
+        el.finalPowerText.textContent = powerLabel;
+        renderFloorTrack(el.resultFloorTrack, {
+          targetIndex: arrived ? destination.index : -1,
+          reachedIndex: arrived ? destination.index : -1,
+          includeSecret: true
+        });
+        playSound("measure");
+      }, 120);
+      window.setTimeout(() => {
+        el.resultScreen.classList.remove("is-measuring");
+        el.resultTitle.textContent = arrived ? `${destination.name} 도착!` : "동력 더 필요";
+        el.arrivalShort.textContent = arrived ? destination.short : "다시";
+        el.arrivalName.textContent = arrived ? destination.name : "도전";
+        el.measureStatus.textContent = arrived ? "도착 완료" : "다시 준비";
+        el.finalDestinationText.textContent = arrived ? destination.name : "다시 도전";
+        el.praiseText.textContent = arrived ? getPraise(destination) : getRetryMessage();
+        el.restartButton.hidden = false;
+        el.restartButton.disabled = false;
+        playSound("finish");
+      }, 2300);
+    }
+
+    function getPraise(destination) {
+      if (destination.secret) {
+        return "무지개 동력으로 꼭대기 전망대까지 갔어요!";
+      }
+      if (destination.index >= 4) {
+        return "옥상 정원까지 도착했어요. 남은 십을 끝까지 잘 내렸어요.";
+      }
+      if (destination.index >= 3) {
+        return "전망층까지 왔어요. 십의 자리와 일의 자리를 차근차근 살폈어요.";
+      }
+      if (destination.index >= 2) {
+        return "중간층까지 올라왔어요. 남은 십을 내려 합치는 힘이 좋아지고 있어요.";
+      }
+      return `${destination.name}까지 갔어요. 다음에는 더 높은 층까지 가 봐요.`;
+    }
+
+    function getRetryMessage() {
+      const next = getNextFloor(null);
+      if (state.correct >= 6) {
+        return `거의 다 왔어요. ${next.name}부터 다시 한 층씩 올라가 봐요.`;
+      }
+      if (state.correct >= 3) {
+        return "동력이 조금 부족해요. 남은 십을 아래로 내리는 걸 다시 해 봐요.";
+      }
+      return "괜찮아요. 십의 자리부터 천천히 나누면 지하 정비층부터 도착할 수 있어요.";
+    }
+
+    function setButtonsDisabled(disabled) {
+      [...el.choiceGrid.querySelectorAll("button")].forEach((button) => {
+        button.disabled = disabled;
+      });
+    }
+
+    function currentProblem() {
+      return state.problems[state.index];
+    }
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function initAudio() {
+      if (state.audio) {
+        return;
+      }
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        return;
+      }
+      state.audio = new AudioContext();
+    }
+
+    function playSound(kind) {
+      if (!state.soundsOn) {
+        return;
+      }
+      initAudio();
+      if (!state.audio) {
+        return;
+      }
+      if (state.audio.state === "suspended") {
+        state.audio.resume();
+      }
+      const plans = {
+        start: [260, 330, 392],
+        correct: [440, 660],
+        try: [180, 150],
+        reward: [392, 523, 784],
+        scan: [220, 294, 392],
+        measure: [330, 440, 660],
+        next: [330],
+        finish: [392, 523, 659, 880]
+      };
+      const frequencies = plans[kind] || [330];
+      frequencies.forEach((frequency, index) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        oscillator.type = "triangle";
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, state.audio.currentTime + index * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.045, state.audio.currentTime + index * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, state.audio.currentTime + index * 0.08 + 0.16);
+        oscillator.connect(gain).connect(state.audio.destination);
+        oscillator.start(state.audio.currentTime + index * 0.08);
+        oscillator.stop(state.audio.currentTime + index * 0.08 + 0.18);
+      });
+    }
+
+    el.startButton.addEventListener("click", () => {
+      playSound("start");
+      showScreen("tutorial");
+    });
+    el.tutorialNextButton.addEventListener("click", startGame);
+    el.hintToggleButton.addEventListener("click", () => {
+      state.hintOpen = !state.hintOpen;
+      renderStep();
+      playSound("next");
+    });
+    el.rewardNextButton.addEventListener("click", nextAfterReward);
+    el.restartButton.addEventListener("click", () => {
+      playSound("start");
+      showScreen("cover");
+    });
+    el.soundToggle.addEventListener("click", () => {
+      state.soundsOn = !state.soundsOn;
+      el.soundToggle.textContent = "소리";
+      el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
+      el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
+      if (state.soundsOn) {
+        playSound("next");
+      }
+    });
+
+    renderFloorTrack(el.floorTrack, { targetIndex: -1, reachedIndex: -1 });
+    renderFloorTrack(el.resultFloorTrack, { targetIndex: -1, reachedIndex: -1, includeSecret: true });
+    renderStatus();
+  </script>
+</body>
+</html>

@@ -40,11 +40,23 @@
 
 ```html
 <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+  <div class="stage-shell">
+    <button class="sound-toggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+  </div>
+</main>
 ```
 
 ```css
-.screen {
+.stage-shell {
   width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+  aspect-ratio: 16 / 10;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   min-height: auto;
   aspect-ratio: 16 / 10;
 }
@@ -52,6 +64,7 @@
 
 - 텍스트 안전 여백 + 스크림(반투명 어둠막)으로 글자 가독성 확보.
 - 좌표 스트레스 방지: 배경은 그림, 조작은 투명/반투명 HTML 버튼.
+- `소리` 같은 전역 조작 버튼은 `.stage-shell` 내부 상단 오른쪽 보조 슬롯에 작게 두고, 문제·선택지·결과 버튼 위로 떠다니게 만들지 않는다.
 - PC와 태블릿 가로에서는 Stage를 contain 방식으로 맞추고, 남는 영역은 바깥 배경 여백으로 둔다.
 - 차시를 만든 뒤 루트에서 `node scripts/check-stage-ratio.mjs`를 통과시킨다.
 
