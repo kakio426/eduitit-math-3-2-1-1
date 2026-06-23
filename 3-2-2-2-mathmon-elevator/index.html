@@ -68,7 +68,11 @@
 
     .stage-shell {
       --stage-inset: clamp(14px, 2vw, 22px);
-      --sound-slot: clamp(64px, 6vw, 78px);
+      --sound-button-size: clamp(30px, 3vw, 34px);
+      --sound-gap: clamp(8px, 1vw, 12px);
+      --sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));
+      --top-control-pad-x: 9px;
+      --top-control-icon-gap: 7px;
       position: relative;
       width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
       aspect-ratio: 16 / 10;
@@ -108,12 +112,15 @@
 
     .top-row {
       position: absolute;
-      inset: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) auto clamp(14px, 2vw, 22px);
+      top: var(--stage-inset);
+      left: var(--stage-inset);
+      right: calc(var(--stage-inset) + var(--sound-reserve));
       z-index: 4;
+      height: var(--sound-button-size);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: var(--sound-gap);
       pointer-events: none;
     }
 
@@ -123,23 +130,29 @@
     .mini-badge {
       display: inline-flex;
       align-items: center;
-      min-height: 34px;
-      padding: 7px 13px;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: max-content;
+      min-height: var(--sound-button-size);
+      padding: 0 var(--top-control-pad-x);
+      gap: var(--top-control-icon-gap);
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(12, 23, 27, 0.74);
+      background: rgba(14, 12, 22, 0.7);
       color: #ffffff;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1;
       backdrop-filter: blur(10px);
+      white-space: nowrap;
     }
 
     .brand-badge img {
-      width: 22px;
-      height: 22px;
-      margin-right: 8px;
-      border-radius: 6px;
+      width: 20px;
+      height: 20px;
+      margin-right: 0;
+      border-radius: 5px;
     }
 
     .unit-badge {
@@ -219,47 +232,68 @@
       top: var(--stage-inset);
       right: var(--stage-inset);
       z-index: 60;
-      display: inline-grid;
+      display: grid;
       place-items: center;
-      width: clamp(54px, 5.3vw, 66px);
+      width: var(--sound-button-size);
       min-width: 0;
-      height: 34px;
-      min-height: 34px;
+      height: var(--sound-button-size);
+      min-height: 0;
       padding: 0;
-      border: 1px solid rgba(255, 200, 87, 0.55);
+      border: 1px solid rgba(255, 232, 186, 0.34);
       border-radius: 999px;
-      color: #ffe3a5;
-      background: rgba(14, 12, 22, 0.78);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
-      font-size: clamp(0.72rem, 1vw, 0.84rem);
-      font-weight: 950;
+      color: rgba(255, 238, 198, 0.92);
+      background: rgba(14, 12, 22, 0.42);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+      font-size: 0;
       line-height: 1;
       backdrop-filter: blur(10px);
     }
 
+    .sound-toggle::before,
     .sound-toggle::after {
-      content: "";
+      content: none !important;
+      display: none !important;
+    }
+
+    .sound-toggle svg {
       position: absolute;
-      top: 6px;
-      right: 7px;
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #69efbf;
-      box-shadow: 0 0 10px rgba(105, 239, 191, 0.8);
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      display: block;
+      transform: translate(-50%, -50%);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .sound-off-stroke {
+      display: none;
     }
 
     .stage-shell .top-row {
-      right: calc(var(--stage-inset) + var(--sound-slot));
+      right: calc(var(--stage-inset) + var(--sound-reserve));
     }
 
     .stage-shell .hud {
-      padding-right: var(--sound-slot);
+      padding-right: var(--sound-reserve);
     }
 
     .sound-toggle[aria-pressed="false"] {
       border-color: rgba(207, 225, 221, 0.34);
       color: var(--muted);
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-wave {
+      display: none;
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-off-stroke {
+      display: block;
     }
 
     .cover,
@@ -398,14 +432,15 @@
 
     .play {
       grid-template-rows: auto 1fr;
-      padding: clamp(16px, 2.4vw, 24px);
+      padding: var(--stage-inset);
     }
 
     .hud {
       display: grid;
       grid-template-columns: minmax(210px, auto) 1fr auto;
-      align-items: center;
+      align-items: start;
       gap: 12px;
+      min-height: var(--sound-button-size);
       margin-bottom: 16px;
     }
 
@@ -836,7 +871,7 @@
     }
 
     .step-chip {
-      min-height: 34px;
+      min-height: 0;
       display: grid;
       place-items: center;
       padding: 6px 8px;
@@ -1389,7 +1424,14 @@
 
   <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
     <div class="stage-shell">
-      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 10h3.5l4.2-4v12l-4.2-4H4z"></path>
+          <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <path class="sound-wave" d="M18.5 5.8a9 9 0 0 1 0 12.4"></path>
+          <path class="sound-off-stroke" d="M16 8l5 8M21 8l-5 8"></path>
+        </svg>
+      </button>
     <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
       <img class="raster-bg" src="cover-generated.webp" alt="">
       <div class="top-row">
@@ -2377,7 +2419,6 @@
     });
     el.soundToggle.addEventListener("click", () => {
       state.soundsOn = !state.soundsOn;
-      el.soundToggle.textContent = "소리";
       el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
       el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
       if (state.soundsOn) {

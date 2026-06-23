@@ -84,6 +84,12 @@ teacher-facing SaaS·관리자 화면에는 적용하지 않는다(그건 `eduit
 - 기본 Stage CSS는 `.stage-shell`이 `width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);`, `aspect-ratio: 16 / 10;`을 담당하고, `.screen`은 `position: absolute; inset: 0; width: 100%; height: 100%;`로 Stage를 채우게 한다.
 - PC와 태블릿 가로에서는 Stage를 contain 방식으로 맞추고, 남는 영역은 바깥 배경 여백으로 처리한다.
 - `소리` 같은 전역 조작 버튼은 Stage 밖에 fixed로 띄우지 말고 `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 둔다. `top-row`/`hud`는 그 공간만큼 비워 버튼이 배지·문제·선택지를 가리지 않게 한다.
+- 소리 버튼 위치는 모든 화면에서 완전히 같아야 한다. `.stage-shell`에 `--sound-button-size`, `--sound-gap`, `--sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));`를 두고, `.sound-toggle`은 `top: var(--stage-inset); right: var(--stage-inset); width/height: var(--sound-button-size);`만 쓴다. 화면별 `transform`, active-screen별 위치 보정, 하단 고정은 금지한다.
+- 소리 버튼은 텍스트 pill이 아니라 원형 SVG 아이콘 버튼이다. 화면에 `소리` 글자를 직접 넣지 말고, 켜짐/꺼짐은 SVG 파형과 `aria-label`로만 표현한다. 음표 문자 pseudo-element나 초록 상태 점으로 버튼을 꾸미지 않는다.
+- `.stage-shell .top-row`는 `right: calc(var(--stage-inset) + var(--sound-reserve));`, `.stage-shell .hud`는 `padding-right: var(--sound-reserve);`로 같은 슬롯을 공유한다. 화면별로 단원 배지와 소리 버튼 사이 간격이 달라지면 실패다.
+- `.top-row`는 `top: var(--stage-inset); left: var(--stage-inset); right: calc(var(--stage-inset) + var(--sound-reserve)); height: var(--sound-button-size); gap: var(--sound-gap);`를 명시하고 `inset` 축약을 쓰지 않는다. 문제 화면 `.hud`는 `align-items: start; min-height: var(--sound-button-size);`로 오른쪽 배지가 소리 버튼보다 위아래로 흔들리지 않게 한다.
+- 브랜드/단원/상태 배지와 작은 보조 버튼은 글자보다 상자가 먼저 보이면 실패다. `flex: 0 0 auto; width: fit-content; max-width: max-content; min-height: var(--sound-button-size); padding: 0 var(--top-control-pad-x); gap: var(--top-control-icon-gap); white-space: nowrap;`를 기본으로 쓰고, 안정 슬롯이 꼭 필요한 경우를 제외하고 `min-width`로 빈 공간을 크게 만들지 않는다.
+- 아이콘+텍스트 배지는 아이콘 크기, 글자 크기, gap, 좌우 패딩을 함께 줄인다. 아이콘만 있는 전역 버튼은 텍스트 pill로 만들지 말고 원형/정사각 아이콘 버튼으로 둔다.
 - 새 차시를 만들거나 화면을 크게 고친 뒤에는 반드시 `node scripts/check-stage-ratio.mjs`를 통과시킨다.
 
 ## 성취기준 표기 주의

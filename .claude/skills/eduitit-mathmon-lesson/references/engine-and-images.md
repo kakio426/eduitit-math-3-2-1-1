@@ -41,15 +41,96 @@
 ```html
 <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
   <div class="stage-shell">
-    <button class="sound-toggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+    <button class="sound-toggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M4 10h3.5l4.2-4v12l-4.2-4H4z"></path>
+        <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+        <path class="sound-wave" d="M18.5 5.8a9 9 0 0 1 0 12.4"></path>
+        <path class="sound-off-stroke" d="M16 8l5 8M21 8l-5 8"></path>
+      </svg>
+    </button>
   </div>
 </main>
 ```
 
 ```css
 .stage-shell {
+  --stage-inset: clamp(14px, 2vw, 22px);
+  --sound-button-size: clamp(30px, 3vw, 34px);
+  --sound-gap: clamp(8px, 1vw, 12px);
+  --sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));
+  --top-control-pad-x: 9px;
+  --top-control-icon-gap: 7px;
+  position: relative;
   width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
   aspect-ratio: 16 / 10;
+}
+
+.sound-toggle {
+  position: absolute;
+  top: var(--stage-inset);
+  right: var(--stage-inset);
+  width: var(--sound-button-size);
+  height: var(--sound-button-size);
+  font-size: 0;
+}
+
+.sound-toggle svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+}
+
+.sound-toggle[aria-pressed="false"] .sound-wave {
+  display: none;
+}
+
+.sound-off-stroke {
+  display: none;
+}
+
+.sound-toggle[aria-pressed="false"] .sound-off-stroke {
+  display: block;
+}
+
+.top-row {
+  position: absolute;
+  top: var(--stage-inset);
+  left: var(--stage-inset);
+  right: calc(var(--stage-inset) + var(--sound-reserve));
+  height: var(--sound-button-size);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sound-gap);
+}
+
+.brand-badge,
+.unit-badge,
+.mini-badge {
+  flex: 0 0 auto;
+  width: fit-content;
+  max-width: max-content;
+  min-height: var(--sound-button-size);
+  padding: 0 var(--top-control-pad-x);
+  gap: var(--top-control-icon-gap);
+  white-space: nowrap;
+}
+
+.stage-shell .top-row {
+  right: calc(var(--stage-inset) + var(--sound-reserve));
+}
+
+.stage-shell .hud {
+  padding-right: var(--sound-reserve);
+}
+
+.hud {
+  align-items: start;
+  min-height: var(--sound-button-size);
 }
 
 .screen {
@@ -64,7 +145,9 @@
 
 - 텍스트 안전 여백 + 스크림(반투명 어둠막)으로 글자 가독성 확보.
 - 좌표 스트레스 방지: 배경은 그림, 조작은 투명/반투명 HTML 버튼.
-- `소리` 같은 전역 조작 버튼은 `.stage-shell` 내부 상단 오른쪽 보조 슬롯에 작게 두고, 문제·선택지·결과 버튼 위로 떠다니게 만들지 않는다.
+- `소리` 같은 전역 조작 버튼은 `.stage-shell` 내부 상단 오른쪽 보조 슬롯에 작게 두고, `--sound-button-size`/`--sound-gap`/`--sound-reserve`로 모든 화면에서 같은 위치를 유지한다. 화면별 `transform`, active-screen별 위치 보정, 하단 고정은 금지한다.
+- 소리 버튼은 텍스트 pill이 아니라 원형 SVG 아이콘 버튼이다. 화면에 `소리` 글자를 직접 넣지 말고, 켜짐/꺼짐은 SVG 파형과 `aria-label`로 표현한다.
+- 브랜드/단원/상태 배지는 `width: fit-content`, `max-width: max-content`, 작은 패딩/gap 변수로 내용 폭만큼만 잡는다. 상단 배지와 소리 버튼은 같은 `--sound-button-size` 기준선에 둔다.
 - PC와 태블릿 가로에서는 Stage를 contain 방식으로 맞추고, 남는 영역은 바깥 배경 여백으로 둔다.
 - 차시를 만든 뒤 루트에서 `node scripts/check-stage-ratio.mjs`를 통과시킨다.
 
@@ -74,7 +157,7 @@
 
 - 매스몬 원본 관리는 `_shared/mathmon/`이 단일 기준이다.
 - 새 매스몬을 만들기 전 `_shared/mathmon/catalog.json`, 각 팩 `manifest.json`, contact sheet를 확인해 기존 실루엣과 겹치지 않게 한다.
-- 새 팩은 `_shared/mathmon/STYLE_GUIDE.md`의 `mathmon-v2-toy-3d` 기준을 따른다.
+- 새 팩은 `_shared/mathmon/STYLE_GUIDE.md`의 활성 스타일 기준을 따른다. 현재 활성 스타일은 1차시 매스몬 기준의 `mathmon-v1-anime-sticker`이며, 밝은 2D 애니/스티커형 톤으로 생성한다.
 - 원본 투명 PNG와 raw chroma-key 생성물은 `_shared/mathmon/<pack-id>/`에 두고, 차시 폴더에는 실행에 필요한 WebP만 복사한다.
 - 한 차시 안에서는 한 매스몬 팩을 기본으로 쓰고, 여러 팩을 섞을 때는 문서에 이유를 남긴다.
 

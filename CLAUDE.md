@@ -23,7 +23,10 @@
 - 첫 화면은 제목, 한 줄 목표, 시작 버튼이 가장 먼저 보여야 합니다.
 - 첫 화면과 마지막 결과 화면은 이미지 생성 기반 RasterStage로 제작하고, 매 판 달라지는 텍스트·점수·버튼은 HTML 오버레이로 얹습니다.
 - 모든 차시는 `16:10` Stage, 기준 제작 크기 `1280×800`을 지킵니다. `index.html`의 `<main class="game">`에는 `data-stage-ratio="16:10"`과 `data-stage-size="1280x800"`을 두고, `.stage-shell`이 contain 폭과 비율을 담당하게 합니다.
-- `소리` 같은 전역 조작 버튼은 Stage 밖 viewport에 fixed로 띄우지 않고, `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 둡니다. `top-row`/`hud`는 그 공간만큼 비워 버튼이 배지·문제·선택지를 가리지 않게 합니다.
+- `소리` 같은 전역 조작 버튼은 Stage 밖 viewport에 fixed로 띄우지 않고, `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 둡니다. `.stage-shell`의 `--sound-button-size`, `--sound-gap`, `--sound-reserve`로 위치와 예비 공간을 고정하고, `.sound-toggle`에는 화면별 `transform`/active-screen별 위치 보정을 쓰지 않습니다. `top-row`/`hud`는 같은 `--sound-reserve`만큼 비워 버튼이 배지·문제·선택지를 가리지 않게 합니다.
+- 소리 버튼은 텍스트 pill이 아니라 `width/height: var(--sound-button-size)`인 원형 SVG 아이콘 버튼으로 만듭니다. 화면에 `소리` 글자를 직접 노출하지 말고, 켜짐/꺼짐은 SVG 파형과 `aria-label`로만 표현합니다.
+- 상단 배지·단원 pill·소리 버튼은 같은 기준선에 놓습니다. `.top-row`는 `top/left/right`와 `height: var(--sound-button-size)`, `gap: var(--sound-gap)`을 명시하고 `inset` 축약을 쓰지 않습니다. 문제 화면 `.hud`는 `align-items: start`와 `min-height: var(--sound-button-size)`를 둡니다.
+- 브랜드/단원/상태 배지는 내용보다 오른쪽으로 늘어나면 실패입니다. `flex: 0 0 auto`, `width: fit-content`, `max-width: max-content`, 작은 좌우 패딩 변수(`--top-control-pad-x`)와 gap 변수(`--top-control-icon-gap`)를 쓰고, 안정 슬롯이 꼭 필요하지 않으면 `min-width`로 빈 공간을 만들지 않습니다.
 - 차시를 만들거나 화면을 크게 바꾼 뒤에는 루트에서 `node scripts/check-stage-ratio.mjs`를 실행해 Stage 비율 계약을 통과해야 합니다.
 - 문제와 선택지는 장식보다 항상 우선합니다.
 - 보상은 하나의 중심 구조로 유지합니다. 여러 보상 체계를 동시에 전면 배치하지 않습니다.
@@ -124,7 +127,8 @@
 - 차시 폴더에는 실행에 필요한 WebP 같은 경량 배포본만 복사합니다. 원본 PNG와 생성 원본은 `_shared/mathmon/`에 둡니다.
 - 한 차시는 기본적으로 한 매스몬 팩만 씁니다. 여러 팩을 섞어야 할 때는 해당 차시 `README.md`/`REPORT.md`와 팩 `manifest.json`에 이유를 남깁니다.
 - 새 팩을 만들기 전 기존 팩의 contact sheet와 manifest를 보고 실루엣·동물종·소재가 겹치지 않는지 확인합니다.
-- 이미지 분위기는 팩 단위로 반드시 일관되어야 합니다. 앞으로 새로 만드는 매스몬은 `_shared/mathmon/STYLE_GUIDE.md`의 `mathmon-v2-toy-3d` 기준을 기본값으로 삼습니다. 기존 `base-pack`과 `zero-factory-pack`은 레거시 팩으로 보관합니다.
+- 이미지 분위기는 팩 단위로 반드시 일관되어야 합니다. 앞으로 새로 만드는 매스몬은 1차시 `매스몬 상자런`의 밝은 2D 애니/스티커형 톤(`mathmon-v1-anime-sticker`)을 기본값으로 삼습니다. 현재 실행 기준은 `base-pack`이며, 0 공장 기존 팩과 V2 팩은 보존만 합니다.
+- 차시별 전용 매스몬도 본체는 동물/판타지 생물이어야 합니다. 차시 테마는 소품·의상·배지·포즈로만 표현하고, 톱니바퀴·자석·상자·컨베이어 같은 사물 자체를 매스몬 몸으로 만들지 않습니다.
 
 ### RasterStage 화면 규칙
 

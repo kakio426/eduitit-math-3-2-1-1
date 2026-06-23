@@ -108,7 +108,7 @@
 - `result-andromeda-generated.webp`
 - `result-retry-generated.webp`
 - `eduitit-logo-mark.png`
-- `assets/mathmon/core-pack-v2/*.webp`
+- `assets/mathmon/base-pack/*.webp`
 - `screenshots/*.png`
 - `README.md`
 - `REPORT.md`

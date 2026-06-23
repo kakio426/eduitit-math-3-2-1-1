@@ -8,20 +8,21 @@
 
 매스몬 생성·교체·팩 관리의 최상위 절차는 `_shared/mathmon/MATHMON_ASSET_CONTRACT.md`입니다. 이 스타일 가이드는 그 계약의 이미지 분위기 기준을 담당합니다.
 
-이미지 분위기는 반드시 일관되어야 합니다. 학생이 차시가 달라져도 같은 시리즈의 보상 카드라고 느껴야 하기 때문입니다. `base-pack`과 `zero-factory-pack`은 레거시 팩으로 보존하고, 1~3차시부터는 V2 팩을 활성 표준으로 씁니다.
+이미지 분위기는 반드시 일관되어야 합니다. 학생이 차시가 달라져도 같은 시리즈의 보상 카드라고 느껴야 하기 때문입니다. 현재 활성 기준은 1차시 `매스몬 상자런`에서 사용한 2D 애니/스티커형 매스몬 톤입니다. `core-pack-v2`와 `zero-factory-pack-v2`는 보존 팩으로 남기지만 새 생성 기준으로 쓰지 않습니다.
 
-## V2 표준 스타일
+## V1 표준 스타일
 
-- 스타일 id: `mathmon-v2-toy-3d`
-- 형태: 둥글고 부드러운 장난감/클레이풍 3D 마스코트
-- 표정: 큰 눈, 밝은 표정, 초등학생에게 친근한 인상
-- 실루엣: 작은 썸네일에서도 구분되는 단순하고 강한 외곽
-- 재질: 부드러운 플라스틱, 고무, 천 인형, 무광 금속처럼 과하게 사실적이지 않은 표면
-- 색감: 선명하지만 과포화되지 않은 색, 차시 테마색 1~2개와 공통 포인트색을 함께 사용
-- 조명: 부드러운 스튜디오 조명, 강한 그림자나 공포감 있는 대비 금지
+- 스타일 id: `mathmon-v1-anime-sticker`
+- 형태: 둥글고 귀여운 2D 애니메이션/스티커형 마스코트
+- 표정: 큰 눈, 밝은 표정, 초등학생이 바로 친근하게 느끼는 인상
+- 실루엣: 작은 보상 카드에서도 구분되는 단순하고 강한 외곽
+- 선 처리: 깨끗한 컬러 외곽선과 부드러운 내부 명암. 과하게 두껍거나 공격적인 검정선은 피함
+- 색감: 선명하고 명랑한 색, 캐릭터별 대표색이 분명하되 너무 탁하거나 공포스럽지 않게 유지
+- 디테일: 알, 병아리, 여우, 용, 사자, 독수리, 공룡, 유니콘처럼 아이들이 바로 알아볼 수 있는 소재를 우선
+- 캐릭터 골격: 동물 또는 판타지 생물이 본체입니다. 차시 테마는 작은 소품, 의상, 표정, 포즈, 카드 문구로만 더합니다.
 - 카메라: 정면 또는 3/4 정면, 전신, 카드 안에 넣기 좋은 중앙 배치
 - 배경: 원본은 투명 PNG, 생성 중에는 제거 가능한 단색 chroma-key 사용 가능
-- 금지: 2D 스티커풍, 굵은 검정 만화 외곽선, 과한 로봇 렌더, 실사 금속, 텍스트, 로고, 워터마크, 복잡한 배경, 바닥 그림자, 날카로운 공포형 디자인, 과한 디테일, 차시마다 다른 렌더링 톤
+- 금지: 실사풍, 과한 3D 장난감 렌더, 금속 로봇 렌더, 복잡한 배경, 텍스트, 로고, 워터마크, 날카로운 공포형 디자인, 차시마다 다른 렌더링 톤, 톱니바퀴·자석·상자·컨베이어 같은 사물 자체를 매스몬 몸으로 만드는 디자인
 
 ## 팩 단위 일관성
 
@@ -34,7 +35,7 @@
 - 카드 안에서의 크기감과 여백
 - 차시 테마와 연결되는 소재 범위
 
-예를 들어 `zero-factory-pack-v2`는 공장·기계·0 스티커 소재로 통일합니다. 같은 팩 안에 갑자기 동물형, 판타지 용형, 사람형을 섞지 않습니다.
+예를 들어 공장 차시 팩도 매스몬 본체는 동물/판타지 생물이어야 합니다. 공장 테마는 작은 작업 모자, 0 스티커, 작은 공구 가방, 컨베이어 모양 배지 같은 보조 요소로만 표현합니다. 같은 팩 안에 갑자기 실사 금속 로봇, 사물형 매스몬, 3D 장난감 렌더를 섞지 않습니다.
 
 ## 중복 방지
 
@@ -59,10 +60,11 @@
 
 ```text
 Create ONE original Mathmon character for a Korean elementary math game.
-Style: bright cute rounded toy-like 3D mascot, soft clay/plastic material, child-friendly, clean silhouette, full body centered, front three-quarter view, generous padding.
-The character must match the pack theme: <pack theme>.
+Style: bright cute Korean anime sticker mascot, clean colorful outline, soft cel-shaded highlights, child-friendly, clean silhouette, full body centered, front three-quarter view, generous padding.
+Creature-first rule: the main body must be a cute animal or fantasy creature, matching the warm mascot feeling of the lesson 1 Mathmon pack. The lesson theme may appear only as small accessories, costume details, badges, props, pose, or card-story cues.
+The character must match the pack theme without turning into an object: <pack theme>.
 It must not resemble any existing Mathmon in _shared/mathmon/catalog.json.
-Use big friendly eyes, soft studio lighting, simple readable shape, no text, no logo, no watermark. Avoid 2D sticker style, thick black cartoon outline, realistic metal, and industrial robot render.
+Use big friendly eyes, simple readable shape, no text, no logo, no watermark. Avoid realistic 3D render, realistic metal, industrial robot render, object-bodied mascots, scary sharp details, and complex backgrounds.
 Create on a perfectly flat solid #00ff00 chroma-key background for later removal.
 The background must be one uniform color with no shadows, gradients, texture, floor plane, or lighting variation.
 Do not use #00ff00 anywhere in the character.

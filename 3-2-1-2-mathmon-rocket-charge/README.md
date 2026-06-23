@@ -66,6 +66,6 @@
 - `result-*-generated.webp`: 도착지별 결과 RasterStage 배경 9장
 - `result-retry-generated.webp`: 다시하기 RasterStage 배경
 - `eduitit-logo-mark.png`: 에듀잇티 로고
-- `mathmon-*.png`: 1탄 공용 매스몬 이미지(현재 2탄 결과 보상에는 사용하지 않음)
+- `assets/mathmon/base-pack/*.webp`: 1차시 기준 공용 매스몬 동행 이미지
 - `screenshots/`: 화면별 스크린샷
 - `REPORT.md`: 게임 설명, 화면 흐름, 보상 구조

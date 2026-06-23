@@ -18,7 +18,7 @@
 
 보상은 0 공장의 생산량 하나로만 유지합니다. 문제 안에서 한 번이라도 틀리면 그 문제는 불량 처리 이벤트가 적용되어 일부러 틀려 보상을 노리는 흐름을 막습니다. 문제 화면 왼쪽에는 10칸 출하 준비 칸을 두어 완성품과 불량 처리 칸이 눈에 남도록 했고, 보상 팝업에는 생산·불량·정지·무지개 상태가 다른 부품 아이콘으로 보이게 했습니다. 생산량은 문제를 푸는 동안 전면 점수로 보여 주지 않고, 마지막 결과 화면에서 측정해 출하 등급과 0 공장 매스몬 카드로 이어집니다.
 
-3차시는 V2 장난감/클레이풍 기준으로 새로 만든 `0 공장 매스몬팩 V2` 10종을 사용합니다. 원본 관리는 `_shared/mathmon/zero-factory-pack-v2/`에서 하고, 실행 패키지에는 `assets/mathmon/zero-factory-pack-v2/*.webp`만 복사해 둡니다.
+3차시는 1차시 매스몬 기준에 맞춰 공용 `base-pack` 10종을 사용합니다. 원본 관리는 `_shared/mathmon/base-pack/`에서 하고, 실행 패키지에는 `assets/mathmon/base-pack/*.webp`만 복사해 둡니다. 기존 0 공장팩과 V2 장난감/클레이풍 팩은 보존만 하고 실행에는 쓰지 않습니다.
 
 ## 화면
 
@@ -48,7 +48,7 @@
 - `factory-conveyor-generated.webp`: 문제 화면 0 공장 배경
 - `result-*-generated.webp`: 출하 등급별 결과 RasterStage 배경
 - `eduitit-logo-mark.png`: 에듀잇티 로고
-- `assets/mathmon/zero-factory-pack-v2/*.webp`: 0 공장 매스몬 카드 이미지 10종
-- `_shared/mathmon/zero-factory-pack-v2/`: 0 공장 매스몬팩 V2 원본 관리 위치
+- `assets/mathmon/base-pack/*.webp`: 1차시 기준 매스몬 카드 이미지 10종
+- `_shared/mathmon/base-pack/`: 매스몬 공용팩 원본 관리 위치
 - `screenshots/`: 화면별 스크린샷
 - `REPORT.md`: 게임 설명, 화면 흐름, 보상 구조

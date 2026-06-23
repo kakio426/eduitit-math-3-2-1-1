@@ -13,10 +13,10 @@
 
 ## 폴더 구조
 
-- `base-pack/`: 1차시와 2차시에서 쓰던 기존 10종 매스몬(legacy)
-- `zero-factory-pack/`: 3차시 `매스몬 0 공장`용 기존 10종 매스몬(legacy)
-- `core-pack-v2/`: 1차시와 2차시 공용 V2 10종 매스몬(active)
-- `zero-factory-pack-v2/`: 3차시 `매스몬 0 공장`용 V2 10종 매스몬(active)
+- `base-pack/`: 1차시 기준 공용 10종 매스몬(active, 1~3차시 실행 기준)
+- `zero-factory-pack/`: 3차시 `매스몬 0 공장`용 기존 10종 매스몬(preserved, 1차시 기준으로 재생성 전까지 실행 미사용)
+- `core-pack-v2/`: 1차시와 2차시 공용 V2 10종 매스몬(preserved)
+- `zero-factory-pack-v2/`: 3차시 `매스몬 0 공장`용 V2 10종 매스몬(preserved)
 - `catalog.json`: 팩 단위 인벤토리와 사용 차시 목록
 - `MATHMON_ASSET_CONTRACT.md`: Codex와 Claude가 반드시 먼저 확인하는 매스몬 자산 계약
 - `STYLE_GUIDE.md`: Codex와 Claude가 공통으로 따르는 매스몬 생성·관리 기준

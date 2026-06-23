@@ -67,10 +67,85 @@
 
     .stage-shell {
       --stage-inset: clamp(14px, 2vw, 22px);
-      --sound-slot: clamp(64px, 6vw, 78px);
+      --sound-button-size: clamp(30px, 3vw, 34px);
+      --sound-gap: clamp(8px, 1vw, 12px);
+      --sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));
+      --top-control-pad-x: 9px;
+      --top-control-icon-gap: 7px;
       position: relative;
       width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
       aspect-ratio: 16 / 10;
+    }
+
+    .fuel-transfer-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: none;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .fuel-transfer-layer.is-active {
+      display: block;
+    }
+
+    .fuel-stream {
+      position: absolute;
+      left: 31%;
+      top: 48%;
+      width: 39%;
+      height: 16px;
+      border-radius: 999px;
+      transform: rotate(-5deg);
+      transform-origin: left center;
+      background:
+        radial-gradient(circle at 14% 50%, rgba(255, 255, 255, 0.95) 0 5px, transparent 6px),
+        linear-gradient(90deg, transparent, rgba(96, 215, 255, 0.16), rgba(184, 255, 233, 0.95), rgba(255, 232, 140, 0.9), transparent);
+      background-size: 190% 100%;
+      box-shadow: 0 0 24px rgba(53, 217, 178, 0.55), 0 0 34px rgba(255, 200, 87, 0.25);
+      opacity: 0;
+      animation: fuel-transfer 0.82s ease-out both;
+    }
+
+    .fuel-droplet {
+      position: absolute;
+      top: 47.6%;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #baffec;
+      box-shadow: 0 0 18px rgba(53, 217, 178, 0.72);
+      opacity: 0;
+      animation: fuel-droplet 0.82s ease-out both;
+    }
+
+    .fuel-droplet.one {
+      left: 66%;
+    }
+
+    .fuel-droplet.two {
+      left: 58%;
+      animation-delay: 0.07s;
+    }
+
+    .fuel-droplet.three {
+      left: 50%;
+      animation-delay: 0.14s;
+    }
+
+    .fuel-transfer-layer.is-mega .fuel-stream {
+      height: 22px;
+      background:
+        radial-gradient(circle at 14% 50%, rgba(255, 255, 255, 0.95) 0 6px, transparent 7px),
+        linear-gradient(90deg, transparent, rgba(255, 232, 140, 0.2), rgba(255, 240, 180, 0.98), rgba(53, 217, 178, 0.95), transparent);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.6), 0 0 42px rgba(53, 217, 178, 0.38);
+    }
+
+    .fuel-transfer-layer.is-rainbow .fuel-stream {
+      background: linear-gradient(90deg, transparent, #ff7aa2, #ffe27a, #45f2b8, #60d7ff, #c59bff, transparent);
+      background-size: 240% 100%;
+      box-shadow: 0 0 36px rgba(96, 215, 255, 0.48), 0 0 34px rgba(184, 116, 255, 0.36);
     }
 
     .screen {
@@ -96,12 +171,15 @@
 
     .top-row {
       position: absolute;
-      inset: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) auto clamp(14px, 2vw, 22px);
-      z-index: 3;
+      top: var(--stage-inset);
+      left: var(--stage-inset);
+      right: calc(var(--stage-inset) + var(--sound-reserve));
+      z-index: 4;
+      height: var(--sound-button-size);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: var(--sound-gap);
       pointer-events: none;
     }
 
@@ -111,23 +189,29 @@
     .mini-badge {
       display: inline-flex;
       align-items: center;
-      min-height: 34px;
-      padding: 7px 13px;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: max-content;
+      min-height: var(--sound-button-size);
+      padding: 0 var(--top-control-pad-x);
+      gap: var(--top-control-icon-gap);
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(14, 12, 22, 0.7);
       color: #ffffff;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1;
       backdrop-filter: blur(10px);
+      white-space: nowrap;
     }
 
     .brand-badge img {
-      width: 22px;
-      height: 22px;
-      margin-right: 8px;
-      border-radius: 6px;
+      width: 20px;
+      height: 20px;
+      margin-right: 0;
+      border-radius: 5px;
     }
 
     .unit-badge {
@@ -207,47 +291,69 @@
       top: var(--stage-inset);
       right: var(--stage-inset);
       z-index: 60;
-      display: inline-grid;
+      display: grid;
       place-items: center;
-      width: clamp(54px, 5.3vw, 66px);
+      width: var(--sound-button-size);
       min-width: 0;
-      height: 34px;
-      min-height: 34px;
+      height: var(--sound-button-size);
+      min-height: 0;
       padding: 0;
-      border: 1px solid rgba(255, 200, 87, 0.55);
+      border: 1px solid rgba(255, 232, 186, 0.34);
       border-radius: 999px;
-      color: #ffe3a5;
-      background: rgba(14, 12, 22, 0.78);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
-      font-size: clamp(0.72rem, 1vw, 0.84rem);
-      font-weight: 950;
+      color: rgba(255, 238, 198, 0.92);
+      background: rgba(14, 12, 22, 0.42);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+      font-size: 0;
       line-height: 1;
       backdrop-filter: blur(10px);
     }
 
+    .sound-toggle::before,
     .sound-toggle::after {
-      content: "";
+      content: none !important;
+      display: none !important;
+    }
+
+    .sound-toggle svg {
       position: absolute;
-      top: 6px;
-      right: 7px;
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #69efbf;
-      box-shadow: 0 0 10px rgba(105, 239, 191, 0.8);
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      display: block;
+      transform: translate(-50%, -50%);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .sound-off-stroke {
+      display: none;
     }
 
     .stage-shell .top-row {
-      right: calc(var(--stage-inset) + var(--sound-slot));
+      right: calc(var(--stage-inset) + var(--sound-reserve));
     }
 
     .stage-shell .hud {
-      padding-right: var(--sound-slot);
+      padding-right: var(--sound-reserve);
     }
 
     .sound-toggle[aria-pressed="false"] {
       border-color: rgba(215, 202, 219, 0.34);
       color: var(--muted);
+      background: rgba(14, 12, 22, 0.32);
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-wave {
+      display: none;
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-off-stroke {
+      display: block;
     }
 
     .cover {
@@ -510,14 +616,15 @@
 
     .play {
       grid-template-rows: auto 1fr;
-      padding: clamp(14px, 2vw, 20px);
+      padding: var(--stage-inset);
     }
 
     .hud {
       display: grid;
       grid-template-columns: minmax(210px, auto) 1fr auto;
-      align-items: center;
+      align-items: start;
       gap: 12px;
+      min-height: var(--sound-button-size);
       margin-bottom: 12px;
     }
 
@@ -528,9 +635,7 @@
     }
 
     .hud-center {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
+      display: none;
       min-width: 0;
     }
 
@@ -549,22 +654,6 @@
       font-weight: 950;
       line-height: 1;
       white-space: nowrap;
-    }
-
-    #progressText {
-      min-height: 48px;
-      min-width: 172px;
-      padding: 10px 22px;
-      border-color: rgba(255, 200, 87, 0.52);
-      color: #231400;
-      background: linear-gradient(180deg, #ffe27a, #ffc857);
-      font-size: clamp(1.08rem, 2.2vw, 1.42rem);
-      box-shadow: 0 10px 0 rgba(106, 70, 23, 0.2), 0 16px 26px rgba(0, 0, 0, 0.18);
-    }
-
-    #energyText,
-    #chainText {
-      display: none;
     }
 
     .play-layout {
@@ -880,6 +969,91 @@
       animation: rocket-boost 0.68s ease;
     }
 
+    .rocket-zone[data-fuel-tier="1"] .energy-ring {
+      border-width: 3px;
+    }
+
+    .rocket-zone[data-fuel-tier="2"] .pad-glow {
+      filter: blur(10px) saturate(1.12);
+    }
+
+    .rocket-zone[data-fuel-tier="2"] .spark,
+    .rocket-zone[data-fuel-tier="3"] .spark,
+    .rocket-zone[data-fuel-tier="4"] .spark {
+      width: 8px;
+      height: 8px;
+    }
+
+    .rocket-zone[data-fuel-tier="3"] .launch-beam {
+      filter: blur(7px) saturate(1.2);
+      animation-duration: 2.8s;
+    }
+
+    .rocket-zone[data-fuel-tier="3"] .steam-jet,
+    .rocket-zone[data-fuel-tier="4"] .steam-jet {
+      filter: blur(8px) saturate(1.16);
+      animation-duration: 1.65s;
+    }
+
+    .rocket-zone[data-fuel-tier="4"] .energy-ring {
+      border-color: rgba(255, 232, 140, 0.9);
+      box-shadow: 0 0 44px rgba(255, 200, 87, 0.62), inset 0 0 30px rgba(53, 217, 178, 0.36);
+      animation-duration: 1.4s;
+    }
+
+    .rocket-zone.is-impact-mega .pad-glow,
+    .rocket-zone.is-impact-launch .pad-glow {
+      animation: pad-flash 0.86s ease both;
+    }
+
+    .rocket-zone.is-impact-loss::before,
+    .rocket-zone.is-impact-empty::before {
+      background:
+        radial-gradient(circle at 50% 68%, rgba(255, 93, 122, 0.2), transparent 0 28%, transparent 52%),
+        linear-gradient(180deg, rgba(7, 8, 14, 0.12), rgba(8, 6, 14, 0.56) 72%, rgba(8, 6, 14, 0.82));
+    }
+
+    .rocket-zone.is-impact-empty .pad-glow,
+    .rocket-zone.is-impact-empty .energy-ring {
+      opacity: 0.2;
+    }
+
+    .rocket-mini.is-impact-normal .battery-slot {
+      animation: battery-boost 0.72s ease;
+    }
+
+    .rocket-mini.is-impact-mega {
+      animation: rocket-mega-bump 0.86s ease;
+    }
+
+    .rocket-mini.is-impact-mega .battery-slot {
+      animation: liquid-mega-slosh 0.86s ease;
+    }
+
+    .rocket-mini.is-impact-loss {
+      animation: tank-shake 0.66s ease;
+    }
+
+    .rocket-mini.is-impact-loss .battery-slot {
+      animation: liquid-loss-slosh 0.66s ease;
+    }
+
+    .rocket-mini.is-impact-empty .battery-slot {
+      animation: battery-empty-pulse 0.82s ease;
+    }
+
+    .rocket-mini.is-impact-launch {
+      animation: rocket-launch-kick 0.86s ease;
+    }
+
+    .rocket-mini.is-impact-launch .rocket-thrust {
+      animation: launch-thrust-burst 0.86s ease both;
+    }
+
+    .rocket-mini.is-impact-rainbow .battery-slot {
+      animation: rainbow-burst 0.96s ease;
+    }
+
     .fuel-panel {
       position: relative;
       z-index: 4;
@@ -966,7 +1140,7 @@
     }
 
     .planet-chip {
-      min-height: 34px;
+      min-height: 0;
       display: grid;
       place-items: center;
       border: 1px solid rgba(255, 255, 255, 0.16);
@@ -1011,10 +1185,10 @@
 
     .problem-panel {
       display: grid;
-      grid-template-rows: auto auto auto auto minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
       align-content: start;
       gap: 12px;
-      padding: clamp(14px, 2vw, 20px);
+      padding: clamp(14px, 2vw, 20px) clamp(14px, 2vw, 20px) clamp(34px, 3.7vw, 46px);
       overflow: hidden;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.035)),
@@ -1022,17 +1196,33 @@
     }
 
     .problem-heading {
-      display: flex;
-      align-items: flex-start;
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    .problem-progress {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      gap: 12px;
+      min-height: 30px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 200, 87, 0.38);
+      border-radius: 999px;
+      color: #ffeab0;
+      background: rgba(255, 200, 87, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      font-size: 0.86rem;
+      font-weight: 1000;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     .problem-heading h2 {
       width: 100%;
       margin: 0;
       color: #ffffff;
-      font-size: clamp(2rem, 5.15vw, 4.1rem);
+      font-size: clamp(2rem, 4.65vw, 3.72rem);
       line-height: 1;
       font-weight: 1000;
       text-align: center;
@@ -1041,7 +1231,7 @@
 
     .phase-label {
       display: none;
-      min-height: 34px;
+      min-height: 0;
       padding: 8px 12px;
       border-radius: 999px;
       color: #231400;
@@ -1056,8 +1246,10 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
-      gap: 14px;
-      padding: clamp(10px, 1.5vw, 14px);
+      gap: 12px;
+      min-height: 0;
+      padding: clamp(8px, 1.2vw, 12px);
+      overflow: hidden;
       border: 1px solid rgba(53, 217, 178, 0.28);
       border-radius: var(--radius);
       background:
@@ -1079,8 +1271,9 @@
       align-content: center;
       justify-self: center;
       width: min(560px, 100%);
-      gap: 7px;
-      padding: 10px;
+      gap: 6px;
+      min-height: 0;
+      padding: 8px;
       border-color: rgba(255, 255, 255, 0.12);
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
@@ -1093,9 +1286,9 @@
       display: grid;
       grid-template-columns: 42px repeat(4, minmax(0, 1fr));
       align-items: center;
-      gap: clamp(6px, 0.8vw, 9px);
+      gap: clamp(5px, 0.7vw, 8px);
       width: 100%;
-      min-height: 40px;
+      min-height: 0;
     }
 
     .sum-cell,
@@ -1104,10 +1297,10 @@
       place-items: center;
       min-width: 0;
       width: 100%;
-      min-height: clamp(40px, 4.6vw, 52px);
+      min-height: clamp(34px, 3.8vw, 46px);
       border-radius: var(--radius);
       color: #ffffff;
-      font-size: clamp(1.62rem, 3.35vw, 2.55rem);
+      font-size: clamp(1.44rem, 3vw, 2.2rem);
       font-weight: 1000;
       line-height: 1;
       overflow: hidden;
@@ -1124,15 +1317,15 @@
     }
 
     .carry-cell {
-      min-height: clamp(31px, 3.8vw, 42px);
+      min-height: clamp(27px, 3vw, 36px);
       color: var(--amber);
-      font-size: clamp(1.12rem, 2.45vw, 1.75rem);
+      font-size: clamp(1rem, 2.1vw, 1.48rem);
       background: rgba(255, 200, 87, 0.08);
       border-color: rgba(255, 200, 87, 0.22);
     }
 
     .sum-line {
-      height: 4px;
+      height: 3px;
       margin-left: 52px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.42);
@@ -1163,6 +1356,30 @@
         radial-gradient(circle at 50% 50%, rgba(255, 200, 87, 0.18), transparent 0 48%, transparent 70%),
         rgba(255, 200, 87, 0.08);
       box-shadow: inset 0 0 0 3px rgba(255, 200, 87, 0.28), 0 0 20px rgba(255, 200, 87, 0.2);
+    }
+
+    .sum-cell.is-step-pop,
+    .carry-cell.is-carry-pop {
+      position: relative;
+      color: #201000;
+      border-color: rgba(255, 200, 87, 0.92);
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      animation: step-cell-pop 0.7s ease both;
+    }
+
+    .sum-cell.is-step-pop::after,
+    .carry-cell.is-carry-pop::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.95) 0 4px, transparent 5px),
+        radial-gradient(circle at 82% 30%, rgba(255, 255, 255, 0.75) 0 3px, transparent 4px),
+        radial-gradient(circle at 48% 82%, rgba(255, 255, 255, 0.68) 0 3px, transparent 4px);
+      opacity: 0;
+      animation: step-sparkle 0.7s ease both;
+      pointer-events: none;
     }
 
     .step-panel {
@@ -1202,7 +1419,7 @@
 
     .hint-toggle {
       min-width: 74px;
-      min-height: 54px;
+      min-height: 48px;
       padding: 8px 10px;
       border: 1px solid rgba(255, 200, 87, 0.52);
       border-radius: var(--radius);
@@ -1217,7 +1434,7 @@
     .step-panel.is-open .hint-toggle {
       justify-self: end;
       min-width: 58px;
-      min-height: 34px;
+      min-height: 0;
       padding: 6px 10px;
       color: #ffe7a4;
       background: rgba(255, 255, 255, 0.08);
@@ -1319,18 +1536,21 @@
     .choice-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, clamp(48px, 4.4vw, 58px));
       align-content: start;
+      align-self: start;
       gap: 8px;
     }
 
     .choice-button {
-      min-height: 56px;
+      height: 100%;
+      min-height: 0;
       padding: 8px 12px;
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: var(--radius);
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
-      font-size: clamp(1.04rem, 2vw, 1.36rem);
+      font-size: clamp(1rem, 1.82vw, 1.24rem);
       font-weight: 1000;
       line-height: 1.22;
       transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
@@ -1355,11 +1575,15 @@
     }
 
     .feedback {
-      min-height: 42px;
+      min-height: 0;
       color: #ffffff;
       font-size: clamp(0.98rem, 2vw, 1.14rem);
       font-weight: 900;
       line-height: 1.35;
+    }
+
+    .feedback:empty {
+      display: none;
     }
 
     .feedback.good {
@@ -1692,6 +1916,14 @@
       font-size: 0.94rem;
     }
 
+    .result.is-measuring .result-planet-track .planet-chip.is-scanning {
+      color: #201000;
+      border-color: rgba(255, 200, 87, 0.88);
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.2), 0 0 26px rgba(255, 200, 87, 0.32);
+      animation: planet-scan-pop 0.48s ease both;
+    }
+
     .result-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1895,6 +2127,183 @@
       }
     }
 
+    @keyframes fuel-transfer {
+      0% {
+        opacity: 0;
+        background-position: 130% 50%;
+        clip-path: inset(0 0 0 100%);
+      }
+      18% {
+        opacity: 1;
+      }
+      72% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+      100% {
+        opacity: 0;
+        background-position: -70% 50%;
+        clip-path: inset(0 100% 0 0);
+      }
+    }
+
+    @keyframes fuel-droplet {
+      0% {
+        opacity: 0;
+        transform: translateX(120px) translateY(0) scale(0.6);
+      }
+      22% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-320px) translateY(-18px) scale(1.1);
+      }
+    }
+
+    @keyframes step-cell-pop {
+      0% {
+        transform: scale(0.94);
+        box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 rgba(255, 200, 87, 0);
+      }
+      42% {
+        transform: scale(1.08);
+        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.38), 0 0 26px rgba(255, 200, 87, 0.56);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12), 0 0 14px rgba(255, 200, 87, 0.18);
+      }
+    }
+
+    @keyframes step-sparkle {
+      0%,
+      100% {
+        opacity: 0;
+        transform: scale(0.82) rotate(0deg);
+      }
+      48% {
+        opacity: 1;
+        transform: scale(1.1) rotate(8deg);
+      }
+    }
+
+    @keyframes pad-flash {
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+      }
+      45% {
+        transform: translate(-50%, -50%) scale(1.32);
+        opacity: 1;
+      }
+    }
+
+    @keyframes rocket-mega-bump {
+      0%,
+      100% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      }
+      38% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px - 18px)) rotate(-2deg);
+      }
+      68% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px + 7px)) rotate(1.4deg);
+      }
+    }
+
+    @keyframes liquid-mega-slosh {
+      0%,
+      100% {
+        transform: translateX(0);
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 18px rgba(53, 217, 178, 0.3);
+      }
+      34% {
+        transform: translateX(-4px) rotate(-1deg);
+        box-shadow: inset 0 0 16px rgba(10, 24, 31, 0.62), 0 0 46px rgba(255, 200, 87, 0.72);
+      }
+      62% {
+        transform: translateX(5px) rotate(1deg);
+        box-shadow: inset 0 0 16px rgba(10, 24, 31, 0.62), 0 0 42px rgba(53, 217, 178, 0.72);
+      }
+    }
+
+    @keyframes liquid-loss-slosh {
+      0%,
+      100% {
+        transform: translateX(0);
+        filter: none;
+      }
+      28% {
+        transform: translateX(-5px) rotate(-1.4deg);
+        filter: saturate(0.7) brightness(0.86);
+      }
+      56% {
+        transform: translateX(4px) rotate(1.2deg);
+        filter: saturate(0.8) brightness(0.9);
+      }
+    }
+
+    @keyframes battery-empty-pulse {
+      0%,
+      100% {
+        filter: none;
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 10px rgba(255, 93, 122, 0.18);
+      }
+      45% {
+        filter: saturate(0.35) brightness(0.72);
+        box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.92), 0 0 26px rgba(255, 93, 122, 0.5);
+      }
+    }
+
+    @keyframes rocket-launch-kick {
+      0%,
+      100% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      }
+      36% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px - 24px));
+      }
+      70% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px + 6px));
+      }
+    }
+
+    @keyframes launch-thrust-burst {
+      0% {
+        opacity: 0.3;
+        transform: translateX(-50%) scaleY(0.8);
+      }
+      42% {
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1.9);
+      }
+      100% {
+        opacity: calc(0.15 + var(--charge, 0) * 0.72);
+        transform: translateX(-50%) scaleY(1);
+      }
+    }
+
+    @keyframes rainbow-burst {
+      0%,
+      100% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 18px rgba(53, 217, 178, 0.3);
+      }
+      50% {
+        box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.28), 0 0 44px rgba(255, 200, 87, 0.66), 0 0 40px rgba(96, 215, 255, 0.58), 0 0 34px rgba(184, 116, 255, 0.54);
+      }
+    }
+
+    @keyframes planet-scan-pop {
+      from {
+        transform: translateY(4px) scale(0.96);
+      }
+      to {
+        transform: translateY(0) scale(1);
+      }
+    }
+
     @keyframes flight-streak {
       from {
         background-position: 0 0, 0 0;
@@ -1924,9 +2333,33 @@
       }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .fuel-stream,
+      .fuel-droplet,
+      .spark,
+      .steam-jet,
+      .launch-beam,
+      .energy-ring,
+      .pad-glow,
+      .battery-liquid::before,
+      .battery-liquid::after,
+      .rocket-thrust,
+      .measure-scan,
+      .result-measure::after {
+        animation: none !important;
+      }
+
+      .rocket-mini,
+      .battery-slot,
+      .sum-cell,
+      .planet-chip {
+        animation-duration: 0.01ms !important;
+      }
+    }
+
     @media (max-width: 1100px) {
       .play {
-        padding: 12px;
+        padding: var(--stage-inset);
       }
 
       .hud {
@@ -1935,7 +2368,7 @@
 
       .problem-panel {
         gap: 8px;
-        padding: 12px;
+        padding: 12px 12px 28px;
       }
 
       .problem-heading h2 {
@@ -1953,7 +2386,7 @@
       }
 
       .sum-row {
-        min-height: 34px;
+        min-height: 0;
       }
 
       .sum-cell,
@@ -1987,6 +2420,7 @@
       }
 
       .choice-button {
+        height: 100%;
         min-height: 48px;
         padding: 6px 10px;
       }
@@ -2080,8 +2514,21 @@
   </div>
 
   <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
-    <div class="stage-shell">
-      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+    <div class="stage-shell" data-active-screen="cover">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+          <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <path class="sound-wave" d="M18.5 5.8a9 9 0 0 1 0 12.4"></path>
+          <path class="sound-off-stroke" d="M4.5 4.5 19.5 19.5"></path>
+        </svg>
+      </button>
+      <div class="fuel-transfer-layer" id="fuelTransferLayer" aria-hidden="true">
+        <span class="fuel-stream"></span>
+        <span class="fuel-droplet one"></span>
+        <span class="fuel-droplet two"></span>
+        <span class="fuel-droplet three"></span>
+      </div>
     <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
       <img class="raster-bg" src="cover-generated.webp" alt="">
       <div class="top-row">
@@ -2107,7 +2554,7 @@
             <div class="rocket-fin right"></div>
             <div class="rocket-flame"></div>
           </div>
-          <img class="cover-mathmon" src="assets/mathmon/core-pack-v2/mathmon-core-v2-04-banjjakmon.webp" alt="">
+          <img class="cover-mathmon" src="assets/mathmon/base-pack/mathmon-3-babydragonmon.webp" alt="">
         </div>
       </div>
     </section>
@@ -2136,12 +2583,6 @@
     <section class="screen play" id="playScreen" aria-labelledby="questionText">
       <header class="hud">
         <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
-        <div class="hud-center">
-          <span class="stat-pill" id="progressText">문제 1/10</span>
-          <span class="stat-pill" id="energyText">연료 넣는 중</span>
-          <span class="stat-pill" id="chainText">마지막에 측정</span>
-        </div>
-        <span class="unit-badge">로켓 연료 넣기</span>
       </header>
       <div class="play-layout">
         <aside class="rocket-zone" id="rocketZone" aria-label="로켓 연료 상태">
@@ -2167,7 +2608,7 @@
           </div>
           <div class="fuel-panel">
             <div class="fuel-readout">
-              <span>로켓 안 연료</span>
+              <span>로켓 연료</span>
               <strong id="fuelPercentText">채우는 중</strong>
             </div>
             <div class="fuel-meter" aria-hidden="true">
@@ -2186,6 +2627,7 @@
 
         <section class="problem-panel" aria-live="polite">
           <div class="problem-heading">
+            <span class="problem-progress" id="progressText">문제 1/10</span>
             <h2 id="questionText">123 × 4</h2>
             <span class="phase-label" id="phaseLabel">일의 자리</span>
           </div>
@@ -2349,6 +2791,15 @@
       "reward-art--launch",
       "reward-art--rainbow"
     ];
+    const ROCKET_IMPACT_CLASSES = [
+      "is-impact-normal",
+      "is-impact-mega",
+      "is-impact-loss",
+      "is-impact-empty",
+      "is-impact-launch",
+      "is-impact-rainbow"
+    ];
+    const STEP_EFFECT_CLASSES = ["is-step-pop", "is-carry-pop"];
 
     const state = {
       screen: "cover",
@@ -2370,6 +2821,7 @@
     };
 
     const el = {
+      stageShell: document.querySelector(".stage-shell"),
       coverScreen: document.getElementById("coverScreen"),
       tutorialScreen: document.getElementById("tutorialScreen"),
       playScreen: document.getElementById("playScreen"),
@@ -2377,9 +2829,8 @@
       startButton: document.getElementById("startButton"),
       tutorialNextButton: document.getElementById("tutorialNextButton"),
       soundToggle: document.getElementById("soundToggle"),
+      fuelTransferLayer: document.getElementById("fuelTransferLayer"),
       progressText: document.getElementById("progressText"),
-      energyText: document.getElementById("energyText"),
-      chainText: document.getElementById("chainText"),
       fuelPercentText: document.getElementById("fuelPercentText"),
       fuelMeterFill: document.getElementById("fuelMeterFill"),
       fuelNote: document.getElementById("fuelNote"),
@@ -2430,10 +2881,41 @@
 
     function showScreen(name) {
       state.screen = name;
+      el.stageShell.dataset.activeScreen = name;
       [el.coverScreen, el.tutorialScreen, el.playScreen, el.resultScreen].forEach((screen) => {
         screen.classList.remove("is-active");
       });
       document.getElementById(`${name}Screen`).classList.add("is-active");
+    }
+
+    function restartAnimation(target, className, duration = 760) {
+      if (!target) {
+        return;
+      }
+      target.classList.remove(className);
+      void target.offsetWidth;
+      target.classList.add(className);
+      window.setTimeout(() => target.classList.remove(className), duration);
+    }
+
+    function clearStepEffects() {
+      [
+        el.carryHundredsSlot,
+        el.carryTensSlot,
+        el.thousandsAnswer,
+        el.hundredsAnswer,
+        el.tensAnswer,
+        el.onesAnswer
+      ].forEach((cell) => {
+        STEP_EFFECT_CLASSES.forEach((className) => cell.classList.remove(className));
+      });
+    }
+
+    function clearRocketImpact() {
+      ROCKET_IMPACT_CLASSES.forEach((className) => {
+        el.rocketMini.classList.remove(className);
+        el.rocketZone.classList.remove(className);
+      });
     }
 
     function startGame() {
@@ -2496,6 +2978,9 @@
       state.problemHadMistake = false;
       state.problemHadReveal = false;
       el.rewardPop.classList.remove("is-visible");
+      el.fuelTransferLayer.className = "fuel-transfer-layer";
+      clearStepEffects();
+      clearRocketImpact();
       FUEL_EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
       FUEL_ART_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
       el.questionText.textContent = `${problem.number} × ${problem.multiplier}`;
@@ -2517,13 +3002,12 @@
 
     function renderStatus() {
       el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
-      el.energyText.textContent = state.fuelPercent > 0 ? "연료 넣는 중" : "연료 준비";
-      el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 측정" : "마지막에 측정";
       const charge = getFuelPercent() / MAX_FUEL;
       const fuelPercent = getFuelPercent();
       el.rocketZone.style.setProperty("--charge", charge.toFixed(3));
       el.rocketMini.style.setProperty("--charge", charge.toFixed(3));
       el.rocketMini.style.setProperty("--fuel-height", `${Math.round(charge * 100)}%`);
+      el.rocketZone.dataset.fuelTier = String(getFuelTier(fuelPercent));
       el.rocketZone.classList.toggle("is-rainbow", state.rainbowFuel);
       el.rocketMini.classList.toggle("is-rainbow", state.rainbowFuel);
       el.fuelPercentText.textContent = state.rainbowFuel ? "무지개 연료" : "채우는 중";
@@ -2535,6 +3019,23 @@
 
     function getFuelPercent(fuelPercent = state.fuelPercent) {
       return clamp(Math.round(fuelPercent), 0, MAX_FUEL);
+    }
+
+    function getFuelTier(fuelPercent = state.fuelPercent) {
+      const fuel = getFuelPercent(fuelPercent);
+      if (state.rainbowFuel || fuel >= 90) {
+        return 4;
+      }
+      if (fuel >= 70) {
+        return 3;
+      }
+      if (fuel >= 42) {
+        return 2;
+      }
+      if (fuel >= 16) {
+        return 1;
+      }
+      return 0;
     }
 
     function getDestinationByFuel(fuelPercent = state.fuelPercent, rainbowFuel = state.rainbowFuel) {
@@ -2760,6 +3261,7 @@
     function completeStep(step, revealed) {
       const problem = currentProblem();
       applyStepToBoard(step, problem);
+      triggerStepEffect(step, problem, revealed);
       renderStatus();
       el.rocketMini.classList.remove("is-boosting");
       void el.rocketMini.offsetWidth;
@@ -2778,6 +3280,29 @@
         state.stepAttempts = 0;
         renderStep();
       }, revealed ? 1000 : 760);
+    }
+
+    function triggerStepEffect(step, problem, revealed) {
+      if (revealed) {
+        return;
+      }
+      clearStepEffects();
+      if (step.id === "ones") {
+        restartAnimation(el.onesAnswer, "is-step-pop");
+        if (problem.carryToTens > 0) {
+          restartAnimation(el.carryTensSlot, "is-carry-pop");
+        }
+      } else if (step.id === "tens") {
+        restartAnimation(el.tensAnswer, "is-step-pop");
+        if (problem.carryToHundreds > 0) {
+          restartAnimation(el.carryHundredsSlot, "is-carry-pop");
+        }
+      } else {
+        restartAnimation(el.hundredsAnswer, "is-step-pop");
+        if (problem.hundredsRaw >= 10) {
+          restartAnimation(el.thousandsAnswer, "is-step-pop");
+        }
+      }
     }
 
     function applyStepToBoard(step, problem) {
@@ -3017,11 +3542,64 @@
       });
     }
 
+    function getFuelImpactClass(result) {
+      const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
+      if (result.rainbow) {
+        return "is-impact-rainbow";
+      }
+      if (result.launches) {
+        return "is-impact-launch";
+      }
+      if (result.emptiesTank) {
+        return "is-impact-empty";
+      }
+      if (actualDelta < 0 || result.id === "smallExplosion" || result.id === "leak") {
+        return "is-impact-loss";
+      }
+      if (actualDelta >= 12 || result.art === "mega") {
+        return "is-impact-mega";
+      }
+      if (actualDelta > 0) {
+        return "is-impact-normal";
+      }
+      return "is-impact-empty";
+    }
+
+    function triggerRewardTransfer(result) {
+      const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
+      const hasVisibleTransfer = actualDelta > 0 || result.rainbow || result.launches;
+      if (!hasVisibleTransfer || state.screen !== "play") {
+        return;
+      }
+      el.fuelTransferLayer.className = "fuel-transfer-layer";
+      void el.fuelTransferLayer.offsetWidth;
+      el.fuelTransferLayer.classList.add("is-active");
+      if (result.rainbow) {
+        el.fuelTransferLayer.classList.add("is-rainbow");
+      } else if (result.art === "mega" || actualDelta >= 12 || result.launches) {
+        el.fuelTransferLayer.classList.add("is-mega");
+      }
+      window.setTimeout(() => {
+        el.fuelTransferLayer.className = "fuel-transfer-layer";
+      }, 920);
+    }
+
+    function triggerRewardImpact(result) {
+      const impactClass = getFuelImpactClass(result);
+      clearRocketImpact();
+      void el.rocketMini.offsetWidth;
+      el.rocketMini.classList.add(impactClass);
+      el.rocketZone.classList.add(impactClass);
+      window.setTimeout(clearRocketImpact, 1080);
+    }
+
     function finishProblem(result) {
       renderStatus();
       el.rocketMini.classList.remove("is-boosting");
       void el.rocketMini.offsetWidth;
       el.rocketMini.classList.add("is-boosting");
+      triggerRewardTransfer(result);
+      triggerRewardImpact(result);
       FUEL_EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
       FUEL_ART_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
       el.rewardPop.classList.add(`fuel-event--${result.id}`);
@@ -3037,7 +3615,7 @@
       window.setTimeout(() => {
         el.rewardPop.classList.add("is-visible");
         el.rewardNextButton.focus();
-      }, 680);
+      }, 840);
     }
 
     function nextAfterReward() {
@@ -3050,10 +3628,53 @@
       renderProblem();
     }
 
+    function animateMeasureValue(targetFuel, finalLabel) {
+      const duration = 1500;
+      const startedAt = performance.now();
+      const target = getFuelPercent(targetFuel);
+
+      function tick(now) {
+        const progress = clamp((now - startedAt) / duration, 0, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(target * eased);
+        el.measureFill.style.setProperty("--measure-width", `${current}%`);
+        el.measurePercent.textContent = finalLabel === "무지개 연료" && progress > 0.84
+          ? finalLabel
+          : `연료 ${current}`;
+        if (progress < 1) {
+          window.requestAnimationFrame(tick);
+          return;
+        }
+        el.measurePercent.textContent = finalLabel;
+        el.finalEnergyText.textContent = finalLabel;
+      }
+
+      window.requestAnimationFrame(tick);
+    }
+
+    function scanResultPlanets(targetIndex) {
+      if (targetIndex < 0) {
+        return;
+      }
+      const chips = [...el.resultPlanetTrack.querySelectorAll(".planet-chip")];
+      const scanCount = Math.min(chips.length, targetIndex + 1);
+      chips.forEach((chip) => chip.classList.remove("is-scanning"));
+      chips.slice(0, scanCount).forEach((chip, index) => {
+        window.setTimeout(() => {
+          chips.forEach((item) => item.classList.remove("is-scanning"));
+          chip.classList.add("is-scanning");
+        }, index * 130);
+      });
+      window.setTimeout(() => {
+        chips.forEach((chip) => chip.classList.remove("is-scanning"));
+      }, scanCount * 130 + 520);
+    }
+
     function showResult() {
       const destination = getDestination();
       const launched = Boolean(destination);
       const fuelPercent = getFuelPercent();
+      const measureFuel = state.rainbowFuel ? MAX_FUEL : fuelPercent;
       const measureLabel = state.rainbowFuel ? "무지개 연료" : `연료 ${fuelPercent}`;
       el.resultRaster.src = launched ? destination.image : "result-retry-generated.webp";
       el.resultScreen.classList.add("is-measuring");
@@ -3073,14 +3694,13 @@
       playSound("scan");
       showScreen("result");
       window.setTimeout(() => {
-        el.measureStatus.textContent = "행성 거리 계산 중";
-        el.measurePercent.textContent = measureLabel;
-        el.measureFill.style.setProperty("--measure-width", `${fuelPercent}%`);
-        el.finalEnergyText.textContent = measureLabel;
+        el.measureStatus.textContent = "도착 거리";
+        animateMeasureValue(measureFuel, measureLabel);
         renderPlanetTrack(el.resultPlanetTrack, {
           targetIndex: launched ? destination.index : -1,
           reachedIndex: launched ? destination.index : -1
         });
+        scanResultPlanets(launched ? destination.index : -1);
         playSound("measure");
       }, 120);
       window.setTimeout(() => {
@@ -3217,7 +3837,6 @@
     });
     el.soundToggle.addEventListener("click", () => {
       state.soundsOn = !state.soundsOn;
-      el.soundToggle.textContent = "소리";
       el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
       el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
       if (state.soundsOn) {

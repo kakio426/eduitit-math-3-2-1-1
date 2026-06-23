@@ -14,12 +14,14 @@
 
 ## 현재 활성 기준
 
-- 활성 스타일: `mathmon-v2-toy-3d`
-- 활성 공용 팩: `_shared/mathmon/core-pack-v2/`
-- 활성 0 공장 팩: `_shared/mathmon/zero-factory-pack-v2/`
-- 레거시 팩: `_shared/mathmon/base-pack/`, `_shared/mathmon/zero-factory-pack/`
+- 활성 스타일: `mathmon-v1-anime-sticker`
+- 활성 공용 팩: `_shared/mathmon/base-pack/`
+- 활성 차시별 전용 팩: 없음. 전용 팩이 필요하면 1차시 스타일로 새로 생성합니다.
+- 보존 팩: `_shared/mathmon/zero-factory-pack/`, `_shared/mathmon/core-pack-v2/`, `_shared/mathmon/zero-factory-pack-v2/`
 
-레거시 팩은 보존만 합니다. 새 차시나 리마스터 차시는 V2 기준을 사용합니다.
+앞으로 새 매스몬을 만들거나 기존 차시를 리마스터할 때는 1차시 `매스몬 상자런`의 매스몬 톤을 기준으로 삼습니다. 0 공장 기존 팩과 V2 장난감/클레이풍 팩은 삭제하지 않고 보존하지만, 실행 기본값이나 새 생성 기준으로 사용하지 않습니다.
+
+차시별 전용 매스몬을 새로 만들 때도 매스몬 본체는 동물 또는 판타지 생물이어야 합니다. 차시 테마는 소품, 의상, 배지, 포즈, 카드 문구로만 표현하고, 톱니바퀴·자석·상자·컨베이어 같은 사물 자체를 매스몬 몸으로 만들지 않습니다.
 
 ## 원본과 배포본
 
@@ -48,15 +50,16 @@ _shared/mathmon/<pack-id>/
 
 1. `catalog.json`에서 활성 팩과 레거시 팩을 확인합니다.
 2. 기존 contact sheet를 보고 실루엣·소재·등급감이 겹치지 않는지 확인합니다.
-3. `STYLE_GUIDE.md`의 `mathmon-v2-toy-3d` 기준으로 프롬프트를 작성합니다.
-4. image generation은 flat chroma-key 배경으로 생성합니다.
-5. 생성 원본은 `raw-chromakey/`에 저장합니다.
-6. 배경 제거 후 투명 `768x768` PNG를 `png/`에 저장합니다.
-7. WebP quality 82~86 배포본을 `webp/`에 저장합니다.
-8. `manifest.json`에 캐릭터 id, 이름, 콘셉트, 파일 경로를 기록합니다.
-9. contact sheet를 갱신합니다.
-10. `catalog.json`에 팩 상태와 `usedBy`를 갱신합니다.
-11. 차시 폴더에는 필요한 WebP만 복사하고 HTML 참조를 그 WebP로 바꿉니다.
+3. `STYLE_GUIDE.md`의 `mathmon-v1-anime-sticker` 기준으로 프롬프트를 작성합니다.
+4. 프롬프트에는 동물/판타지 생물 본체와 차시 테마 소품을 분리해 적습니다.
+5. image generation은 flat chroma-key 배경으로 생성합니다.
+6. 생성 원본은 `raw-chromakey/`에 저장합니다.
+7. 배경 제거 후 투명 `768x768` PNG를 `png/`에 저장합니다.
+8. WebP quality 82~86 배포본을 `webp/`에 저장합니다.
+9. `manifest.json`에 캐릭터 id, 이름, 콘셉트, 파일 경로를 기록합니다.
+10. contact sheet를 갱신합니다.
+11. `catalog.json`에 팩 상태와 `usedBy`를 갱신합니다.
+12. 차시 폴더에는 필요한 WebP만 복사하고 HTML 참조를 그 WebP로 바꿉니다.
 
 ## 차시 적용 원칙
 
@@ -71,8 +74,7 @@ _shared/mathmon/<pack-id>/
 - `catalog.json`과 모든 변경된 `manifest.json`이 JSON으로 파싱됩니다.
 - 각 새 팩에 raw PNG 10종, 투명 PNG 10종, WebP 10종, contact sheet 1장이 있습니다.
 - 모든 투명 PNG는 `768x768`, alpha 포함, 캐릭터 중심 정렬입니다.
-- 차시 `index.html`에는 레거시 매스몬 실행 참조가 남아 있지 않습니다.
+- 차시 `index.html`에는 현재 활성 기준과 다른 V2 매스몬 실행 참조가 남아 있지 않습니다.
 - 차시 폴더에는 실행용 WebP만 복사되어 있습니다.
 - 로컬 서버에서 대표 WebP URL이 `HTTP 200`입니다.
 - 브라우저에서 시작 화면 또는 결과 화면의 매스몬 이미지가 실제로 로드됩니다.
-

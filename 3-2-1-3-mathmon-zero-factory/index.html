@@ -67,7 +67,11 @@
 
     .stage-shell {
       --stage-inset: clamp(14px, 2vw, 22px);
-      --sound-slot: clamp(64px, 6vw, 78px);
+      --sound-button-size: clamp(30px, 3vw, 34px);
+      --sound-gap: clamp(8px, 1vw, 12px);
+      --sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));
+      --top-control-pad-x: 9px;
+      --top-control-icon-gap: 7px;
       position: relative;
       width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
       aspect-ratio: 16 / 10;
@@ -96,12 +100,15 @@
 
     .top-row {
       position: absolute;
-      inset: clamp(14px, 2vw, 22px) clamp(14px, 2vw, 22px) auto clamp(14px, 2vw, 22px);
-      z-index: 3;
+      top: var(--stage-inset);
+      left: var(--stage-inset);
+      right: calc(var(--stage-inset) + var(--sound-reserve));
+      z-index: 4;
+      height: var(--sound-button-size);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: var(--sound-gap);
       pointer-events: none;
     }
 
@@ -111,23 +118,29 @@
     .mini-badge {
       display: inline-flex;
       align-items: center;
-      min-height: 34px;
-      padding: 7px 13px;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: max-content;
+      min-height: var(--sound-button-size);
+      padding: 0 var(--top-control-pad-x);
+      gap: var(--top-control-icon-gap);
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(14, 12, 22, 0.7);
       color: #ffffff;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       font-weight: 900;
-      line-height: 1.1;
+      line-height: 1;
       backdrop-filter: blur(10px);
+      white-space: nowrap;
     }
 
     .brand-badge img {
-      width: 22px;
-      height: 22px;
-      margin-right: 8px;
-      border-radius: 6px;
+      width: 20px;
+      height: 20px;
+      margin-right: 0;
+      border-radius: 5px;
     }
 
     .unit-badge {
@@ -194,47 +207,68 @@
       top: var(--stage-inset);
       right: var(--stage-inset);
       z-index: 60;
-      display: inline-grid;
+      display: grid;
       place-items: center;
-      width: clamp(54px, 5.3vw, 66px);
+      width: var(--sound-button-size);
       min-width: 0;
-      height: 34px;
-      min-height: 34px;
+      height: var(--sound-button-size);
+      min-height: 0;
       padding: 0;
-      border: 1px solid rgba(255, 200, 87, 0.55);
+      border: 1px solid rgba(255, 232, 186, 0.34);
       border-radius: 999px;
-      color: #ffe3a5;
-      background: rgba(14, 12, 22, 0.78);
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.24);
-      font-size: clamp(0.72rem, 1vw, 0.84rem);
-      font-weight: 950;
+      color: rgba(255, 238, 198, 0.92);
+      background: rgba(14, 12, 22, 0.42);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+      font-size: 0;
       line-height: 1;
       backdrop-filter: blur(10px);
     }
 
+    .sound-toggle::before,
     .sound-toggle::after {
-      content: "";
+      content: none !important;
+      display: none !important;
+    }
+
+    .sound-toggle svg {
       position: absolute;
-      top: 6px;
-      right: 7px;
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #69efbf;
-      box-shadow: 0 0 10px rgba(105, 239, 191, 0.8);
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      display: block;
+      transform: translate(-50%, -50%);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .sound-off-stroke {
+      display: none;
     }
 
     .stage-shell .top-row {
-      right: calc(var(--stage-inset) + var(--sound-slot));
+      right: calc(var(--stage-inset) + var(--sound-reserve));
     }
 
     .stage-shell .hud {
-      padding-right: var(--sound-slot);
+      padding-right: var(--sound-reserve);
     }
 
     .sound-toggle[aria-pressed="false"] {
       border-color: rgba(215, 202, 219, 0.34);
       color: var(--muted);
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-wave {
+      display: none;
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-off-stroke {
+      display: block;
     }
 
     .cover {
@@ -566,14 +600,15 @@
 
     .play {
       grid-template-rows: auto 1fr;
-      padding: clamp(16px, 2.4vw, 24px);
+      padding: var(--stage-inset);
     }
 
     .hud {
       display: grid;
       grid-template-columns: minmax(210px, auto) 1fr auto;
-      align-items: center;
+      align-items: start;
       gap: 12px;
+      min-height: var(--sound-button-size);
       margin-bottom: 16px;
     }
 
@@ -1116,7 +1151,7 @@
     }
 
     .planet-chip {
-      min-height: 34px;
+      min-height: 0;
       display: grid;
       place-items: center;
       border: 1px solid rgba(255, 255, 255, 0.16);
@@ -1186,7 +1221,7 @@
 
     .phase-label {
       display: none;
-      min-height: 34px;
+      min-height: 0;
       padding: 8px 12px;
       border-radius: 999px;
       color: #231400;
@@ -2463,7 +2498,14 @@
 
   <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
     <div class="stage-shell">
-      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">소리</button>
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M4 10h3.5l4.2-4v12l-4.2-4H4z"></path>
+          <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <path class="sound-wave" d="M18.5 5.8a9 9 0 0 1 0 12.4"></path>
+          <path class="sound-off-stroke" d="M16 8l5 8M21 8l-5 8"></path>
+        </svg>
+      </button>
     <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
       <img class="raster-bg" src="cover-generated.webp" alt="">
       <div class="top-row">
@@ -2489,7 +2531,7 @@
             <div class="rocket-fin right"></div>
             <div class="rocket-flame"></div>
           </div>
-          <img class="cover-mathmon" src="assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-03-conveymon.webp" alt="">
+          <img class="cover-mathmon" src="assets/mathmon/base-pack/mathmon-2-foxmon.webp" alt="">
         </div>
       </div>
     </section>
@@ -2669,10 +2711,10 @@
             </div>
           </div>
           <div class="result-mathmon-card">
-            <img id="resultMathmonImage" src="assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-01-geariemon.webp" alt="">
+            <img id="resultMathmonImage" src="assets/mathmon/base-pack/mathmon-0-almon.webp" alt="">
             <div class="result-mathmon-copy">
               <span>이번 카드</span>
-              <strong id="resultMathmonName">기어리몬</strong>
+              <strong id="resultMathmonName">알몬</strong>
               <p id="resultMathmonCopy">완성한 생산량에 맞춰 매스몬 카드를 만나요.</p>
               <div class="mathmon-dex-strip" id="mathmonDexStrip" aria-label="매스몬 카드 단계"></div>
             </div>
@@ -2709,16 +2751,16 @@
     };
     const ALL_DESTINATIONS = [...DESTINATIONS, SECRET_DESTINATION];
     const MATHMONS = [
-      { name: "기어리몬", threshold: 0, minCorrect: 0, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-01-geariemon.webp", fileName: "geariemon.png", copy: "0 공장의 톱니를 처음 돌리는 매스몬이에요!" },
-      { name: "볼티몬", threshold: 10, minCorrect: 2, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-02-boltimon.webp", fileName: "boltimon.png", copy: "흔들리는 부품을 단단히 조여 주는 매스몬이에요!" },
-      { name: "컨베몬", threshold: 20, minCorrect: 4, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-03-conveymon.webp", fileName: "conveymon.png", copy: "완성품을 컨베이어에 척척 실어 보내요!" },
-      { name: "마그네몬", threshold: 30, minCorrect: 5, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-04-magnemon.webp", fileName: "magnemon.png", copy: "흩어진 0 스티커를 착 붙여 모으는 매스몬이에요!" },
-      { name: "피스톤몬", threshold: 40, minCorrect: 6, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-05-pistonmon.webp", fileName: "pistonmon.png", copy: "공장을 통통 밀어 생산 속도를 올려요!" },
-      { name: "서킷몬", threshold: 52, minCorrect: 7, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-06-circuitmon.webp", fileName: "circuitmon.png", copy: "핵심 곱과 0 개수를 반짝 연결해요!" },
-      { name: "클로몬", threshold: 64, minCorrect: 8, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-07-clawmon.webp", fileName: "clawmon.png", copy: "정확한 0 스티커를 집게로 집어 올려요!" },
-      { name: "프리즘몬", threshold: 76, minCorrect: 8, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-08-prismon.webp", fileName: "prismon.png", copy: "완성 수를 반짝이는 빛으로 검사해요!" },
-      { name: "다이얼몬", threshold: 88, minCorrect: 9, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-09-dialmon.webp", fileName: "dialmon.png", copy: "총 생산량을 정확하게 재는 매스몬이에요!" },
-      { name: "팩몬", threshold: 98, minCorrect: 10, asset: "assets/mathmon/zero-factory-pack-v2/mathmon-zf-v2-10-packmon.webp", fileName: "packmon.png", copy: "0 공장 최고 출하를 포장하는 특별한 매스몬이에요!" }
+      { name: "알몬", threshold: 0, minCorrect: 0, asset: "assets/mathmon/base-pack/mathmon-0-almon.webp", fileName: "almon.png", copy: "0 공장의 첫 완성품을 반짝 열어 주는 매스몬이에요!" },
+      { name: "삐약몬", threshold: 10, minCorrect: 2, asset: "assets/mathmon/base-pack/mathmon-1-ppiyakmon.webp", fileName: "ppiyakmon.png", copy: "컨베이어 위를 톡톡 뛰며 0 스티커를 세어 줘요!" },
+      { name: "여우몬", threshold: 20, minCorrect: 4, asset: "assets/mathmon/base-pack/mathmon-2-foxmon.webp", fileName: "foxmon.png", copy: "빠른 눈으로 핵심 곱과 붙일 0을 찾아요!" },
+      { name: "새끼용몬", threshold: 30, minCorrect: 5, asset: "assets/mathmon/base-pack/mathmon-3-babydragonmon.webp", fileName: "babydragonmon.png", copy: "완성 수에 힘을 불어넣어 출하를 도와요!" },
+      { name: "사자몬", threshold: 40, minCorrect: 6, asset: "assets/mathmon/base-pack/mathmon-4-lionmon.webp", fileName: "lionmon.png", copy: "큰 생산량도 씩씩하게 지켜 주는 매스몬이에요!" },
+      { name: "독수리몬", threshold: 52, minCorrect: 7, asset: "assets/mathmon/base-pack/mathmon-5-eaglemon.webp", fileName: "eaglemon.png", copy: "완성 수를 높이 띄워 더 멀리 출하해요!" },
+      { name: "드래곤몬", threshold: 64, minCorrect: 8, asset: "assets/mathmon/base-pack/mathmon-6-dragonmon.webp", fileName: "dragonmon.png", copy: "0 공장의 생산 열기를 뜨겁게 올려요!" },
+      { name: "티라노몬", threshold: 76, minCorrect: 8, asset: "assets/mathmon/base-pack/mathmon-7-tyranomon.webp", fileName: "tyranomon.png", copy: "커다란 완성품도 힘차게 밀어 보내요!" },
+      { name: "유니콘몬", threshold: 88, minCorrect: 9, asset: "assets/mathmon/base-pack/mathmon-8-unicornmon.webp", fileName: "unicornmon.png", copy: "무지개빛 출하 길을 열어 주는 매스몬이에요!" },
+      { name: "킹드래곤몬", threshold: 98, minCorrect: 10, asset: "assets/mathmon/base-pack/mathmon-9-kingdragonmon.webp", fileName: "kingdragonmon.png", copy: "0 공장 최고 출하를 장식하는 전설 매스몬이에요!" }
     ];
     const FUEL_EVENT_CLASSES = [
       "fuel-event--normal",
@@ -3714,7 +3756,6 @@
     });
     el.soundToggle.addEventListener("click", () => {
       state.soundsOn = !state.soundsOn;
-      el.soundToggle.textContent = "소리";
       el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
       el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
       if (state.soundsOn) {
