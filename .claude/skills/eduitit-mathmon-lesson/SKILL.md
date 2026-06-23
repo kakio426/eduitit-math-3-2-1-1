@@ -37,7 +37,7 @@ teacher-facing SaaS·관리자 화면에는 적용하지 않는다(그건 `eduit
 
 1. **계획**: 해당 차시 폴더에 `PLAN.md`를 먼저 쓴다 → `references/plan-template.md`.
 2. **폴더**: `_templates/lesson-package`를 `3-2-<단원>-<차시>-<영문짧은이름>`으로 복사.
-3. **자산**: `_shared/`에서 `eduitit-logo-mark.png` + 첫 화면 동행용 매스몬 1~2종 복사(10종 전부 복사 불필요 — 도감 없음).
+3. **자산**: `_shared/`에서 `eduitit-logo-mark.png`와 필요한 배포용 자산만 복사. 매스몬은 반드시 `_shared/mathmon/catalog.json`과 `_shared/mathmon/STYLE_GUIDE.md`를 먼저 확인하고, 새 매스몬은 `_shared/mathmon/<pack-id>/`에 원본 등록 후 차시 폴더에는 WebP 배포본만 복사한다(10종 전부 복사 불필요 — 도감 없음).
 4. **엔진 복제**: 최신 기준 차시(`3-2-1-2-...`)의 `index.html`을 복제해 개조. 재사용 함수 맵 → `references/engine-and-images.md`.
 5. **개조 3종만**: ① 문제 생성기 ② 보상/등급 라벨 ③ 테마 이미지. 점수·콤보·단계선택·등급 뼈대는 그대로.
 6. **이미지**: 필요한 RasterStage 이미지를 생성하고 WebP로 배포 변환 → `references/engine-and-images.md`.
@@ -71,3 +71,4 @@ teacher-facing SaaS·관리자 화면에는 적용하지 않는다(그건 `eduit
 - `references/plan-template.md` — 차시 `PLAN.md` 템플릿(구조·화면 수·생성 이미지·검증).
 - `references/engine-and-images.md` — 2차시 재사용 함수 맵 + RasterStage/WebP 이미지 패턴.
 - `references/verification.md` — 빌드·배포 검증 체크리스트.
+- `_shared/mathmon/STYLE_GUIDE.md` — 매스몬 팩 생성·중복 방지·이미지 분위기 기준.

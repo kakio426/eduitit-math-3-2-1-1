@@ -3,6 +3,8 @@
   "updated": "2026-06-23",
   "policy": {
     "sourceOfTruth": "_shared/mathmon",
+    "styleGuide": "_shared/mathmon/STYLE_GUIDE.md",
+    "defaultNewPackStyle": "rounded toy-like 3D mascot",
     "lessonCopyRule": "Copy only the runtime assets needed by a lesson into that lesson folder.",
     "rewardRule": "A lesson should foreground one reward structure; Mathmon appears as the result card, not as a second scoring system."
   },

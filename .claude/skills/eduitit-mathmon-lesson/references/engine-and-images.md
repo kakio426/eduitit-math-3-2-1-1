@@ -31,6 +31,14 @@
 
 **WebP 규칙**: 작업실 원본은 PNG 보관, 배포는 WebP(quality 82). `index.html`은 webp 참조. 변환은 Pillow(`Image.save(..., format="WEBP", quality=82, method=6)`)를 임시 venv에서 사용 가능.
 
+## 매스몬 이미지 패턴
+
+- 매스몬 원본 관리는 `_shared/mathmon/`이 단일 기준이다.
+- 새 매스몬을 만들기 전 `_shared/mathmon/catalog.json`, 각 팩 `manifest.json`, contact sheet를 확인해 기존 실루엣과 겹치지 않게 한다.
+- 새 팩은 `_shared/mathmon/STYLE_GUIDE.md`의 rounded toy-like 3D mascot 기준을 따른다.
+- 원본 투명 PNG와 raw chroma-key 생성물은 `_shared/mathmon/<pack-id>/`에 두고, 차시 폴더에는 실행에 필요한 WebP만 복사한다.
+- 한 차시 안에서는 한 매스몬 팩을 기본으로 쓰고, 여러 팩을 섞을 때는 문서에 이유를 남긴다.
+
 ## 차시당 생성 이미지 표준 세트
 
 | 용도 | 개수 | 비고 |
