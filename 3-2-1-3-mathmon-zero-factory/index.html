@@ -1119,8 +1119,8 @@
 
     .problem-panel {
       display: grid;
-      grid-template-rows: auto auto 1fr auto;
-      gap: 10px;
+      grid-template-rows: auto auto auto 1fr auto;
+      gap: 12px;
       padding: clamp(14px, 2vw, 18px);
     }
 
@@ -1156,14 +1156,13 @@
 
     .calc-stage {
       display: grid;
-      grid-template-columns: minmax(310px, 0.95fr) minmax(220px, 0.7fr);
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
       align-items: stretch;
     }
 
-    .factory-board,
-    .step-panel {
-      min-height: 190px;
+    .factory-board {
+      min-height: 168px;
       padding: 12px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -1172,13 +1171,13 @@
 
     .factory-board {
       display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 12px;
+      grid-template-rows: 1fr auto;
+      gap: 10px;
       font-variant-numeric: tabular-nums;
     }
 
     .factory-card {
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
@@ -1210,7 +1209,7 @@
       grid-template-columns: minmax(0, 1fr) 28px minmax(0, 0.82fr) 28px minmax(0, 1fr);
       align-items: center;
       gap: 8px;
-      min-height: 96px;
+      min-height: 106px;
       padding: 12px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1292,9 +1291,9 @@
       border-radius: var(--radius);
       color: #d8fff2;
       background: rgba(53, 217, 178, 0.08);
-      font-size: clamp(0.94rem, 1.9vw, 1.08rem);
+      font-size: clamp(0.94rem, 1.8vw, 1.06rem);
       font-weight: 900;
-      line-height: 1.32;
+      line-height: 1.25;
     }
 
     .factory-machine {
@@ -1511,7 +1510,7 @@
     }
 
     .step-panel {
-      display: grid;
+      display: none;
       grid-template-rows: auto minmax(96px, 1fr) auto;
       gap: 10px;
       border-color: rgba(255, 200, 87, 0.36);
@@ -1588,7 +1587,7 @@
     }
 
     .prompt {
-      min-height: 44px;
+      min-height: 50px;
       display: flex;
       align-items: center;
       padding: 10px 12px;
@@ -1596,9 +1595,9 @@
       border-radius: var(--radius);
       background: rgba(255, 200, 87, 0.08);
       color: #fff0c6;
-      font-size: clamp(1.02rem, 2.1vw, 1.22rem);
+      font-size: clamp(1.18rem, 2.35vw, 1.5rem);
       font-weight: 950;
-      line-height: 1.35;
+      line-height: 1.24;
     }
 
     .choice-grid {
@@ -1609,15 +1608,15 @@
     }
 
     .choice-button {
-      min-height: 64px;
+      min-height: 76px;
       padding: 10px 12px;
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: var(--radius);
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
-      font-size: clamp(1.05rem, 2.2vw, 1.46rem);
+      font-size: clamp(1.18rem, 2.45vw, 1.72rem);
       font-weight: 1000;
-      line-height: 1.22;
+      line-height: 1.12;
       transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
     }
 
@@ -2859,7 +2858,7 @@
       el.corePart.className = "belt-part is-current";
       el.zeroStickerRow.className = "zero-sticker-row";
       el.finalPart.className = "belt-part";
-      el.factoryRule.textContent = "끝의 0을 잠깐 떼고 핵심 부분부터 곱해요.";
+      el.factoryRule.textContent = "끝의 0은 잠깐 떼고 계산해요.";
       el.feedbackText.textContent = "";
       el.feedbackText.className = "feedback";
       renderStatus();
@@ -2987,10 +2986,10 @@
           optionType: "core",
           formula: `${problem.coreLeft} × ${problem.coreRight} = ?`,
           correct: problem.core,
-          prompt: `${problem.coreLeft} × ${problem.coreRight}의 값을 골라요.`,
-          meaning: `${problem.factorA} × ${problem.factorB}에서 끝의 0을 떼면 ${problem.coreLeft} × ${problem.coreRight}이 돼요.`,
-          hint: `${problem.coreLeft} × ${problem.coreRight}만 먼저 계산해요.`,
-          explain: `${problem.coreLeft} × ${problem.coreRight} = ${problem.core.toLocaleString("ko-KR")}예요. 이제 0을 ${problem.zeros}개 붙이면 돼요.`,
+          prompt: `먼저 ${problem.coreLeft} × ${problem.coreRight}을 골라요.`,
+          meaning: "끝의 0은 잠깐 떼고 계산해요.",
+          hint: `${problem.coreLeft} × ${problem.coreRight}만 먼저 봐요.`,
+          explain: `${problem.coreLeft} × ${problem.coreRight} = ${problem.core.toLocaleString("ko-KR")}`,
           distractors: [
             problem.core + problem.coreRight,
             Math.max(0, problem.core - problem.coreRight),
@@ -3002,12 +3001,12 @@
           id: "zeros",
           label: "0 붙이기",
           optionType: "zeros",
-          formula: `${problem.core.toLocaleString("ko-KR")} 뒤에 0은 몇 개?`,
+          formula: "0을 몇 개 붙일까요?",
           correct: problem.zeros,
-          prompt: "처음 수 끝에 있던 0을 모두 세어 골라요.",
-          meaning: `${problem.factorA}에는 끝 0 ${problem.leftZeros}개, ${problem.factorB}에는 끝 0 ${problem.rightZeros}개가 있어요.`,
-          hint: `${problem.factorA}와 ${problem.factorB} 끝에 붙은 0을 한 수씩 세어 봐요.`,
-          explain: `0을 ${problem.leftZeros}+${problem.rightZeros}=${problem.zeros}개 붙이면 ${problem.core.toLocaleString("ko-KR")} → ${problem.answer.toLocaleString("ko-KR")}이 완성돼요.`
+          prompt: `${problem.core.toLocaleString("ko-KR")} 뒤에 붙일 0의 개수를 골라요.`,
+          meaning: "처음 두 수의 맨 끝 0만 세어요.",
+          hint: `맨 끝 0은 모두 ${problem.zeros}개예요.`,
+          explain: `0 ${problem.zeros}개를 붙여 ${problem.answer.toLocaleString("ko-KR")} 완성!`
         }
       ];
     }
@@ -3036,7 +3035,7 @@
         const values = [step.correct, Math.max(0, step.correct - 1), step.correct + 1, step.correct + 2];
         return shuffle([...new Set(values)].slice(0, 4).map((value) => ({
           value,
-          label: `<span>${value === 0 ? "붙이지 않기" : `0 ${value}개`}</span><small>${value === 0 ? "0 없음" : "0".repeat(value)}</small>`
+          label: value === 0 ? "붙이지 않기" : `0 ${value}개`
         })));
       }
       const values = [step.correct];
@@ -3113,13 +3112,13 @@
       if (step.id === "core") {
         el.corePart.textContent = problem.core.toLocaleString("ko-KR");
         el.corePart.classList.add("is-done");
-        el.factoryRule.textContent = `핵심 곱 ${problem.core.toLocaleString("ko-KR")}을 만들었어요. 이제 0 스티커를 붙여요.`;
+        el.factoryRule.textContent = `핵심 곱 ${problem.core.toLocaleString("ko-KR")} 완성. 이제 0을 붙여요.`;
       } else if (step.id === "zeros") {
         renderZeroStickers(problem.zeros);
         el.zeroStickerRow.classList.add("is-done");
         el.finalPart.textContent = problem.answer.toLocaleString("ko-KR");
         el.finalPart.classList.add("is-done");
-        el.factoryRule.textContent = `${problem.core.toLocaleString("ko-KR")} 뒤에 0을 ${problem.zeros}개 붙여 ${problem.answer.toLocaleString("ko-KR")} 완성!`;
+        el.factoryRule.textContent = `${problem.answer.toLocaleString("ko-KR")} 완성!`;
       }
       updateCurrentAnswerCell();
     }
@@ -3300,7 +3299,7 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "choice-button";
-        button.innerHTML = option.label;
+        button.textContent = option.label;
         button.addEventListener("click", () => handler(option, button));
         el.choiceGrid.appendChild(button);
       });
