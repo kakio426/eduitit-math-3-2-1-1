@@ -44,7 +44,7 @@
 
 첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 로켓과 매스몬이 보이는 기존 대표 장면은 그대로 유지하고, 제목 부분만 GPT Image로 만든 독립 타이틀 아트(`title-poster-generated.webp`)로 얹었습니다. 한 줄 목표와 시작 버튼은 HTML로 얹습니다. 한 줄 목표는 실제 화면에서 `받아올림 있는 곱셈을 풀어 로켓의 연료를 넣어요.`로 보여 줍니다.
 
-![첫 화면](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/01-cover.png)
+![첫 화면](screenshots/01-cover.png)
 
 ### 설명 화면
 
@@ -59,15 +59,15 @@
 
 버튼 문구는 다음 행동이 바로 보이도록 `연료 넣기`로 둡니다.
 
-![설명 화면](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/02-tutorial.png)
+![설명 화면](screenshots/02-tutorial.png)
 
 ### 문제 화면
 
 문제 화면은 왼쪽에 로켓 연료 상태, 오른쪽에 세로셈판과 선택지를 둡니다. 로켓은 생성 이미지(`rocket-charge.webp`)를 사용하고, 뒤쪽에는 별하늘 발사장 생성 이미지(`rocket-launchpad-generated.webp`)를 깔았습니다. 왼쪽에는 `로켓 연료`, `채우는 중`, `행성 거리`, `마지막에 측정`처럼 현재 상태만 짧게 보여 줍니다. 큰 배터리 창 위에는 HTML/CSS 액체 레이어를 얹어 연료량에 따라 액체가 차오르게 했고, 같은 값을 발사장 전체에도 전달해 바닥 링, 증기, 신호등, 빛줄기 효과가 함께 강해지게 했습니다. 무지개 연료를 얻으면 연료 액체와 발사장 효과가 무지개빛으로 바뀝니다. 세로셈판은 일, 십, 백 순서로 현재 칸을 강조하고, 올림 수와 답 칸을 실제 계산 순서대로 채웁니다. 현재 계산에 쓰는 숫자, 곱하는 수, 올림 수, 답 칸을 세로셈판 안에서 직접 강조하고, 보조식은 기본으로 숨긴 뒤 학생이 `힌트`를 누를 때만 펼쳐지게 했습니다.
 
-![문제 화면](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/03-problem.png)
+![문제 화면](screenshots/03-problem.png)
 
-![힌트 열린 문제 화면](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/03-problem-hint.png)
+![힌트 열린 문제 화면](screenshots/03-problem-hint.png)
 
 ### 보상 화면
 
@@ -75,19 +75,19 @@
 
 소리는 WebAudio로 생성합니다. 시작 뒤에는 낮은 우주 배경음이 깔리고, 연료 이벤트 모달이 뜰 때는 일반 주입, 대량 주입, 연료 감소, 연료 0, 즉시 발사, 무지개 연료가 서로 다른 효과음으로 구분됩니다. 상단의 소리 버튼으로 BGM과 효과음을 함께 켜고 끌 수 있습니다.
 
-![연료 이벤트 모달](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/04-reward.png)
+![연료 이벤트 모달](screenshots/04-reward.png)
 
 ### 도착 결과 화면
 
 도착 결과는 도착지별 RasterStage 배경 9장을 사용합니다. 수성부터 해왕성까지 8행성, 그리고 무지개 연료 secret stage인 안드로메다 배경이 따로 있습니다. 생성 이미지에는 텍스트, 점수, 버튼을 넣지 않고 로켓, 매스몬, 도착 장소만 담습니다. 그 위에 연료 측정 막대, 행성 거리 스캔, `연료 측정값`, `맞힌 문제`, `도착한 곳`, 도착 문구를 HTML로 얹습니다.
 
-![도착 결과 화면](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/05-result-success.png)
+![도착 결과 화면](screenshots/05-result-success.png)
 
 ### 다시하기 결과 화면
 
 연료가 부족하면 `result-retry-generated.webp`를 RasterStage 배경으로 사용합니다. 로켓이 안전하게 점검되고 파란 매스몬 친구가 다시 해보자고 응원하는 장면 위에 다시 도전 문구와 `다시하기` 버튼을 보여 줍니다.
 
-![다시하기 결과 화면](https://raw.githubusercontent.com/kakio426/eduitit-math-3-2-1-1/main/3-2-1-2-mathmon-rocket-charge/screenshots/06-result-retry.png)
+![다시하기 결과 화면](screenshots/06-result-retry.png)
 
 ## 5. 매스몬 역할
 
