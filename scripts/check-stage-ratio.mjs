@@ -87,11 +87,19 @@ for (const lesson of lessons) {
   const hasStageMeta = /<main\s+class="game"[^>]*data-stage-ratio="16:10"[^>]*data-stage-size="1280x800"/.test(html);
   const hasTopBadges = html.includes('class="brand-badge"') && html.includes(".top-row");
   const hasHudUnitBadge = /<header\s+class="hud"[\s\S]*class="unit-badge"/.test(html);
-  const hasTitleArt = html.includes('class="hero-title-art"') || html.includes("title-poster-generated.webp");
+  const titleArtMatch = html.match(/<img(?=[^>]*class="hero-title-art")(?=[^>]*alt="")(?=[^>]*aria-hidden="true")[^>]*src="(title-(?:poster|logo)-generated\.webp)"[^>]*>/);
+  const hasTitleArt = html.includes('class="hero-title-art"') || html.includes("title-poster-generated.webp") || html.includes("title-logo-generated.webp");
   const hasHiddenCoverTitle = /<h1(?=[^>]*class="visually-hidden")(?=[^>]*id="coverTitle")[^>]*>/.test(html);
-  const hasTitleArtImage = /<img(?=[^>]*class="hero-title-art")(?=[^>]*src="title-poster-generated\.webp")(?=[^>]*alt="")(?=[^>]*aria-hidden="true")[^>]*>/.test(html);
+  const hasTitleArtImage = Boolean(titleArtMatch);
   const hasCoverBackground = /<img(?=[^>]*class="raster-bg")(?=[^>]*src="cover-generated\.webp")[^>]*>/.test(html);
-  const hasTitleArtWebp = !hasTitleArt || await fileExists(path.join(lesson, "title-poster-generated.webp"));
+  const titleArtFile = titleArtMatch?.[1] || "";
+  const titleArtBase = titleArtFile.replace(/-generated\.webp$/, "");
+  const hasTitleArtWebp = !hasTitleArt || (titleArtFile && await fileExists(path.join(lesson, titleArtFile)));
+  const hasTitleArtPng = !hasTitleArt || (titleArtBase && await fileExists(path.join(lesson, `${titleArtBase}-generated.png`)));
+  const hasTitleSource = !hasTitleArt || (titleArtBase && (
+    await fileExists(path.join(lesson, `${titleArtBase}-source.png`)) ||
+    await fileExists(path.join(lesson, `${titleArtBase}-chromakey.png`))
+  ));
   const stageWidthRuleCount = (html.match(new RegExp(STAGE_WIDTH_RULE.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g")) || []).length;
   const checks = [
     [hasStageMeta, "main.game에 data-stage-ratio=\"16:10\" data-stage-size=\"1280x800\"가 필요합니다."],
@@ -151,9 +159,11 @@ for (const lesson of lessons) {
     [!html.includes('content: "♪";'), "소리 버튼을 음표 문자 pseudo-element로 만들지 않습니다. SVG 스피커 아이콘을 쓰세요."],
     [!html.includes(">소리 켬<") && !html.includes(">소리 끔<") && !html.includes(">BGM 켜짐<") && !html.includes(">BGM 꺼짐<"), "소리 버튼의 긴 상태 문구는 화면에 직접 노출하지 않습니다. 보이는 글자는 짧게 두고 aria-label로 상태를 전달하세요."],
     [!hasTitleArt || hasHiddenCoverTitle, "첫 화면 제목을 그림으로 쓰는 경우 실제 제목은 <h1 class=\"visually-hidden\" id=\"coverTitle\">로 남겨야 합니다."],
-    [!hasTitleArt || hasTitleArtImage, "첫 화면 제목 그림은 <img class=\"hero-title-art\" src=\"title-poster-generated.webp\" alt=\"\" aria-hidden=\"true\"> 패턴으로 얹어야 합니다."],
+    [!hasTitleArt || hasTitleArtImage, "첫 화면 제목 그림은 <img class=\"hero-title-art\" src=\"title-*-generated.webp\" alt=\"\" aria-hidden=\"true\"> 패턴으로 얹어야 합니다."],
     [!hasTitleArt || hasCoverBackground, "제목 그림을 만들 때 전체 커버를 갈아엎지 말고 기존 cover-generated.webp 배경을 유지해야 합니다."],
-    [!hasTitleArt || hasTitleArtWebp, "title-poster-generated.webp 제목 오버레이 배포 자산이 차시 폴더에 있어야 합니다."],
+    [!hasTitleArt || hasTitleArtWebp, "title-*-generated.webp 제목 오버레이 배포 자산이 차시 폴더에 있어야 합니다."],
+    [!hasTitleArt || hasTitleArtPng, "title-*-generated.png 투명 PNG 원본이 차시 폴더에 있어야 합니다."],
+    [!hasTitleArt || hasTitleSource, "title-*-source.png 또는 title-*-chromakey.png 생성 원본을 함께 보관해야 합니다. CSS/SVG/로컬 폰트로 만든 가짜 제목 이미지는 통과시키지 않습니다."],
     [!html.includes("cover-title-generated"), "제목 참고 이미지를 전체 커버 배경(cover-title-generated)으로 바꾸지 마세요. 제목만 독립 오버레이로 생성하세요."],
   ];
 
