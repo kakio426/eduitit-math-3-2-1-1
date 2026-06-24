@@ -338,6 +338,13 @@
       text-shadow: 0 7px 0 rgba(0, 0, 0, 0.22), 0 0 28px rgba(96, 215, 255, 0.24);
     }
 
+    .hero-title-art {
+      width: min(570px, 100%);
+      max-height: 255px;
+      object-fit: contain;
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.34));
+    }
+
     .hero-copy p {
       max-width: 520px;
       margin: 0;
@@ -345,6 +352,13 @@
       font-size: clamp(1.2rem, 2.8vw, 1.72rem);
       font-weight: 900;
       line-height: 1.35;
+    }
+
+    .cover #startButton {
+      min-width: 190px;
+      min-height: 72px;
+      padding: 0 44px;
+      font-size: clamp(1.18rem, 2.7vw, 1.42rem);
     }
 
     .cover-visual {
@@ -2335,7 +2349,7 @@
     </div>
   </div>
 
-  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800" data-cover-standard="generated-title-overlay">
     <div class="stage-shell">
       <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -2354,7 +2368,8 @@
       <span class="lesson-badge">내림 없는 몇십몇 ÷ 몇</span>
       <div class="cover-scene">
         <div class="hero-copy">
-          <h1 id="coverTitle">매스몬 나누기 농장</h1>
+          <h1 class="visually-hidden" id="coverTitle">매스몬 나누기 농장</h1>
+          <img class="hero-title-art" src="title-logo-generated.webp" alt="" aria-hidden="true">
           <p>수확물을 똑같이 나눠 바구니에 담자!</p>
           <button class="primary-button" id="startButton" type="button">시작</button>
         </div>

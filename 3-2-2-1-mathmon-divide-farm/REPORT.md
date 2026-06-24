@@ -29,7 +29,7 @@
 
 ### 첫 화면
 
-첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 배경 래스터는 캐릭터 없는 농장 장면으로 재생성했고, base-pack `mathmon-2-foxmon.webp`를 `.cover-mathmon` HTML 이미지로 얹습니다. 게임 제목, 한 줄 목표, 시작 버튼, 브랜드 배지, 단원 배지는 HTML 오버레이입니다.
+첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 배경 래스터는 캐릭터 없는 농장 장면으로 재생성했고, base-pack `mathmon-2-foxmon.webp`를 `.cover-mathmon` HTML 이미지로 얹습니다. 게임 제목은 GPT Image/imagegen으로 만든 `title-logo-generated.webp` 독립 래스터 오버레이이며, 실제 제목은 `visually-hidden` 텍스트로 남겼습니다. 한 줄 목표, 시작 버튼, 브랜드 배지, 단원 배지는 HTML 오버레이입니다.
 
 ![첫 화면](screenshots/01-cover.png)
 
@@ -71,6 +71,7 @@
 - 선택지 확인: 48개 후보의 `몫 합치기` 단계에서 `십의 자리 몫 + 일의 자리 몫` 오답 누락 0건
 - 오답 공개 확인: 십의 자리 단계에서 `정답은 4십이에요`처럼 단위가 붙어 표시됨
 - 화면 계약 확인: 첫 화면 3요소, 브랜드/단원/배움주제 배지, 중심 보상 1개, 결과 등급 구조 유지
+- 제목 아트 표준 확인: `data-cover-standard="generated-title-overlay"`, `title-logo-chromakey.png`, `title-logo-generated.png/webp` 보관 및 연결
 
 브라우저에서 `index.html`을 열면 바로 실행됩니다.
 
@@ -80,3 +81,4 @@
 - 보상 연출 보강: 보상 팝업 배지에 `requestAnimationFrame` 팝 모션을 추가했습니다.
 - 밝은 농장 톤은 그대로 유지했습니다.
 - 매스몬 동행 통일: 첫 화면과 결과 등급 래스터를 캐릭터 없는 농장 배경으로 재생성하고, `assets/mathmon/base-pack/mathmon-2-foxmon.webp`를 `.cover-mathmon`과 `.result-mathmon`으로 연결했습니다. 학생 화면에는 여우몬 한 마리만 보입니다.
+- 첫 화면 제목 아트 표준화: `title-logo-generated.webp`를 `.hero-title-art`로 얹고, 제목 텍스트는 접근성용 숨김 `<h1>`로 유지했습니다.
