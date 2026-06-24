@@ -104,6 +104,54 @@
       "subject": "수학",
       "learningGoal": "몫과 나누는 수를 곱한 뒤 나머지를 더해 나눗셈 결과를 검산한다.",
       "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-3-1",
+      "folder": "3-2-3-1-mathmon-target-hit",
+      "title": "매스몬 표적 맞히기",
+      "grade": 3,
+      "semester": 2,
+      "unit": 3,
+      "lesson": 1,
+      "subject": "수학",
+      "learningGoal": "원 그림에서 중심·반지름·지름을 찾아 구분한다.",
+      "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-3-2",
+      "folder": "3-2-3-2-mathmon-compass-ring",
+      "title": "매스몬 컴퍼스 마법진",
+      "grade": 3,
+      "semester": 2,
+      "unit": 3,
+      "lesson": 2,
+      "subject": "수학",
+      "learningGoal": "컴퍼스를 반지름만큼 벌려 원을 그린다.",
+      "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-3-3",
+      "folder": "3-2-3-3-mathmon-double-bridge",
+      "title": "매스몬 두 배 다리",
+      "grade": 3,
+      "semester": 2,
+      "unit": 3,
+      "lesson": 3,
+      "subject": "수학",
+      "learningGoal": "지름은 반지름의 두 배임을 알고 반지름과 지름을 바꾼다.",
+      "entryFile": "index.html"
+    },
+    {
+      "id": "3-2-3-4",
+      "folder": "3-2-3-4-mathmon-circle-pattern",
+      "title": "매스몬 원 무늬 디자이너",
+      "grade": 3,
+      "semester": 2,
+      "unit": 3,
+      "lesson": 4,
+      "subject": "수학",
+      "learningGoal": "같은 크기 원을 규칙대로 배치해 무늬를 만든다.",
+      "entryFile": "index.html"
     }
   ]
 }

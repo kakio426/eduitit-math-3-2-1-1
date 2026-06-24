@@ -26,6 +26,10 @@ ai mart/
   3-2-2-2-mathmon-elevator/
   3-2-2-3-mathmon-star-pickup/
   3-2-2-4-mathmon-check-lock/
+  3-2-3-1-mathmon-target-hit/
+  3-2-3-2-mathmon-compass-ring/
+  3-2-3-3-mathmon-double-bridge/
+  3-2-3-4-mathmon-circle-pattern/
 ```
 
 ## 차시 폴더 이름 규칙
@@ -61,6 +65,10 @@ ai mart/
 | 3학년 2학기 2단원 2차시 | `3-2-2-2-mathmon-elevator` | 매스몬 엘리베이터 | 내림 있는 두 자리 수 ÷ 한 자리 수 |
 | 3학년 2학기 2단원 3차시 | `3-2-2-3-mathmon-star-pickup` | 매스몬 별 줍기 | 나머지가 있는 나눗셈 |
 | 3학년 2학기 2단원 4차시 | `3-2-2-4-mathmon-check-lock` | 매스몬 검산 자물쇠 | 곱셈으로 나눗셈 검산하기 |
+| 3학년 2학기 3단원 1차시 | `3-2-3-1-mathmon-target-hit` | 매스몬 표적 맞히기 | 원의 중심·반지름·지름 찾기 |
+| 3학년 2학기 3단원 2차시 | `3-2-3-2-mathmon-compass-ring` | 매스몬 컴퍼스 마법진 | 컴퍼스로 원 그리기 |
+| 3학년 2학기 3단원 3차시 | `3-2-3-3-mathmon-double-bridge` | 매스몬 두 배 다리 | 지름은 반지름의 두 배 |
+| 3학년 2학기 3단원 4차시 | `3-2-3-4-mathmon-circle-pattern` | 매스몬 원 무늬 디자이너 | 원으로 규칙·무늬 만들기 |
 
 ## 레포지토리 운영
 

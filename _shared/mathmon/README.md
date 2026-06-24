@@ -22,6 +22,7 @@
 - `MATHMON_ASSET_CONTRACT.md`: Codex와 Claude가 반드시 먼저 확인하는 매스몬 자산 계약
 - `STYLE_GUIDE.md`: Codex와 Claude가 공통으로 따르는 매스몬 생성·관리 기준
 - `UNIT2_COMPANION_REGEN_GUIDE.md`: 2단원 4차시를 base-pack 매스몬 동행으로 통일하기 위한 래스터 재생성 지침(나중에 진행)
+- `UNIT3_IMAGE_GUIDE.md`: 3단원 4차시 코드 완성 후 생성하면 되는 커버·제목 아트·결과 등급·circle-pack 매스몬 자산 안내(나중에 진행)
 
 ## 파일 규칙
 

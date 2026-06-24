@@ -1,0 +1,3829 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3학년 2학기 3단원 · 매스몬 컴퍼스 마법진 | 에듀잇티</title>
+  <style>
+    :root {
+      --page: #111018;
+      --panel: #201a2d;
+      --panel-soft: #2b243a;
+      --ink: #fff8e8;
+      --muted: #d7cadb;
+      --line: rgba(255, 255, 255, 0.16);
+      --mint: #35d9b2;
+      --amber: #ffc857;
+      --rose: #ff5d7a;
+      --sky: #60d7ff;
+      --violet: #b88cff;
+      --deep: #0e0c16;
+      --radius: 8px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(255, 200, 87, 0.08) 0 1px, transparent 1px 80px),
+        linear-gradient(90deg, rgba(96, 215, 255, 0.07) 0 1px, transparent 1px 96px),
+        linear-gradient(135deg, #16111f 0%, #21182b 46%, #101019 100%);
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+    }
+
+    .phone-blocker {
+      display: none;
+    }
+
+    .cover-title-text {
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.05;
+      margin: 0 0 6px;
+      color: var(--ink);
+      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .cover-target {
+      width: clamp(160px, 26vw, 280px);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background: radial-gradient(circle,
+        #ff5d7a 0 16%, #fff8e8 16% 26%, #ff5d7a 26% 42%,
+        #fff8e8 42% 56%, #ff5d7a 56% 72%, #fff8e8 72% 86%, #ff5d7a 86% 100%);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    }
+
+    .calc-stage {
+      overflow: visible;
+    }
+
+    .target-board {
+      width: 100%;
+      max-width: min(360px, 94%);
+      margin: 0 auto;
+    }
+
+    .target-board svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .target-board .cand-line {
+      stroke: #ffd56b;
+      stroke-width: 7;
+      stroke-linecap: round;
+    }
+
+    .target-board .cand-dot {
+      fill: #ffd56b;
+    }
+
+    .target-board .cand-label {
+      fill: #fff8e8;
+      font-weight: 800;
+      font-size: 24px;
+      paint-order: stroke;
+      stroke: rgba(14, 12, 22, 0.85);
+      stroke-width: 4px;
+    }
+
+    .target-board .cand.is-pick-correct .cand-line,
+    .target-board .cand.is-pick-correct .cand-dot {
+      stroke: var(--mint);
+      fill: var(--mint);
+    }
+
+    .target-board .cand.is-pick-correct .cand-label {
+      fill: var(--mint);
+    }
+
+    .target-board .cand.is-pick-wrong .cand-line,
+    .target-board .cand.is-pick-wrong .cand-dot {
+      stroke: var(--rose);
+      fill: var(--rose);
+    }
+
+    .game {
+      --stage-padding: clamp(10px, 2vw, 24px);
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: var(--stage-padding);
+    }
+
+    .stage-shell {
+      --stage-inset: clamp(14px, 2vw, 22px);
+      --sound-button-size: clamp(30px, 3vw, 34px);
+      --sound-gap: clamp(8px, 1vw, 12px);
+      --sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));
+      --top-control-pad-x: 9px;
+      --top-control-icon-gap: 7px;
+      position: relative;
+      width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+      aspect-ratio: 16 / 10;
+    }
+
+    .fuel-transfer-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: none;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .fuel-transfer-layer.is-active {
+      display: block;
+    }
+
+    .fuel-stream {
+      position: absolute;
+      left: 31%;
+      top: 48%;
+      width: 39%;
+      height: 16px;
+      border-radius: 999px;
+      transform: rotate(-5deg);
+      transform-origin: left center;
+      background:
+        radial-gradient(circle at 14% 50%, rgba(255, 255, 255, 0.95) 0 5px, transparent 6px),
+        linear-gradient(90deg, transparent, rgba(96, 215, 255, 0.16), rgba(184, 255, 233, 0.95), rgba(255, 232, 140, 0.9), transparent);
+      background-size: 190% 100%;
+      box-shadow: 0 0 24px rgba(53, 217, 178, 0.55), 0 0 34px rgba(255, 200, 87, 0.25);
+      opacity: 0;
+      animation: fuel-transfer 0.82s ease-out both;
+    }
+
+    .fuel-droplet {
+      position: absolute;
+      top: 47.6%;
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #baffec;
+      box-shadow: 0 0 18px rgba(53, 217, 178, 0.72);
+      opacity: 0;
+      animation: fuel-droplet 0.82s ease-out both;
+    }
+
+    .fuel-droplet.one {
+      left: 66%;
+    }
+
+    .fuel-droplet.two {
+      left: 58%;
+      animation-delay: 0.07s;
+    }
+
+    .fuel-droplet.three {
+      left: 50%;
+      animation-delay: 0.14s;
+    }
+
+    .fuel-transfer-layer.is-mega .fuel-stream {
+      height: 22px;
+      background:
+        radial-gradient(circle at 14% 50%, rgba(255, 255, 255, 0.95) 0 6px, transparent 7px),
+        linear-gradient(90deg, transparent, rgba(255, 232, 140, 0.2), rgba(255, 240, 180, 0.98), rgba(53, 217, 178, 0.95), transparent);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.6), 0 0 42px rgba(53, 217, 178, 0.38);
+    }
+
+    .fuel-transfer-layer.is-rainbow .fuel-stream {
+      background: linear-gradient(90deg, transparent, #ff7aa2, #ffe27a, #45f2b8, #60d7ff, #c59bff, transparent);
+      background-size: 240% 100%;
+      box-shadow: 0 0 36px rgba(96, 215, 255, 0.48), 0 0 34px rgba(184, 116, 255, 0.36);
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: auto;
+      aspect-ratio: 16 / 10;
+      display: none;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.06), transparent 34%),
+        linear-gradient(180deg, #251e32, #171421);
+      box-shadow: var(--shadow);
+    }
+
+    .screen.is-active {
+      display: grid;
+    }
+
+    .top-row {
+      position: absolute;
+      top: var(--stage-inset);
+      left: var(--stage-inset);
+      right: calc(var(--stage-inset) + var(--sound-reserve));
+      z-index: 4;
+      height: var(--sound-button-size);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sound-gap);
+      pointer-events: none;
+    }
+
+    .brand-badge,
+    .unit-badge,
+    .lesson-badge,
+    .mini-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: max-content;
+      min-height: var(--sound-button-size);
+      padding: 0 var(--top-control-pad-x);
+      gap: var(--top-control-icon-gap);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(14, 12, 22, 0.7);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 900;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
+    .brand-badge img {
+      width: 20px;
+      height: 20px;
+      margin-right: 0;
+      border-radius: 5px;
+    }
+
+    .unit-badge {
+      border-color: rgba(96, 215, 255, 0.5);
+      color: #c8f3ff;
+    }
+
+    .lesson-badge {
+      position: absolute;
+      left: clamp(14px, 2vw, 22px);
+      bottom: clamp(14px, 2vw, 22px);
+      z-index: 3;
+      border-color: rgba(255, 200, 87, 0.56);
+      color: #ffe0a3;
+    }
+
+    .primary-button,
+    .ghost-button {
+      min-height: 58px;
+      padding: 0 28px;
+      border: 0;
+      border-radius: var(--radius);
+      font-size: clamp(1.05rem, 2.6vw, 1.32rem);
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.34), 0 22px 38px rgba(0, 0, 0, 0.3);
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease;
+    }
+
+    .primary-button {
+      color: #2a1700;
+      background: linear-gradient(180deg, #ffe27a, #ffb83d);
+    }
+
+    .ghost-button {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .primary-button:hover,
+    .ghost-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .primary-button:active,
+    .ghost-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 8px 0 rgba(106, 70, 23, 0.28), 0 12px 22px rgba(0, 0, 0, 0.28);
+    }
+
+    .primary-button:focus-visible,
+    .ghost-button:focus-visible,
+    .choice-button:focus-visible,
+    .hint-toggle:focus-visible,
+    .sound-toggle:focus-visible {
+      outline: 4px solid rgba(255, 255, 255, 0.86);
+      outline-offset: 4px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .sound-toggle {
+      position: absolute;
+      top: var(--stage-inset);
+      right: var(--stage-inset);
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      width: var(--sound-button-size);
+      min-width: 0;
+      height: var(--sound-button-size);
+      min-height: 0;
+      padding: 0;
+      border: 1px solid rgba(255, 232, 186, 0.34);
+      border-radius: 999px;
+      color: rgba(255, 238, 198, 0.92);
+      background: rgba(14, 12, 22, 0.42);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+      font-size: 0;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .sound-toggle::before,
+    .sound-toggle::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .sound-toggle svg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      display: block;
+      transform: translate(-50%, -50%);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .sound-off-stroke {
+      display: none;
+    }
+
+    .stage-shell .top-row {
+      right: calc(var(--stage-inset) + var(--sound-reserve));
+    }
+
+    .stage-shell .hud {
+      padding-right: var(--sound-reserve);
+    }
+
+    .sound-toggle[aria-pressed="false"] {
+      border-color: rgba(215, 202, 219, 0.34);
+      color: var(--muted);
+      background: rgba(14, 12, 22, 0.32);
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-wave {
+      display: none;
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-off-stroke {
+      display: block;
+    }
+
+    .cover {
+      align-items: center;
+      padding: clamp(70px, 10vw, 100px) clamp(24px, 5vw, 70px);
+      background: #171421;
+    }
+
+    .raster-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(18, 12, 26, 0.74) 0%, rgba(18, 12, 26, 0.44) 38%, transparent 68%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.16), transparent 38%);
+      pointer-events: none;
+    }
+
+    .cover-scene {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(300px, 0.92fr) minmax(360px, 1.08fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 58px);
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      justify-items: start;
+      gap: 18px;
+      transform: translateY(-48px);
+    }
+
+    .hero-title-art {
+      display: block;
+      width: min(500px, 100%);
+      height: auto;
+      margin: -8px 0 -8px -10px;
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.24));
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .hero-copy p {
+      max-width: 520px;
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.2rem, 2.8vw, 1.72rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .cover #startButton {
+      min-width: 190px;
+      min-height: 72px;
+      padding: 0 44px;
+      font-size: clamp(1.22rem, 3vw, 1.58rem);
+      box-shadow: 0 16px 0 rgba(106, 70, 23, 0.34), 0 26px 42px rgba(0, 0, 0, 0.32);
+    }
+
+    .cover-visual {
+      position: relative;
+      min-height: 470px;
+      display: grid;
+      place-items: center;
+      visibility: hidden;
+    }
+
+    .star-field {
+      position: absolute;
+      inset: 4% 0 0 0;
+      background:
+        linear-gradient(90deg, transparent 0 14%, rgba(255, 255, 255, 0.54) 14% 15%, transparent 15% 45%, rgba(255, 200, 87, 0.6) 45% 46%, transparent 46%),
+        linear-gradient(90deg, transparent 0 62%, rgba(96, 215, 255, 0.56) 62% 63%, transparent 63%),
+        linear-gradient(90deg, transparent 0 28%, rgba(255, 255, 255, 0.42) 28% 29%, transparent 29% 82%, rgba(255, 93, 122, 0.5) 82% 83%, transparent 83%);
+      background-size: 220px 80px, 260px 130px, 310px 110px;
+      opacity: 0.5;
+      transform: skewY(-6deg);
+    }
+
+    .rocket-hero {
+      position: relative;
+      width: min(330px, 72%);
+      height: 420px;
+      filter: drop-shadow(0 26px 34px rgba(0, 0, 0, 0.35));
+      animation: float-rocket 4.8s ease-in-out infinite;
+    }
+
+    .rocket-body {
+      position: absolute;
+      left: 50%;
+      top: 34px;
+      width: 136px;
+      height: 274px;
+      transform: translateX(-50%);
+      border: 4px solid rgba(255, 255, 255, 0.75);
+      border-radius: 78px 78px 36px 36px;
+      background: linear-gradient(90deg, #f8f4eb 0%, #ffffff 38%, #d9ecff 100%);
+    }
+
+    .rocket-nose {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 128px;
+      height: 108px;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: linear-gradient(135deg, #ff5d7a, #ffc857);
+    }
+
+    .rocket-window {
+      position: absolute;
+      left: 50%;
+      top: 114px;
+      width: 66px;
+      height: 66px;
+      transform: translateX(-50%);
+      border: 7px solid #7d4b2d;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #60d7ff, #d2fbff);
+      box-shadow: inset 10px -10px 0 rgba(21, 107, 140, 0.14);
+    }
+
+    .rocket-band {
+      position: absolute;
+      left: 50%;
+      top: 205px;
+      width: 120px;
+      height: 36px;
+      transform: translateX(-50%);
+      border-radius: var(--radius);
+      background: #35d9b2;
+    }
+
+    .rocket-fin {
+      position: absolute;
+      top: 240px;
+      width: 76px;
+      height: 112px;
+      background: linear-gradient(180deg, #ff5d7a, #c93b58);
+    }
+
+    .rocket-fin.left {
+      left: 42px;
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    .rocket-fin.right {
+      right: 42px;
+      clip-path: polygon(0 0, 100% 100%, 0 100%);
+    }
+
+    .rocket-flame {
+      position: absolute;
+      left: 50%;
+      top: 314px;
+      width: 78px;
+      height: 100px;
+      transform: translateX(-50%);
+      clip-path: polygon(50% 100%, 100% 0, 0 0);
+      background: linear-gradient(180deg, #ffe27a, #ff8f3d 52%, #ff5d7a);
+      animation: flame-pulse 0.48s ease-in-out infinite alternate;
+    }
+
+    .cover-mathmon {
+      position: absolute;
+      right: 2%;
+      bottom: 7%;
+      width: clamp(128px, 16vw, 180px);
+      transform: rotate(4deg);
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.32));
+    }
+
+    .tutorial {
+      align-items: center;
+      padding: clamp(74px, 10vw, 100px) clamp(22px, 5vw, 70px) clamp(28px, 4vw, 42px);
+      background: #171421;
+    }
+
+    .tutorial::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(14, 10, 22, 0.88) 0%, rgba(14, 10, 22, 0.72) 37%, rgba(14, 10, 22, 0.2) 68%, rgba(14, 10, 22, 0.08) 100%),
+        linear-gradient(180deg, rgba(8, 6, 12, 0.24), rgba(8, 6, 12, 0.18));
+      pointer-events: none;
+    }
+
+    .tutorial-layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.68fr) minmax(320px, 1fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 56px);
+    }
+
+    .tutorial-copy {
+      display: grid;
+      gap: 20px;
+      max-width: 720px;
+    }
+
+    .tutorial-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.2rem, 5.4vw, 4.2rem);
+      line-height: 1.02;
+      font-weight: 1000;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(26, 21, 36, 0.68);
+      color: #ffffff;
+      font-size: clamp(1.05rem, 2.4vw, 1.38rem);
+      font-weight: 950;
+      line-height: 1.28;
+      backdrop-filter: blur(10px);
+    }
+
+    .steps b {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      color: #201000;
+      background: var(--amber);
+      font-size: 1.2rem;
+    }
+
+    .tutorial-art-spacer {
+      min-height: clamp(360px, 48vw, 590px);
+    }
+
+    .play {
+      grid-template-rows: auto 1fr;
+      padding: var(--stage-inset);
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: minmax(210px, auto) 1fr auto;
+      align-items: start;
+      gap: 12px;
+      min-height: var(--sound-button-size);
+      margin-bottom: 12px;
+    }
+
+    .hud .brand-badge,
+    .hud .unit-badge {
+      position: static;
+      pointer-events: auto;
+    }
+
+    .hud-center {
+      display: none;
+      min-width: 0;
+    }
+
+    .stat-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      min-width: 112px;
+      padding: 7px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.92rem;
+      font-weight: 950;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .play-layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: minmax(270px, 0.78fr) minmax(460px, 1.22fr);
+      gap: clamp(16px, 2.8vw, 28px);
+    }
+
+    .rocket-zone,
+    .problem-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .rocket-zone {
+      position: relative;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      overflow: hidden;
+      padding: 18px;
+      isolation: isolate;
+      --charge: 0;
+      background: #151522;
+    }
+
+    .rocket-zone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(circle at 50% 67%, rgba(53, 217, 178, calc(0.08 + var(--charge) * 0.24)), transparent 0 26%, transparent 50%),
+        linear-gradient(180deg, rgba(7, 8, 14, 0.04), rgba(8, 6, 14, 0.46) 72%, rgba(8, 6, 14, 0.76));
+      pointer-events: none;
+    }
+
+    .rocket-zone::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        repeating-linear-gradient(112deg, transparent 0 68px, rgba(96, 215, 255, calc(0.02 + var(--charge) * 0.08)) 70px 74px, transparent 76px 150px),
+        radial-gradient(circle at 18% 18%, rgba(255, 200, 87, calc(0.08 + var(--charge) * 0.18)), transparent 0 9%, transparent 22%),
+        radial-gradient(circle at 82% 22%, rgba(255, 93, 122, calc(0.05 + var(--charge) * 0.16)), transparent 0 8%, transparent 20%);
+      mix-blend-mode: screen;
+      opacity: calc(0.45 + var(--charge) * 0.42);
+      pointer-events: none;
+    }
+
+    .launchpad-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center bottom;
+      filter: saturate(calc(0.82 + var(--charge) * 0.34)) brightness(calc(0.76 + var(--charge) * 0.18));
+      transform: scale(1.015);
+      transition: filter 0.7s ease;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .launch-effects {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .pad-glow,
+    .energy-ring,
+    .launch-beam,
+    .steam-jet,
+    .spark {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .pad-glow {
+      left: 50%;
+      top: 66%;
+      width: calc(128px + var(--charge) * 110px);
+      height: calc(42px + var(--charge) * 44px);
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 222, 105, calc(0.24 + var(--charge) * 0.52)), rgba(53, 217, 178, calc(0.12 + var(--charge) * 0.34)) 38%, transparent 72%);
+      filter: blur(8px);
+      animation: pad-pulse 1.7s ease-in-out infinite;
+    }
+
+    .energy-ring {
+      left: 50%;
+      top: 66%;
+      width: calc(142px + var(--charge) * 92px);
+      height: calc(42px + var(--charge) * 32px);
+      transform: translate(-50%, -50%);
+      border: 2px solid rgba(255, 200, 87, calc(0.34 + var(--charge) * 0.46));
+      border-radius: 50%;
+      box-shadow:
+        0 0 calc(8px + var(--charge) * 28px) rgba(255, 200, 87, calc(0.24 + var(--charge) * 0.32)),
+        inset 0 0 calc(8px + var(--charge) * 22px) rgba(53, 217, 178, calc(0.14 + var(--charge) * 0.28));
+      animation: ring-spin 2.4s linear infinite;
+    }
+
+    .launch-beam {
+      top: -8%;
+      width: 20%;
+      height: 92%;
+      background: linear-gradient(180deg, transparent, rgba(96, 215, 255, calc(0.04 + var(--charge) * 0.18)), rgba(255, 200, 87, calc(0.05 + var(--charge) * 0.2)), transparent);
+      filter: blur(8px);
+      opacity: calc(0.18 + var(--charge) * 0.58);
+      transform: skewX(-18deg);
+      animation: light-sweep 3.8s ease-in-out infinite;
+    }
+
+    .launch-beam.left {
+      left: 4%;
+    }
+
+    .launch-beam.right {
+      right: 6%;
+      animation-delay: -1.7s;
+    }
+
+    .steam-jet {
+      bottom: 24%;
+      width: 34%;
+      height: 16%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(255, 255, 255, calc(0.16 + var(--charge) * 0.38)), rgba(255, 228, 188, calc(0.08 + var(--charge) * 0.16)) 42%, transparent 72%);
+      filter: blur(10px);
+      opacity: calc(0.18 + var(--charge) * 0.54);
+      animation: steam-billow 2.2s ease-in-out infinite;
+    }
+
+    .steam-jet.left {
+      left: -6%;
+    }
+
+    .steam-jet.right {
+      right: -8%;
+      animation-delay: -0.9s;
+    }
+
+    .spark {
+      bottom: 28%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffe27a;
+      box-shadow: 0 0 12px rgba(255, 200, 87, 0.82);
+      opacity: calc(var(--charge) * 0.88);
+      animation: spark-rise 1.35s ease-in-out infinite;
+    }
+
+    .spark.one {
+      left: 27%;
+    }
+
+    .spark.two {
+      left: 71%;
+      animation-delay: -0.42s;
+    }
+
+    .spark.three {
+      left: 52%;
+      animation-delay: -0.84s;
+    }
+
+    .rocket-mini {
+      position: relative;
+      z-index: 3;
+      align-self: center;
+      justify-self: center;
+      width: clamp(230px, 18vw, 290px);
+      aspect-ratio: 748 / 1071;
+      transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      transition: transform 0.45s ease;
+      filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.34));
+    }
+
+    .rocket-sprite {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .battery-slot {
+      position: absolute;
+      left: 36.9%;
+      top: 39.1%;
+      z-index: 3;
+      width: 26.1%;
+      height: 34.4%;
+      overflow: hidden;
+      border-radius: 24% / 10%;
+      background: rgba(10, 24, 31, 0.24);
+      box-shadow:
+        inset 0 0 18px rgba(10, 24, 31, 0.88),
+        0 0 calc(8px + var(--charge, 0) * 22px) rgba(53, 217, 178, calc(0.1 + var(--charge, 0) * 0.34));
+    }
+
+    .battery-liquid {
+      position: absolute;
+      left: -16%;
+      right: -16%;
+      bottom: 0;
+      height: var(--fuel-height, 0%);
+      min-height: calc(var(--charge, 0) * 10px);
+      border-radius: 18px 18px 0 0;
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.82), transparent 0 8px, transparent 12px),
+        linear-gradient(180deg, #d9fff2 0%, #45f2b8 34%, #1cc890 72%, #0a8f6b 100%);
+      box-shadow:
+        inset 0 10px 16px rgba(255, 255, 255, 0.32),
+        inset 0 -10px 22px rgba(4, 97, 80, 0.38),
+        0 0 24px rgba(53, 217, 178, 0.62);
+      transition: height 0.72s cubic-bezier(0.18, 0.9, 0.26, 1.15);
+    }
+
+    .battery-liquid::before {
+      content: "";
+      position: absolute;
+      left: -18%;
+      top: -17px;
+      width: 136%;
+      height: 34px;
+      border-radius: 50%;
+      background:
+        radial-gradient(ellipse at 24% 52%, rgba(255, 255, 255, 0.72) 0 12%, transparent 13%),
+        radial-gradient(ellipse at 54% 46%, rgba(255, 255, 255, 0.46) 0 15%, transparent 16%),
+        radial-gradient(ellipse at 82% 56%, rgba(255, 255, 255, 0.38) 0 11%, transparent 12%),
+        linear-gradient(180deg, rgba(211, 255, 239, 0.92), rgba(53, 217, 178, 0.88));
+      animation: liquid-wave 2.2s ease-in-out infinite;
+    }
+
+    .battery-liquid::after {
+      content: "";
+      position: absolute;
+      inset: 8px 12px 10px;
+      background:
+        radial-gradient(circle at 22% 78%, rgba(255, 255, 255, 0.65) 0 3px, transparent 4px),
+        radial-gradient(circle at 62% 58%, rgba(255, 255, 255, 0.5) 0 2px, transparent 3px),
+        radial-gradient(circle at 78% 84%, rgba(255, 255, 255, 0.42) 0 2px, transparent 3px);
+      opacity: calc(0.24 + var(--charge, 0) * 0.6);
+      animation: liquid-bubbles 2.6s linear infinite;
+    }
+
+    .rocket-zone.is-rainbow .launchpad-bg {
+      filter: saturate(1.22) brightness(1.02);
+    }
+
+    .rocket-zone.is-rainbow::after {
+      background:
+        repeating-linear-gradient(112deg, transparent 0 68px, rgba(255, 255, 255, 0.1) 70px 74px, transparent 76px 150px),
+        linear-gradient(125deg, rgba(255, 82, 128, 0.22), rgba(255, 210, 75, 0.18), rgba(72, 236, 174, 0.22), rgba(90, 184, 255, 0.2), rgba(184, 116, 255, 0.18));
+      opacity: 0.88;
+    }
+
+    .rocket-mini.is-rainbow .battery-liquid,
+    .rocket-mini.is-rainbow + .fuel-panel .fuel-meter-fill {
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.82), transparent 0 8px, transparent 12px),
+        linear-gradient(90deg, #ff5d7a, #ffc857, #45f2b8, #60d7ff, #b874ff, #ff5d7a);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.45s linear infinite;
+      box-shadow: 0 0 30px rgba(255, 200, 87, 0.52), 0 0 28px rgba(96, 215, 255, 0.44);
+    }
+
+    .battery-shine {
+      position: absolute;
+      inset: 8% auto auto 12%;
+      z-index: 4;
+      width: 22%;
+      height: 82%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0.03));
+      opacity: calc(0.08 + var(--charge, 0) * 0.42);
+      pointer-events: none;
+    }
+
+    .rocket-thrust {
+      position: absolute;
+      left: 50%;
+      bottom: -1%;
+      z-index: 1;
+      width: calc(26% + var(--charge, 0) * 18%);
+      height: calc(9% + var(--charge, 0) * 18%);
+      transform: translateX(-50%);
+      border-radius: 0 0 50% 50%;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255, 225, 116, 0.96), rgba(255, 136, 62, 0.68) 42%, rgba(255, 93, 122, 0) 72%);
+      opacity: calc(0.15 + var(--charge, 0) * 0.72);
+      filter: blur(1px);
+      animation: thrust-pulse 0.58s ease-in-out infinite alternate;
+    }
+
+    .rocket-mini.is-boosting .battery-slot {
+      animation: battery-boost 0.68s ease;
+    }
+
+    .rocket-mini.is-boosting {
+      animation: rocket-boost 0.68s ease;
+    }
+
+    .rocket-zone[data-fuel-tier="1"] .energy-ring {
+      border-width: 3px;
+    }
+
+    .rocket-zone[data-fuel-tier="2"] .pad-glow {
+      filter: blur(10px) saturate(1.12);
+    }
+
+    .rocket-zone[data-fuel-tier="2"] .spark,
+    .rocket-zone[data-fuel-tier="3"] .spark,
+    .rocket-zone[data-fuel-tier="4"] .spark {
+      width: 8px;
+      height: 8px;
+    }
+
+    .rocket-zone[data-fuel-tier="3"] .launch-beam {
+      filter: blur(7px) saturate(1.2);
+      animation-duration: 2.8s;
+    }
+
+    .rocket-zone[data-fuel-tier="3"] .steam-jet,
+    .rocket-zone[data-fuel-tier="4"] .steam-jet {
+      filter: blur(8px) saturate(1.16);
+      animation-duration: 1.65s;
+    }
+
+    .rocket-zone[data-fuel-tier="4"] .energy-ring {
+      border-color: rgba(255, 232, 140, 0.9);
+      box-shadow: 0 0 44px rgba(255, 200, 87, 0.62), inset 0 0 30px rgba(53, 217, 178, 0.36);
+      animation-duration: 1.4s;
+    }
+
+    .rocket-zone.is-impact-mega .pad-glow,
+    .rocket-zone.is-impact-launch .pad-glow {
+      animation: pad-flash 0.86s ease both;
+    }
+
+    .rocket-zone.is-impact-loss::before,
+    .rocket-zone.is-impact-empty::before {
+      background:
+        radial-gradient(circle at 50% 68%, rgba(255, 93, 122, 0.2), transparent 0 28%, transparent 52%),
+        linear-gradient(180deg, rgba(7, 8, 14, 0.12), rgba(8, 6, 14, 0.56) 72%, rgba(8, 6, 14, 0.82));
+    }
+
+    .rocket-zone.is-impact-empty .pad-glow,
+    .rocket-zone.is-impact-empty .energy-ring {
+      opacity: 0.2;
+    }
+
+    .rocket-mini.is-impact-normal .battery-slot {
+      animation: battery-boost 0.72s ease;
+    }
+
+    .rocket-mini.is-impact-mega {
+      animation: rocket-mega-bump 0.86s ease;
+    }
+
+    .rocket-mini.is-impact-mega .battery-slot {
+      animation: liquid-mega-slosh 0.86s ease;
+    }
+
+    .rocket-mini.is-impact-loss {
+      animation: tank-shake 0.66s ease;
+    }
+
+    .rocket-mini.is-impact-loss .battery-slot {
+      animation: liquid-loss-slosh 0.66s ease;
+    }
+
+    .rocket-mini.is-impact-empty .battery-slot {
+      animation: battery-empty-pulse 0.82s ease;
+    }
+
+    .rocket-mini.is-impact-launch {
+      animation: rocket-launch-kick 0.86s ease;
+    }
+
+    .rocket-mini.is-impact-launch .rocket-thrust {
+      animation: launch-thrust-burst 0.86s ease both;
+    }
+
+    .rocket-mini.is-impact-rainbow .battery-slot {
+      animation: rainbow-burst 0.96s ease;
+    }
+
+    .fuel-panel {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.64);
+      backdrop-filter: blur(10px);
+    }
+
+    .fuel-readout {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      color: #ffffff;
+      font-size: 0.94rem;
+      font-weight: 950;
+    }
+
+    .fuel-readout strong {
+      color: #b8ffe9;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .fuel-meter {
+      position: relative;
+      height: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.16);
+    }
+
+    .fuel-meter-fill {
+      display: block;
+      width: var(--fuel-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.42), transparent 22%),
+        linear-gradient(180deg, #d9fff2, #35d9b2 62%, #0f9b77);
+      box-shadow: 0 0 20px rgba(53, 217, 178, 0.48);
+      transition: width 0.7s cubic-bezier(0.18, 0.9, 0.26, 1.15);
+    }
+
+    .fuel-note {
+      display: none;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 850;
+      line-height: 1.32;
+    }
+
+    .planet-panel {
+      display: none;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .planet-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #fff0c6;
+      font-size: 0.9rem;
+      font-weight: 950;
+    }
+
+    .planet-title strong {
+      color: #ffffff;
+    }
+
+    .planet-track {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .planet-chip {
+      min-height: 0;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      color: rgba(255, 255, 255, 0.58);
+      background: rgba(0, 0, 0, 0.18);
+      font-size: 0.86rem;
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .planet-chip.is-reached {
+      border-color: rgba(96, 215, 255, 0.58);
+      color: #10202a;
+      background: linear-gradient(180deg, #d7f8ff, #60d7ff);
+    }
+
+    .planet-chip.is-current {
+      border-color: rgba(255, 200, 87, 0.86);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.22), 0 0 22px rgba(255, 200, 87, 0.22);
+    }
+
+    .planet-chip.is-target {
+      border-color: rgba(255, 200, 87, 0.9);
+      color: #231400;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.24), 0 0 28px rgba(255, 200, 87, 0.34);
+    }
+
+    .planet-chip.is-secret {
+      border-color: rgba(184, 116, 255, 0.58);
+      color: #ffeaff;
+      background: linear-gradient(135deg, rgba(255, 93, 122, 0.28), rgba(96, 215, 255, 0.22), rgba(184, 116, 255, 0.28));
+    }
+
+    .planet-chip.is-secret.is-target,
+    .planet-chip.is-secret.is-reached {
+      color: #24132b;
+      background: linear-gradient(135deg, #ff8ca6, #ffe27a, #60d7ff, #c59bff);
+      box-shadow: 0 0 0 3px rgba(184, 116, 255, 0.26), 0 0 30px rgba(96, 215, 255, 0.34);
+    }
+
+    .problem-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      align-content: start;
+      gap: 12px;
+      padding: clamp(14px, 2vw, 20px) clamp(14px, 2vw, 20px) clamp(34px, 3.7vw, 46px);
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.035)),
+        rgba(26, 22, 34, 0.78);
+    }
+
+    .problem-heading {
+      display: grid;
+      justify-items: center;
+      gap: 8px;
+    }
+
+    .problem-progress {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 200, 87, 0.38);
+      border-radius: 999px;
+      color: #ffeab0;
+      background: rgba(255, 200, 87, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+      font-size: 0.86rem;
+      font-weight: 1000;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .problem-heading h2 {
+      width: 100%;
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2rem, 4.65vw, 3.72rem);
+      line-height: 1;
+      font-weight: 1000;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .phase-label {
+      display: none;
+      min-height: 0;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #231400;
+      background: var(--amber);
+      font-size: 0.88rem;
+      font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .calc-stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      min-height: 0;
+      padding: clamp(8px, 1.2vw, 12px);
+      overflow: hidden;
+      border: 1px solid rgba(53, 217, 178, 0.28);
+      border-radius: var(--radius);
+      background:
+        radial-gradient(circle at 72% 62%, rgba(53, 217, 178, 0.1), transparent 0 26%, transparent 54%),
+        rgba(14, 12, 22, 0.48);
+      box-shadow: inset 0 0 0 1px rgba(53, 217, 178, 0.08);
+    }
+
+    .vertical-sum,
+    .step-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.42);
+    }
+
+    .vertical-sum {
+      display: grid;
+      align-content: center;
+      justify-self: center;
+      width: min(560px, 100%);
+      gap: 6px;
+      min-height: 0;
+      padding: 8px;
+      border-color: rgba(255, 255, 255, 0.12);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02)),
+        rgba(12, 10, 18, 0.52);
+      font-variant-numeric: tabular-nums;
+      box-shadow: none;
+    }
+
+    .sum-row {
+      display: grid;
+      grid-template-columns: 42px repeat(4, minmax(0, 1fr));
+      align-items: center;
+      gap: clamp(5px, 0.7vw, 8px);
+      width: 100%;
+      min-height: 0;
+    }
+
+    .sum-cell,
+    .sum-mark {
+      display: grid;
+      place-items: center;
+      min-width: 0;
+      width: 100%;
+      min-height: clamp(34px, 3.8vw, 46px);
+      border-radius: var(--radius);
+      color: #ffffff;
+      font-size: clamp(1.44rem, 3vw, 2.2rem);
+      font-weight: 1000;
+      line-height: 1;
+      overflow: hidden;
+    }
+
+    .sum-cell {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .sum-cell.is-empty {
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .carry-cell {
+      min-height: clamp(27px, 3vw, 36px);
+      color: var(--amber);
+      font-size: clamp(1rem, 2.1vw, 1.48rem);
+      background: rgba(255, 200, 87, 0.08);
+      border-color: rgba(255, 200, 87, 0.22);
+    }
+
+    .sum-line {
+      height: 3px;
+      margin-left: 52px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.42);
+    }
+
+    .answer-cell {
+      color: #35f0b2;
+      background: rgba(53, 217, 178, 0.1);
+      border-color: rgba(53, 217, 178, 0.28);
+    }
+
+    .answer-cell.is-current {
+      box-shadow: inset 0 0 0 4px rgba(255, 200, 87, 0.7), 0 0 22px rgba(255, 200, 87, 0.34);
+    }
+
+    .sum-cell.is-active-factor,
+    .sum-mark.is-active-factor,
+    .carry-cell.is-active-carry {
+      color: #231400;
+      border-color: rgba(255, 200, 87, 0.88);
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.18), 0 0 24px rgba(255, 200, 87, 0.22);
+    }
+
+    .carry-cell.is-carry-target {
+      border-color: rgba(255, 200, 87, 0.74);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 200, 87, 0.18), transparent 0 48%, transparent 70%),
+        rgba(255, 200, 87, 0.08);
+      box-shadow: inset 0 0 0 3px rgba(255, 200, 87, 0.28), 0 0 20px rgba(255, 200, 87, 0.2);
+    }
+
+    .sum-cell.is-step-pop,
+    .carry-cell.is-carry-pop {
+      position: relative;
+      color: #201000;
+      border-color: rgba(255, 200, 87, 0.92);
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      animation: step-cell-pop 0.7s ease both;
+    }
+
+    .sum-cell.is-step-pop::after,
+    .carry-cell.is-carry-pop::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.95) 0 4px, transparent 5px),
+        radial-gradient(circle at 82% 30%, rgba(255, 255, 255, 0.75) 0 3px, transparent 4px),
+        radial-gradient(circle at 48% 82%, rgba(255, 255, 255, 0.68) 0 3px, transparent 4px);
+      opacity: 0;
+      animation: step-sparkle 0.7s ease both;
+      pointer-events: none;
+    }
+
+    .step-panel {
+      align-self: center;
+      justify-self: end;
+      display: grid;
+      grid-template-rows: auto auto auto;
+      gap: 8px;
+      align-content: center;
+      width: 78px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .step-panel:not(.is-open) {
+      width: 78px;
+      padding: 0;
+      place-items: center;
+      border: 0;
+      background: transparent;
+    }
+
+    .step-panel:not(.is-open) .step-track,
+    .step-panel:not(.is-open) .step-focus-label,
+    .step-panel:not(.is-open) .step-formula,
+    .step-panel:not(.is-open) .step-meaning,
+    .step-panel:not(.is-open) #stepHintContent {
+      display: none;
+    }
+
+    #stepHintContent {
+      display: grid;
+      gap: 9px;
+    }
+
+    .hint-toggle {
+      min-width: 74px;
+      min-height: 48px;
+      padding: 8px 10px;
+      border: 1px solid rgba(255, 200, 87, 0.52);
+      border-radius: var(--radius);
+      color: #231400;
+      background: linear-gradient(180deg, #ffe27a, #ffc857);
+      font-size: clamp(0.9rem, 1.65vw, 1rem);
+      font-weight: 1000;
+      line-height: 1;
+      box-shadow: 0 8px 0 rgba(106, 70, 23, 0.22), 0 12px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .step-panel.is-open .hint-toggle {
+      justify-self: end;
+      min-width: 58px;
+      min-height: 0;
+      padding: 6px 10px;
+      color: #ffe7a4;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+    }
+
+    .step-panel.is-open {
+      position: absolute;
+      right: 12px;
+      top: 12px;
+      z-index: 8;
+      width: min(300px, calc(100% - 42px));
+      padding: 12px;
+      border: 1px solid rgba(255, 200, 87, 0.38);
+      background: rgba(14, 12, 22, 0.92);
+      box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
+    }
+
+    .step-focus-label {
+      display: none;
+      margin: 0;
+      color: #ffe7a4;
+      font-size: 0.88rem;
+      font-weight: 1000;
+      letter-spacing: 0;
+    }
+
+    .step-track {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .step-chip {
+      min-height: 32px;
+      display: grid;
+      place-items: center;
+      padding: 6px 8px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 0.8rem;
+      font-weight: 950;
+    }
+
+    .step-chip.is-current {
+      color: #231400;
+      background: var(--amber);
+      border-color: rgba(255, 200, 87, 0.86);
+    }
+
+    .step-chip.is-done {
+      color: #10271f;
+      background: #78f2c8;
+      border-color: rgba(53, 217, 178, 0.86);
+    }
+
+    .step-formula {
+      display: grid;
+      place-items: center;
+      min-height: 68px;
+      padding: 10px;
+      border: 1px solid rgba(255, 200, 87, 0.32);
+      border-radius: var(--radius);
+      color: #fff0c6;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 200, 87, 0.16), transparent 0 22%, transparent 48%),
+        rgba(255, 200, 87, 0.08);
+      font-size: clamp(1.34rem, 2.7vw, 2.05rem);
+      font-weight: 1000;
+      text-align: center;
+      line-height: 1.08;
+      box-shadow: none;
+    }
+
+    .step-meaning {
+      margin: 0;
+      color: rgba(255, 240, 198, 0.82);
+      font-size: clamp(0.9rem, 1.65vw, 1rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .prompt {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 200, 87, 0.26);
+      border-radius: var(--radius);
+      background: rgba(255, 200, 87, 0.08);
+      color: #fff0c6;
+      font-size: clamp(1rem, 1.9vw, 1.18rem);
+      font-weight: 950;
+      line-height: 1.35;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, clamp(48px, 4.4vw, 58px));
+      align-content: start;
+      align-self: start;
+      gap: 8px;
+    }
+
+    .choice-button {
+      height: 100%;
+      min-height: 0;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-size: clamp(1rem, 1.82vw, 1.24rem);
+      font-weight: 1000;
+      line-height: 1.22;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+    }
+
+    .choice-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .choice-button.is-correct {
+      color: #10271f;
+      border-color: rgba(53, 217, 178, 0.86);
+      background: linear-gradient(180deg, #b8ffe9, #35d9b2);
+    }
+
+    .choice-button.is-wrong {
+      color: #ffffff;
+      border-color: rgba(255, 93, 122, 0.78);
+      background: rgba(255, 93, 122, 0.32);
+    }
+
+    .feedback {
+      min-height: 0;
+      color: #ffffff;
+      font-size: clamp(0.98rem, 2vw, 1.14rem);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .feedback:empty {
+      display: none;
+    }
+
+    .feedback.good {
+      color: #b8ffe9;
+    }
+
+    .feedback.try {
+      color: #ffe7a4;
+    }
+
+    .feedback.wrong {
+      color: #ffc0cd;
+    }
+
+    .reward-pop {
+      position: absolute;
+      z-index: 10;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(14, 12, 22, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .reward-pop.is-visible {
+      display: grid;
+    }
+
+    .reward-card {
+      width: min(560px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 16px;
+      padding: clamp(14px, 3vw, 22px);
+      border: 0;
+      border-radius: 12px;
+      background: rgba(14, 12, 22, 0.42);
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .reward-art {
+      position: relative;
+      width: min(480px, 100%);
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      background-image: url("reward-events-sprite-generated.png");
+      background-repeat: no-repeat;
+      background-size: 300% 200%;
+      background-position: 0% 0%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 34px rgba(53, 217, 178, 0.12);
+    }
+
+    .reward-art::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 54%, rgba(14, 12, 22, 0.02), rgba(14, 12, 22, 0.18) 48%, rgba(14, 12, 22, 0.42) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.1));
+      pointer-events: none;
+    }
+
+    .reward-delta {
+      position: absolute;
+      left: 50%;
+      bottom: 30px;
+      z-index: 2;
+      display: inline-grid;
+      place-items: center;
+      min-width: 188px;
+      min-height: 86px;
+      padding: 10px 22px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 16px;
+      color: #241500;
+      background: linear-gradient(180deg, rgba(255, 231, 128, 0.96), rgba(255, 184, 61, 0.96));
+      font-size: clamp(1.7rem, 4.8vw, 3.05rem);
+      font-weight: 1000;
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.28), 0 22px 30px rgba(0, 0, 0, 0.28);
+      text-shadow: 0 1px rgba(255, 255, 255, 0.32);
+    }
+
+    .reward-pop.reward-art--normal .reward-art {
+      background-position: 0% 0%;
+    }
+
+    .reward-pop.reward-art--mega .reward-art {
+      background-position: 50% 0%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 44px rgba(255, 200, 87, 0.24);
+    }
+
+    .reward-pop.reward-art--loss .reward-art {
+      background-position: 100% 0%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 40px rgba(255, 93, 122, 0.22);
+      animation: tank-shake 0.5s ease both;
+    }
+
+    .reward-pop.reward-art--empty .reward-art {
+      background-position: 0% 100%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 34px rgba(255, 93, 122, 0.14);
+    }
+
+    .reward-pop.reward-art--launch .reward-art {
+      background-position: 50% 100%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 48px rgba(255, 200, 87, 0.28);
+      animation: reward-pop 0.42s ease both;
+    }
+
+    .reward-pop.reward-art--rainbow .reward-art {
+      background-position: 100% 100%;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42), 0 0 54px rgba(96, 215, 255, 0.26), 0 0 40px rgba(184, 116, 255, 0.22);
+    }
+
+    .reward-pop.reward-art--loss .reward-delta,
+    .reward-pop.reward-art--empty .reward-delta {
+      color: #ffffff;
+      background: linear-gradient(180deg, rgba(255, 140, 166, 0.96), rgba(255, 93, 122, 0.96));
+      box-shadow: 0 16px 0 rgba(116, 25, 48, 0.28);
+    }
+
+    .reward-pop.reward-art--mega .reward-delta,
+    .reward-pop.reward-art--launch .reward-delta {
+      min-width: 210px;
+      min-height: 96px;
+      font-size: clamp(1.9rem, 5.2vw, 3.25rem);
+    }
+
+    .reward-pop.reward-art--rainbow .reward-delta {
+      color: #24132b;
+      background: linear-gradient(90deg, #ff8ca6, #ffe27a, #45f2b8, #60d7ff, #c59bff);
+      box-shadow: 0 16px 0 rgba(72, 38, 104, 0.28), 0 0 28px rgba(96, 215, 255, 0.36);
+    }
+
+    .reward-card p {
+      display: none;
+    }
+
+    .result {
+      align-items: center;
+      padding: clamp(72px, 9vw, 92px) clamp(24px, 5vw, 62px) clamp(28px, 4vw, 44px);
+      background: #171421;
+    }
+
+    .result::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, transparent 0%, rgba(13, 10, 20, 0.28) 45%, rgba(13, 10, 20, 0.78) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.22));
+      pointer-events: none;
+    }
+
+    .result::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
+      background:
+        repeating-linear-gradient(115deg, transparent 0 42px, rgba(96, 215, 255, 0.16) 43px 47px, transparent 48px 118px),
+        radial-gradient(circle at 22% 48%, rgba(255, 200, 87, 0.22), transparent 0 24%, transparent 25%);
+      transform: translateX(-8%);
+      pointer-events: none;
+    }
+
+    .result.is-measuring::before {
+      opacity: 1;
+      animation: flight-streak 1.4s linear infinite;
+    }
+
+    .result-layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(280px, 0.86fr) minmax(360px, 1.14fr);
+      align-items: center;
+      gap: clamp(24px, 5vw, 56px);
+    }
+
+    .launch-scene {
+      min-height: 460px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: visible;
+    }
+
+    .launch-scene .rocket-hero {
+      display: none;
+    }
+
+    .launch-pad {
+      display: none;
+    }
+
+    .result-copy {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      font-size: clamp(2.6rem, 6.5vw, 5.4rem);
+      line-height: 0.98;
+      font-weight: 1000;
+      text-shadow: 0 5px 18px rgba(0, 0, 0, 0.42);
+    }
+
+    .praise {
+      margin: 0;
+      color: #ffe8ba;
+      font-size: clamp(1.14rem, 2.4vw, 1.45rem);
+      font-weight: 950;
+      line-height: 1.35;
+      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
+    }
+
+    .result-measure {
+      position: relative;
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(96, 215, 255, 0.32);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.56);
+      box-shadow: 0 0 30px rgba(96, 215, 255, 0.1);
+    }
+
+    .result-measure::after {
+      content: "";
+      position: absolute;
+      inset: -40% auto -40% -30%;
+      width: 26%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+      transform: skewX(-18deg);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .result.is-measuring .result-measure::after {
+      opacity: 1;
+      animation: scan-sweep 1.35s ease-in-out infinite;
+    }
+
+    .measure-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      color: #ffffff;
+      font-weight: 1000;
+    }
+
+    .measure-top span {
+      color: #c8f3ff;
+      font-size: 0.96rem;
+    }
+
+    .measure-top strong {
+      color: #b8ffe9;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      line-height: 1;
+    }
+
+    .measure-tube {
+      position: relative;
+      height: 26px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .measure-fill {
+      display: block;
+      width: var(--measure-width, 0%);
+      height: 100%;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(180deg, #d9fff2, #45f2b8 42%, #12a97d);
+      box-shadow: 0 0 28px rgba(53, 217, 178, 0.56);
+      transition: width 1.7s cubic-bezier(0.18, 0.9, 0.2, 1);
+    }
+
+    .result.is-rainbow-result .measure-fill {
+      background:
+        radial-gradient(circle at 22% 50%, rgba(255, 255, 255, 0.66) 0 5px, transparent 6px),
+        linear-gradient(90deg, #ff5d7a, #ffc857, #45f2b8, #60d7ff, #b874ff, #ff5d7a);
+      background-size: 240% 100%;
+      animation: rainbow-flow 1.45s linear infinite;
+      box-shadow: 0 0 30px rgba(255, 200, 87, 0.42), 0 0 28px rgba(96, 215, 255, 0.4);
+    }
+
+    .measure-scan {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+      opacity: 0;
+      transform: translateX(-100%);
+      pointer-events: none;
+    }
+
+    .result.is-measuring .measure-scan {
+      opacity: 1;
+      animation: meter-scan 1.2s ease-in-out infinite;
+    }
+
+    .result-planet-track {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .result-planet-track .planet-chip {
+      min-height: 40px;
+      font-size: 0.94rem;
+    }
+
+    .result.is-measuring .result-planet-track .planet-chip.is-scanning {
+      color: #201000;
+      border-color: rgba(255, 200, 87, 0.88);
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.2), 0 0 26px rgba(255, 200, 87, 0.32);
+      animation: planet-scan-pop 0.48s ease both;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result-stat {
+      min-height: 94px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .result-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-top: 6px;
+      color: #ffffff;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 1000;
+      line-height: 1;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .result-actions [hidden] {
+      display: none;
+    }
+
+    .result.is-measuring .result-actions {
+      visibility: hidden;
+    }
+
+    @keyframes float-rocket {
+      0%,
+      100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+      50% {
+        transform: translateY(-14px) rotate(2deg);
+      }
+    }
+
+    @keyframes flame-pulse {
+      from {
+        transform: translateX(-50%) scaleY(0.84);
+      }
+      to {
+        transform: translateX(-50%) scaleY(1.08);
+      }
+    }
+
+    @keyframes liquid-wave {
+      0%,
+      100% {
+        transform: translateX(-6%) translateY(0) rotate(-1deg);
+      }
+      50% {
+        transform: translateX(6%) translateY(3px) rotate(1deg);
+      }
+    }
+
+    @keyframes liquid-bubbles {
+      from {
+        transform: translateY(18px);
+      }
+      to {
+        transform: translateY(-24px);
+      }
+    }
+
+    @keyframes rainbow-flow {
+      from {
+        background-position: 0% 50%;
+      }
+      to {
+        background-position: 200% 50%;
+      }
+    }
+
+    @keyframes thrust-pulse {
+      from {
+        transform: translateX(-50%) scaleY(0.76);
+      }
+      to {
+        transform: translateX(-50%) scaleY(1.08);
+      }
+    }
+
+    @keyframes battery-boost {
+      0% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 8px rgba(53, 217, 178, 0.18);
+      }
+      48% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.72), 0 0 38px rgba(53, 217, 178, 0.86);
+      }
+      100% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 18px rgba(53, 217, 178, 0.3);
+      }
+    }
+
+    @keyframes rocket-boost {
+      0%,
+      100% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      }
+      42% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px - 12px)) rotate(-1.4deg);
+      }
+      70% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px + 4px)) rotate(1deg);
+      }
+    }
+
+    @keyframes tank-shake {
+      0%,
+      100% {
+        transform: translateX(0) rotate(0deg);
+      }
+      22% {
+        transform: translateX(-10px) rotate(-1deg);
+      }
+      44% {
+        transform: translateX(9px) rotate(1deg);
+      }
+      66% {
+        transform: translateX(-5px) rotate(-0.5deg);
+      }
+    }
+
+    @keyframes reward-pop {
+      from {
+        transform: scale(0.94);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pad-pulse {
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(0.94);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.08);
+      }
+    }
+
+    @keyframes ring-spin {
+      0% {
+        transform: translate(-50%, -50%) rotateX(60deg) rotateZ(0deg);
+      }
+      100% {
+        transform: translate(-50%, -50%) rotateX(60deg) rotateZ(360deg);
+      }
+    }
+
+    @keyframes light-sweep {
+      0%,
+      100% {
+        transform: translateX(-18%) skewX(-18deg);
+      }
+      50% {
+        transform: translateX(18%) skewX(-18deg);
+      }
+    }
+
+    @keyframes steam-billow {
+      0%,
+      100% {
+        transform: translateY(8px) scale(0.88);
+      }
+      50% {
+        transform: translateY(-12px) scale(1.14);
+      }
+    }
+
+    @keyframes spark-rise {
+      0% {
+        transform: translateY(20px) scale(0.5);
+        opacity: 0;
+      }
+      35% {
+        opacity: calc(var(--charge) * 0.9);
+      }
+      100% {
+        transform: translateY(-92px) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    @keyframes fuel-transfer {
+      0% {
+        opacity: 0;
+        background-position: 130% 50%;
+        clip-path: inset(0 0 0 100%);
+      }
+      18% {
+        opacity: 1;
+      }
+      72% {
+        opacity: 1;
+        clip-path: inset(0 0 0 0);
+      }
+      100% {
+        opacity: 0;
+        background-position: -70% 50%;
+        clip-path: inset(0 100% 0 0);
+      }
+    }
+
+    @keyframes fuel-droplet {
+      0% {
+        opacity: 0;
+        transform: translateX(120px) translateY(0) scale(0.6);
+      }
+      22% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-320px) translateY(-18px) scale(1.1);
+      }
+    }
+
+    @keyframes step-cell-pop {
+      0% {
+        transform: scale(0.94);
+        box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0), 0 0 0 rgba(255, 200, 87, 0);
+      }
+      42% {
+        transform: scale(1.08);
+        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.38), 0 0 26px rgba(255, 200, 87, 0.56);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.12), 0 0 14px rgba(255, 200, 87, 0.18);
+      }
+    }
+
+    @keyframes step-sparkle {
+      0%,
+      100% {
+        opacity: 0;
+        transform: scale(0.82) rotate(0deg);
+      }
+      48% {
+        opacity: 1;
+        transform: scale(1.1) rotate(8deg);
+      }
+    }
+
+    @keyframes pad-flash {
+      0%,
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+      }
+      45% {
+        transform: translate(-50%, -50%) scale(1.32);
+        opacity: 1;
+      }
+    }
+
+    @keyframes rocket-mega-bump {
+      0%,
+      100% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      }
+      38% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px - 18px)) rotate(-2deg);
+      }
+      68% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px + 7px)) rotate(1.4deg);
+      }
+    }
+
+    @keyframes liquid-mega-slosh {
+      0%,
+      100% {
+        transform: translateX(0);
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 18px rgba(53, 217, 178, 0.3);
+      }
+      34% {
+        transform: translateX(-4px) rotate(-1deg);
+        box-shadow: inset 0 0 16px rgba(10, 24, 31, 0.62), 0 0 46px rgba(255, 200, 87, 0.72);
+      }
+      62% {
+        transform: translateX(5px) rotate(1deg);
+        box-shadow: inset 0 0 16px rgba(10, 24, 31, 0.62), 0 0 42px rgba(53, 217, 178, 0.72);
+      }
+    }
+
+    @keyframes liquid-loss-slosh {
+      0%,
+      100% {
+        transform: translateX(0);
+        filter: none;
+      }
+      28% {
+        transform: translateX(-5px) rotate(-1.4deg);
+        filter: saturate(0.7) brightness(0.86);
+      }
+      56% {
+        transform: translateX(4px) rotate(1.2deg);
+        filter: saturate(0.8) brightness(0.9);
+      }
+    }
+
+    @keyframes battery-empty-pulse {
+      0%,
+      100% {
+        filter: none;
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 10px rgba(255, 93, 122, 0.18);
+      }
+      45% {
+        filter: saturate(0.35) brightness(0.72);
+        box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.92), 0 0 26px rgba(255, 93, 122, 0.5);
+      }
+    }
+
+    @keyframes rocket-launch-kick {
+      0%,
+      100% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px));
+      }
+      36% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px - 24px));
+      }
+      70% {
+        transform: translateY(calc((1 - var(--charge, 0)) * 16px + 6px));
+      }
+    }
+
+    @keyframes launch-thrust-burst {
+      0% {
+        opacity: 0.3;
+        transform: translateX(-50%) scaleY(0.8);
+      }
+      42% {
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1.9);
+      }
+      100% {
+        opacity: calc(0.15 + var(--charge, 0) * 0.72);
+        transform: translateX(-50%) scaleY(1);
+      }
+    }
+
+    @keyframes rainbow-burst {
+      0%,
+      100% {
+        box-shadow: inset 0 0 18px rgba(10, 24, 31, 0.88), 0 0 18px rgba(53, 217, 178, 0.3);
+      }
+      50% {
+        box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.28), 0 0 44px rgba(255, 200, 87, 0.66), 0 0 40px rgba(96, 215, 255, 0.58), 0 0 34px rgba(184, 116, 255, 0.54);
+      }
+    }
+
+    @keyframes planet-scan-pop {
+      from {
+        transform: translateY(4px) scale(0.96);
+      }
+      to {
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes flight-streak {
+      from {
+        background-position: 0 0, 0 0;
+        transform: translateX(-8%);
+      }
+      to {
+        background-position: 180px -120px, 0 0;
+        transform: translateX(8%);
+      }
+    }
+
+    @keyframes scan-sweep {
+      0% {
+        transform: translateX(0) skewX(-18deg);
+      }
+      100% {
+        transform: translateX(560%) skewX(-18deg);
+      }
+    }
+
+    @keyframes meter-scan {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fuel-stream,
+      .fuel-droplet,
+      .spark,
+      .steam-jet,
+      .launch-beam,
+      .energy-ring,
+      .pad-glow,
+      .battery-liquid::before,
+      .battery-liquid::after,
+      .rocket-thrust,
+      .measure-scan,
+      .result-measure::after {
+        animation: none !important;
+      }
+
+      .rocket-mini,
+      .battery-slot,
+      .sum-cell,
+      .planet-chip {
+        animation-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .play {
+        padding: var(--stage-inset);
+      }
+
+      .hud {
+        margin-bottom: 8px;
+      }
+
+      .problem-panel {
+        gap: 8px;
+        padding: 12px 12px 28px;
+      }
+
+      .problem-heading h2 {
+        font-size: clamp(1.85rem, 4.8vw, 3.55rem);
+      }
+
+      .calc-stage {
+        gap: 10px;
+        padding: 8px;
+      }
+
+      .vertical-sum {
+        gap: 5px;
+        padding: 8px;
+      }
+
+      .sum-row {
+        min-height: 0;
+      }
+
+      .sum-cell,
+      .sum-mark {
+        min-height: clamp(34px, 4vw, 46px);
+        font-size: clamp(1.36rem, 3vw, 2.15rem);
+      }
+
+      .carry-cell {
+        min-height: clamp(26px, 3.3vw, 36px);
+        font-size: clamp(1rem, 2.1vw, 1.45rem);
+      }
+
+      .hint-toggle {
+        min-width: 66px;
+        min-height: 46px;
+      }
+
+      .step-panel,
+      .step-panel:not(.is-open) {
+        width: 70px;
+      }
+
+      .prompt {
+        min-height: 38px;
+        padding: 7px 10px;
+      }
+
+      .choice-grid {
+        gap: 6px;
+      }
+
+      .choice-button {
+        height: 100%;
+        min-height: 48px;
+        padding: 6px 10px;
+      }
+    }
+
+    @media (max-width: 880px) {
+
+      .cover,
+      .tutorial,
+      .result {
+        padding-top: 78px;
+      }
+
+      .cover-scene,
+      .tutorial-layout,
+      .play-layout,
+      .result-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .cover-visual {
+        min-height: 300px;
+        order: -1;
+      }
+
+      .rocket-hero {
+        height: 300px;
+      }
+
+      .cover-mathmon {
+        width: 118px;
+      }
+
+      .hud {
+        grid-template-columns: 1fr;
+      }
+
+      .hud-center {
+        justify-content: flex-start;
+        overflow-x: auto;
+      }
+
+      .calc-stage {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) and (orientation: portrait) {
+      .game,
+      .sound-toggle {
+        display: none;
+      }
+
+      .phone-blocker {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .phone-blocker div {
+        width: min(420px, 100%);
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+      }
+
+      .phone-blocker h1 {
+        margin: 0 0 10px;
+        font-size: 1.7rem;
+      }
+
+      .phone-blocker p {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 850;
+        line-height: 1.45;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-blocker" aria-hidden="true">
+    <div>
+      <h1>가로 화면에서 플레이해요</h1>
+      <p>태블릿이나 컴퓨터 화면에서 컴퍼스 마법진을 시작할 수 있어요.</p>
+    </div>
+  </div>
+
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+    <div class="stage-shell" data-active-screen="cover">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+          <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <path class="sound-wave" d="M18.5 5.8a9 9 0 0 1 0 12.4"></path>
+          <path class="sound-off-stroke" d="M4.5 4.5 19.5 19.5"></path>
+        </svg>
+      </button>
+      <div class="fuel-transfer-layer" id="fuelTransferLayer" aria-hidden="true">
+        <span class="fuel-stream"></span>
+        <span class="fuel-droplet one"></span>
+        <span class="fuel-droplet two"></span>
+        <span class="fuel-droplet three"></span>
+      </div>
+    <!-- TODO(이미지): 생성형 커버 배경 + 제목 타이틀 아트를 만든 뒤 generated-title-overlay 표준으로 승격. 매스몬 circle-pack 동행도 생성 후 .cover-visual에 오버레이 -->
+    <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 3단원 2차시</span>
+      </div>
+      <span class="lesson-badge">컴퍼스로 원 그리기</span>
+      <div class="cover-scene">
+        <div class="hero-copy">
+          <h1 id="coverTitle" class="cover-title-text">매스몬 컴퍼스 마법진</h1>
+          <p>반지름에 맞게 컴퍼스를 벌려 마법진을 그려요.</p>
+          <button class="primary-button" id="startButton" type="button">시작</button>
+        </div>
+        <div class="cover-visual" aria-hidden="true">
+          <div class="cover-target"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 3단원 2차시</span>
+      </div>
+      <div class="tutorial-layout">
+        <div class="tutorial-copy">
+          <span class="mini-badge">어떻게 해요?</span>
+          <h2 id="tutorialTitle">컴퍼스를 반지름만큼 벌려요.</h2>
+          <ol class="steps">
+            <li><b>1</b><span>반지름에 맞게 컴퍼스 벌림(cm)을 골라요.</span></li>
+            <li><b>2</b><span>맞히면 마법진 점수가 변해요. 갑자기 오르거나 내릴 수도 있어요.</span></li>
+            <li><b>3</b><span>모은 점수에 따라 마법진 등급이 달라져요.</span></li>
+          </ol>
+          <button class="primary-button" id="tutorialNextButton" type="button">그리기 시작</button>
+        </div>
+        <div class="tutorial-art-spacer" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="screen play" id="playScreen" aria-labelledby="questionText">
+      <header class="hud">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+      </header>
+      <div class="play-layout">
+        <aside class="rocket-zone" id="rocketZone" aria-label="마법진 점수 상태">
+          <div class="launch-effects" aria-hidden="true">
+            <span class="launch-beam left"></span>
+            <span class="launch-beam right"></span>
+            <span class="pad-glow"></span>
+            <span class="energy-ring"></span>
+            <span class="steam-jet left"></span>
+            <span class="steam-jet right"></span>
+            <span class="spark one"></span>
+            <span class="spark two"></span>
+            <span class="spark three"></span>
+          </div>
+          <div class="rocket-mini" id="rocketMini" aria-hidden="true">
+            <div class="battery-slot">
+              <div class="battery-liquid"></div>
+              <div class="battery-shine"></div>
+            </div>
+            <div class="rocket-thrust"></div>
+          </div>
+          <div class="fuel-panel">
+            <div class="fuel-readout">
+              <span>마법진 점수</span>
+              <strong id="fuelPercentText">모으는 중</strong>
+            </div>
+            <div class="fuel-meter" aria-hidden="true">
+              <span class="fuel-meter-fill" id="fuelMeterFill"></span>
+            </div>
+            <p class="fuel-note" id="fuelNote">10발을 끝내면 마법진 점수를 재서 등급을 정해요.</p>
+            <div class="planet-panel">
+              <div class="planet-title">
+                <span>마법진 등급</span>
+                <strong id="destinationText">마지막에 측정</strong>
+              </div>
+              <div class="planet-track" id="planetTrack" aria-label="받을 수 있는 마법진 등급"></div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="problem-panel" aria-live="polite">
+          <div class="problem-heading">
+            <span class="problem-progress" id="progressText">문제 1/10</span>
+            <h2 id="questionText">지름은 어느 것?</h2>
+            <span class="phase-label" id="phaseLabel">원 그림에서 찾기</span>
+          </div>
+          <div class="calc-stage">
+            <div class="target-board" id="targetBoard" aria-label="원 그림판"></div>
+          </div>
+          <div class="prompt" id="promptText">그림에서 지금 묻는 것을 골라요.</div>
+          <div class="choice-grid" id="choiceGrid"></div>
+          <div class="feedback" id="feedbackText"></div>
+        </section>
+      </div>
+      <div class="reward-pop" id="rewardPop" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+        <div class="reward-card">
+          <div class="reward-art" aria-hidden="true">
+            <div class="reward-delta" id="rewardDelta">점수 쑥</div>
+          </div>
+          <h3 class="visually-hidden" id="rewardTitle">마법진 점수</h3>
+          <p id="rewardMessage">잘했어요! 마법진 점수가 올랐어요.</p>
+          <button class="primary-button" id="rewardNextButton" type="button">다음</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen result" id="resultScreen" aria-labelledby="resultTitle">
+      <img class="raster-bg" id="resultRaster" alt="" onerror="this.style.display='none'">
+      <div class="top-row">
+        <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+        <span class="unit-badge">3학년 2학기 3단원 2차시</span>
+      </div>
+      <div class="result-layout">
+        <div class="launch-scene" aria-hidden="true">
+          <div class="cover-target"></div>
+        </div>
+        <div class="result-copy">
+          <h2 id="resultTitle">마법진 점수 측정 준비</h2>
+          <p class="praise" id="praiseText">반지름에 맞게 컴퍼스를 벌렸어요.</p>
+          <div class="result-measure" id="resultMeasure" aria-label="마법진 점수 측정 결과">
+            <div class="measure-top">
+              <span id="measureStatus">점수 측정 중</span>
+              <strong id="measurePercent">점수 0</strong>
+            </div>
+            <div class="measure-tube" aria-hidden="true">
+              <span class="measure-fill" id="measureFill"></span>
+              <span class="measure-scan"></span>
+            </div>
+            <div class="result-planet-track" id="resultPlanetTrack" aria-label="마법진 등급 측정"></div>
+          </div>
+          <div class="result-stats">
+            <div class="result-stat">
+              <span>마법진 점수</span>
+              <strong id="finalEnergyText">0</strong>
+            </div>
+            <div class="result-stat">
+              <span>맞힌 문제</span>
+              <strong id="finalCorrectText">0/10</strong>
+            </div>
+            <div class="result-stat">
+              <span>마법진 등급</span>
+              <strong id="finalDestinationText">마법진</strong>
+            </div>
+          </div>
+          <div class="result-actions">
+            <button class="primary-button" id="restartButton" type="button">다시하기</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div>
+  </main>
+
+  <script>
+    const TOTAL_QUESTIONS = 10;
+    const MAX_FUEL = 100;
+    // 결과 등급: 마법진 점수(0~100)에 따른 자체 완결형 등급. 이미지는 생성 후 채울 TODO.
+    const DESTINATIONS = [
+      { id: "faint", short: "흐", name: "흐린 원", min: 1, max: 18, image: "result-faint-generated.webp" },
+      { id: "small", short: "작", name: "작은 마법진", min: 19, max: 38, image: "result-small-generated.webp" },
+      { id: "ring", short: "마", name: "마법진", min: 39, max: 60, image: "result-ring-generated.webp" },
+      { id: "big", short: "큰", name: "큰 마법진", min: 61, max: 82, image: "result-big-generated.webp" },
+      { id: "grand", short: "대", name: "대마법진", min: 83, max: 100, image: "result-grand-generated.webp" }
+    ];
+    const SECRET_DESTINATION = {
+      id: "legend",
+      short: "전",
+      name: "전설 마법진",
+      min: 100,
+      max: 100,
+      image: "result-legend-generated.webp",
+      secret: true
+    };
+    const ALL_DESTINATIONS = [...DESTINATIONS, SECRET_DESTINATION];
+    const FUEL_EVENT_CLASSES = [
+      "fuel-event--normal",
+      "fuel-event--smallExplosion",
+      "fuel-event--megaFuel",
+      "fuel-event--instantLaunch",
+      "fuel-event--emptyTank",
+      "fuel-event--rainbowFuel",
+      "fuel-event--leak"
+    ];
+    const FUEL_ART_CLASSES = [
+      "reward-art--normal",
+      "reward-art--mega",
+      "reward-art--loss",
+      "reward-art--empty",
+      "reward-art--launch",
+      "reward-art--rainbow"
+    ];
+    const ROCKET_IMPACT_CLASSES = [
+      "is-impact-normal",
+      "is-impact-mega",
+      "is-impact-loss",
+      "is-impact-empty",
+      "is-impact-launch",
+      "is-impact-rainbow"
+    ];
+    const STEP_EFFECT_CLASSES = ["is-step-pop", "is-carry-pop"];
+
+    const state = {
+      screen: "cover",
+      problems: [],
+      index: 0,
+      fuelPercent: 0,
+      correct: 0,
+      chain: 0,
+      stepIndex: 0,
+      stepAttempts: 0,
+      problemHadMistake: false,
+      problemHadReveal: false,
+      hintOpen: false,
+      rainbowFuel: false,
+      lastFuelEvent: null,
+      instantLaunch: false,
+      soundsOn: true,
+      audio: null,
+      bgmGain: null,
+      bgmTimer: null,
+      bgmRunning: false,
+      bgmStep: 0
+    };
+
+    const el = {
+      stageShell: document.querySelector(".stage-shell"),
+      coverScreen: document.getElementById("coverScreen"),
+      tutorialScreen: document.getElementById("tutorialScreen"),
+      playScreen: document.getElementById("playScreen"),
+      resultScreen: document.getElementById("resultScreen"),
+      startButton: document.getElementById("startButton"),
+      tutorialNextButton: document.getElementById("tutorialNextButton"),
+      soundToggle: document.getElementById("soundToggle"),
+      fuelTransferLayer: document.getElementById("fuelTransferLayer"),
+      progressText: document.getElementById("progressText"),
+      fuelPercentText: document.getElementById("fuelPercentText"),
+      fuelMeterFill: document.getElementById("fuelMeterFill"),
+      fuelNote: document.getElementById("fuelNote"),
+      destinationText: document.getElementById("destinationText"),
+      planetTrack: document.getElementById("planetTrack"),
+      rocketZone: document.getElementById("rocketZone"),
+      rocketMini: document.getElementById("rocketMini"),
+      questionText: document.getElementById("questionText"),
+      phaseLabel: document.getElementById("phaseLabel"),
+      targetBoard: document.getElementById("targetBoard"),
+      promptText: document.getElementById("promptText"),
+      choiceGrid: document.getElementById("choiceGrid"),
+      feedbackText: document.getElementById("feedbackText"),
+      rewardPop: document.getElementById("rewardPop"),
+      rewardTitle: document.getElementById("rewardTitle"),
+      rewardDelta: document.getElementById("rewardDelta"),
+      rewardMessage: document.getElementById("rewardMessage"),
+      rewardNextButton: document.getElementById("rewardNextButton"),
+      resultRaster: document.getElementById("resultRaster"),
+      resultMeasure: document.getElementById("resultMeasure"),
+      measureStatus: document.getElementById("measureStatus"),
+      measurePercent: document.getElementById("measurePercent"),
+      measureFill: document.getElementById("measureFill"),
+      resultPlanetTrack: document.getElementById("resultPlanetTrack"),
+      praiseText: document.getElementById("praiseText"),
+      finalEnergyText: document.getElementById("finalEnergyText"),
+      finalCorrectText: document.getElementById("finalCorrectText"),
+      finalDestinationText: document.getElementById("finalDestinationText"),
+      restartButton: document.getElementById("restartButton")
+    };
+
+    function showScreen(name) {
+      state.screen = name;
+      el.stageShell.dataset.activeScreen = name;
+      [el.coverScreen, el.tutorialScreen, el.playScreen, el.resultScreen].forEach((screen) => {
+        screen.classList.remove("is-active");
+      });
+      document.getElementById(`${name}Screen`).classList.add("is-active");
+    }
+
+    function restartAnimation(target, className, duration = 760) {
+      if (!target) {
+        return;
+      }
+      target.classList.remove(className);
+      void target.offsetWidth;
+      target.classList.add(className);
+      window.setTimeout(() => target.classList.remove(className), duration);
+    }
+
+    function clearStepEffects() {
+      if (!el.targetBoard) {
+        return;
+      }
+      el.targetBoard.querySelectorAll(".cand").forEach((g) => {
+        g.classList.remove("is-pick-correct", "is-pick-wrong");
+      });
+    }
+
+    function clearRocketImpact() {
+      ROCKET_IMPACT_CLASSES.forEach((className) => {
+        el.rocketMini.classList.remove(className);
+        el.rocketZone.classList.remove(className);
+      });
+    }
+
+    function startGame() {
+      state.problems = buildProblems();
+      state.index = 0;
+      state.fuelPercent = 0;
+      state.correct = 0;
+      state.chain = 0;
+      state.rainbowFuel = false;
+      state.lastFuelEvent = null;
+      state.instantLaunch = false;
+      playSound("start");
+      showScreen("play");
+      renderProblem();
+    }
+
+    const RULER_MAX = 12; // 눈금 0~12cm
+
+    function buildProblems() {
+      const out = [];
+      for (let i = 0; i < TOTAL_QUESTIONS; i += 1) {
+        out.push(buildCompassProblem(randomInt(2, 6)));
+      }
+      return out;
+    }
+
+    function buildCompassProblem(radius) {
+      // 정답=반지름 r, 대표 오답=지름 2r(벌림을 지름으로 착각) + 한 칸 어긋남
+      const vals = [radius, radius * 2];
+      [radius + 1, radius - 1, radius + 2, radius - 2].forEach((v) => {
+        if (v >= 1 && v <= RULER_MAX && !vals.includes(v)) {
+          vals.push(v);
+        }
+      });
+      const options = shuffle(vals.slice(0, 4)).map((value) => ({ value }));
+      if (!options.some((o) => o.value === radius)) {
+        options[0] = { value: radius };
+      }
+      return { radius, options, correctValue: radius };
+    }
+
+    function renderProblem() {
+      const problem = currentProblem();
+      state.stepIndex = 0;
+      state.stepAttempts = 0;
+      state.problemHadMistake = false;
+      state.problemHadReveal = false;
+      el.rewardPop.classList.remove("is-visible");
+      el.fuelTransferLayer.className = "fuel-transfer-layer";
+      clearStepEffects();
+      clearRocketImpact();
+      FUEL_EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      FUEL_ART_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      el.questionText.textContent = `반지름 ${problem.radius}cm 원 그리기`;
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      renderStatus();
+      renderStep();
+    }
+
+    function renderStatus() {
+      el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
+      const charge = getFuelPercent() / MAX_FUEL;
+      const fuelPercent = getFuelPercent();
+      el.rocketZone.style.setProperty("--charge", charge.toFixed(3));
+      el.rocketMini.style.setProperty("--charge", charge.toFixed(3));
+      el.rocketMini.style.setProperty("--fuel-height", `${Math.round(charge * 100)}%`);
+      el.rocketZone.dataset.fuelTier = String(getFuelTier(fuelPercent));
+      el.rocketZone.classList.toggle("is-rainbow", state.rainbowFuel);
+      el.rocketMini.classList.toggle("is-rainbow", state.rainbowFuel);
+      el.fuelPercentText.textContent = state.rainbowFuel ? "무지개 마법진" : "모으는 중";
+      el.fuelMeterFill.style.setProperty("--fuel-width", `${fuelPercent}%`);
+      el.destinationText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 측정" : "마지막에 측정";
+      el.fuelNote.textContent = "10발을 끝내면 마법진 점수를 재서 등급을 정해요.";
+      renderPlanetTrack(el.planetTrack, { targetIndex: -1, reachedIndex: -1 });
+    }
+
+    function getFuelPercent(fuelPercent = state.fuelPercent) {
+      return clamp(Math.round(fuelPercent), 0, MAX_FUEL);
+    }
+
+    function getFuelTier(fuelPercent = state.fuelPercent) {
+      const fuel = getFuelPercent(fuelPercent);
+      if (state.rainbowFuel || fuel >= 90) {
+        return 4;
+      }
+      if (fuel >= 70) {
+        return 3;
+      }
+      if (fuel >= 42) {
+        return 2;
+      }
+      if (fuel >= 16) {
+        return 1;
+      }
+      return 0;
+    }
+
+    function getDestinationByFuel(fuelPercent = state.fuelPercent, rainbowFuel = state.rainbowFuel) {
+      if (rainbowFuel) {
+        return { ...SECRET_DESTINATION, index: DESTINATIONS.length, started: true };
+      }
+      const fuel = getFuelPercent(fuelPercent);
+      if (fuel <= 0) {
+        return null;
+      }
+      const index = DESTINATIONS.findIndex((destination) => fuel >= destination.min && fuel <= destination.max);
+      const destination = DESTINATIONS[Math.max(index, 0)];
+      return { ...destination, index: DESTINATIONS.indexOf(destination), started: true };
+    }
+
+    function getDestination() {
+      return getDestinationByFuel(state.fuelPercent, state.rainbowFuel);
+    }
+
+    function getNextPlanet(destination) {
+      if (!destination) {
+        return DESTINATIONS[0];
+      }
+      return DESTINATIONS[Math.min(destination.index + 1, DESTINATIONS.length - 1)];
+    }
+
+    function renderPlanetTrack(container, { targetIndex = -1, reachedIndex = -1 } = {}) {
+      container.innerHTML = "";
+      const planets = container === el.resultPlanetTrack ? ALL_DESTINATIONS : DESTINATIONS;
+      planets.forEach((planet, index) => {
+        const chip = document.createElement("span");
+        chip.className = "planet-chip";
+        chip.textContent = planet.short;
+        chip.title = planet.name;
+        if (planet.secret) {
+          chip.classList.add("is-secret");
+        }
+        if (index <= reachedIndex) {
+          chip.classList.add("is-reached");
+        }
+        if (index === targetIndex) {
+          chip.classList.add("is-target");
+        }
+        container.appendChild(chip);
+      });
+    }
+
+    function renderStep() {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      el.phaseLabel.textContent = "컴퍼스 벌리기";
+      el.promptText.textContent = step.prompt;
+      el.targetBoard.innerHTML = drawCompassRuler(problem);
+      el.feedbackText.textContent = "";
+      el.feedbackText.className = "feedback";
+      const options = buildStepOptions(step);
+      renderChoices(options.map((option) => ({
+        label: `${option.value} cm`,
+        value: option,
+        correct: option.value === step.correct
+      })), handleStepChoice);
+    }
+
+    function renderHintPanel() {}
+
+    function getCurrentStep(problem) {
+      const steps = buildSteps(problem);
+      return steps[state.stepIndex];
+    }
+
+    function buildSteps(problem) {
+      return [
+        {
+          id: "spread",
+          correct: problem.correctValue,
+          prompt: "컴퍼스를 반지름만큼 벌려요. 몇 cm로 벌릴까요?",
+          hint: "지름이 아니라 반지름만큼만 벌려요.",
+          explain: `컴퍼스 벌린 길이가 반지름이에요. ${problem.radius}cm로 벌려요.`,
+          options: problem.options
+        }
+      ];
+    }
+
+    function updateStepChips() {}
+
+    function updateCurrentAnswerCell() {}
+
+    function drawCompassRuler(problem) {
+      const r = problem.radius;
+      const x0 = 34;
+      const x1 = 292;
+      const y = 158;
+      const ux = (x1 - x0) / RULER_MAX;
+      let ticks = "";
+      for (let i = 0; i <= RULER_MAX; i += 1) {
+        const x = x0 + ux * i;
+        const big = i % 5 === 0;
+        ticks += `<line x1="${x.toFixed(1)}" y1="${y}" x2="${x.toFixed(1)}" y2="${y + (big ? 13 : 7)}" stroke="#d7cadb" stroke-width="2"/>`;
+        if (i % 2 === 0) {
+          ticks += `<text x="${x.toFixed(1)}" y="${y + 30}" text-anchor="middle" fill="#d7cadb" font-size="12">${i}</text>`;
+        }
+      }
+      const xr = x0 + ux * r;
+      const apexX = (x0 + xr) / 2;
+      const apexY = 60;
+      const compass = `<line x1="${x0}" y1="${y}" x2="${apexX.toFixed(1)}" y2="${apexY}" stroke="#ffd56b" stroke-width="5" stroke-linecap="round"/>
+        <line x1="${xr.toFixed(1)}" y1="${y}" x2="${apexX.toFixed(1)}" y2="${apexY}" stroke="#ffd56b" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="${apexX.toFixed(1)}" cy="${apexY}" r="7" fill="#ffd56b"/>`;
+      const band = `<line x1="${x0}" y1="${y}" x2="${xr.toFixed(1)}" y2="${y}" stroke="#35d9b2" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="${x0}" cy="${y}" r="5" fill="#ff5d7a"/>
+        <circle cx="${xr.toFixed(1)}" cy="${y}" r="5" fill="#35d9b2"/>
+        <text x="160" y="26" text-anchor="middle" fill="#35d9b2" font-weight="800" font-size="20">반지름 ${r}cm</text>`;
+      const baseline = `<line x1="${x0}" y1="${y}" x2="${x1}" y2="${y}" stroke="#d7cadb" stroke-width="2"/>`;
+      return `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="눈금과 컴퍼스">${baseline}${ticks}${compass}${band}</svg>`;
+    }
+
+    function highlightCandidate() {}
+
+    function buildStepOptions(step) {
+      return step.options.slice().sort((a, b) => a.value - b.value);
+    }
+
+    function handleStepChoice(option, button) {
+      const problem = currentProblem();
+      const step = getCurrentStep(problem);
+      if (option.correct) {
+        button.classList.add("is-correct");
+        highlightCandidate(option.value.letter, true);
+        setButtonsDisabled(true);
+        completeStep(step, false);
+        return;
+      }
+
+      state.stepAttempts += 1;
+      state.problemHadMistake = true;
+      button.classList.add("is-wrong");
+      highlightCandidate(option.value.letter, false);
+      playSound("try");
+      if (state.stepAttempts === 1) {
+        el.feedbackText.textContent = `다시 골라요. ${step.hint}`;
+        el.feedbackText.className = "feedback try";
+        button.disabled = true;
+        return;
+      }
+
+      state.problemHadReveal = true;
+      setButtonsDisabled(true);
+      el.feedbackText.textContent = `정답은 ${step.correct}cm예요. ${step.explain}`;
+      el.feedbackText.className = "feedback try";
+      completeStep(step, true);
+    }
+
+    function completeStep(step, revealed) {
+      const problem = currentProblem();
+      applyStepToBoard(step, problem);
+      triggerStepEffect(step, problem, revealed);
+      renderStatus();
+      el.rocketMini.classList.remove("is-boosting");
+      void el.rocketMini.offsetWidth;
+      el.rocketMini.classList.add("is-boosting");
+      if (!revealed) {
+        el.feedbackText.textContent = step.explain;
+        el.feedbackText.className = "feedback good";
+        playSound("correct");
+      }
+      window.setTimeout(() => {
+        if (state.stepIndex >= buildSteps(currentProblem()).length - 1) {
+          completeProblem();
+          return;
+        }
+        state.stepIndex += 1;
+        state.stepAttempts = 0;
+        renderStep();
+      }, revealed ? 1000 : 760);
+    }
+
+    function triggerStepEffect() {}
+
+    function applyStepToBoard() {}
+
+    function completeProblem() {
+      const perfect = !state.problemHadMistake;
+      if (perfect) {
+        state.correct += 1;
+        state.chain += 1;
+      } else {
+        state.chain = 0;
+      }
+      const event = perfect ? rollFuelEvent() : createLeakEvent();
+      applyFuelEvent(event);
+      renderStatus();
+      finishProblem(state.lastFuelEvent);
+    }
+
+    function pickFuelEventForRoll(roll, amountPicker = randomInt) {
+      if (roll < 76.45) {
+        const amount = amountPicker(4, 8);
+        return {
+          id: "normal",
+          amount,
+          title: "점수가 들어갔어요",
+          message: "점수 주입"
+        };
+      }
+      if (roll < 88.45) {
+        const amount = -amountPicker(5, 10);
+        return {
+          id: "smallExplosion",
+          amount,
+          title: "점수통이 펑!",
+          message: "점수 감소"
+        };
+      }
+      if (roll < 97.45) {
+        const amount = amountPicker(12, 20);
+        return {
+          id: "megaFuel",
+          amount,
+          title: "점수가 콸콸!",
+          message: "점수 대량 주입"
+        };
+      }
+      if (roll < 97.95) {
+        return {
+          id: "instantLaunch",
+          amount: 6,
+          title: "완벽한 원!",
+          message: "정중앙",
+          launches: true
+        };
+      }
+      if (roll < 99.95) {
+        return {
+          id: "emptyTank",
+          amount: 0,
+          title: "점수가 사라졌어요",
+          message: "점수 0",
+          emptiesTank: true
+        };
+      }
+      return {
+        id: "rainbowFuel",
+        amount: 10,
+        title: "무지개 점수 발견!",
+        message: "마법진 안이 무지개빛으로 반짝여요.",
+        rainbow: true
+      };
+    }
+
+    function rollFuelEvent() {
+      return pickFuelEventForRoll(Math.random() * 100);
+    }
+
+    function createLeakEvent() {
+      const amount = -randomInt(8, 18);
+      return {
+        id: "leak",
+        amount,
+        title: "점수가 새요",
+        message: "점수 감소"
+      };
+    }
+
+    function applyFuelEvent(event) {
+      const before = state.fuelPercent;
+      if (event.emptiesTank) {
+        state.fuelPercent = 0;
+      } else {
+        state.fuelPercent = clamp(state.fuelPercent + event.amount, 0, MAX_FUEL);
+      }
+      if (event.rainbow) {
+        state.rainbowFuel = true;
+      }
+      if (event.launches) {
+        state.instantLaunch = true;
+      }
+      const actualDelta = state.fuelPercent - before;
+      const feedback = getFuelEventFeedback(event, actualDelta, before);
+      state.lastFuelEvent = {
+        ...event,
+        actualDelta,
+        ...feedback
+      };
+    }
+
+    function getFuelEventFeedback(event, actualDelta, before) {
+      if (event.rainbow) {
+        return {
+          title: "무지개 점수 발견!",
+          message: "무지개 점수",
+          art: "rainbow"
+        };
+      }
+      if (event.launches) {
+        return {
+          title: "완벽한 원!",
+          message: "정중앙",
+          art: "launch"
+        };
+      }
+      if (event.emptiesTank) {
+        return {
+          title: before > 0 ? "점수가 모두 사라졌어요" : "점수통이 비어 있어요",
+          message: "점수 0",
+          art: "empty"
+        };
+      }
+      if (actualDelta > 0) {
+        if (actualDelta <= 4) {
+          return {
+            title: "점수 주입",
+            message: "점수 주입",
+            art: "normal"
+          };
+        }
+        if (actualDelta <= 8) {
+          return {
+            title: "점수 주입",
+            message: "점수 주입",
+            art: "normal"
+          };
+        }
+        if (actualDelta <= 14) {
+          return {
+            title: "점수 주입",
+            message: "점수 주입",
+            art: event.id === "megaFuel" ? "mega" : "normal"
+          };
+        }
+        return {
+          title: "점수 대량 주입",
+          message: "점수 대량 주입",
+          art: "mega"
+        };
+      }
+      if (actualDelta < 0) {
+        const loss = Math.abs(actualDelta);
+        if (event.id === "smallExplosion") {
+          return {
+            title: loss <= 5 ? "점수통이 푸슉!" : "점수통이 펑!",
+            message: "점수 감소",
+            art: "loss"
+          };
+        }
+        return {
+          title: loss <= 8 ? "점수가 조금 새요" : "점수가 많이 새요",
+          message: "점수 감소",
+          art: "loss"
+        };
+      }
+      if (event.amount < 0) {
+        return {
+          title: "점수통이 버텼어요",
+          message: "점수 0",
+          art: "empty"
+        };
+      }
+      return {
+        title: "점수통이 가득 찼어요",
+        message: "점수 가득",
+        art: "mega"
+      };
+    }
+
+    function getFuelEventDeltaLabel(event) {
+      if (event.rainbow) {
+        return "무지개!";
+      }
+      if (event.launches) {
+        return "정중앙!";
+      }
+      if (event.emptiesTank) {
+        return "점수 0";
+      }
+      const actualDelta = typeof event.actualDelta === "number" ? event.actualDelta : event.amount;
+      if (actualDelta > 0) {
+        return `점수 +${actualDelta}`;
+      }
+      if (actualDelta < 0) {
+        return `점수 ${actualDelta}`;
+      }
+      return "변화 없음";
+    }
+
+    function renderChoices(options, handler) {
+      el.choiceGrid.innerHTML = "";
+      options.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.innerHTML = option.label;
+        button.addEventListener("click", () => handler(option, button));
+        el.choiceGrid.appendChild(button);
+      });
+    }
+
+    function getFuelImpactClass(result) {
+      const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
+      if (result.rainbow) {
+        return "is-impact-rainbow";
+      }
+      if (result.launches) {
+        return "is-impact-launch";
+      }
+      if (result.emptiesTank) {
+        return "is-impact-empty";
+      }
+      if (actualDelta < 0 || result.id === "smallExplosion" || result.id === "leak") {
+        return "is-impact-loss";
+      }
+      if (actualDelta >= 12 || result.art === "mega") {
+        return "is-impact-mega";
+      }
+      if (actualDelta > 0) {
+        return "is-impact-normal";
+      }
+      return "is-impact-empty";
+    }
+
+    function getRewardSoundKind(result) {
+      const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
+      if (result.rainbow) {
+        return "rewardRainbow";
+      }
+      if (result.launches) {
+        return "rewardLaunch";
+      }
+      if (result.emptiesTank) {
+        return "rewardEmpty";
+      }
+      if (actualDelta < 0 || result.id === "smallExplosion" || result.id === "leak") {
+        return "rewardLoss";
+      }
+      if (actualDelta >= 12 || result.art === "mega") {
+        return "rewardMega";
+      }
+      return "rewardPositive";
+    }
+
+    function triggerRewardTransfer(result) {
+      const actualDelta = typeof result.actualDelta === "number" ? result.actualDelta : result.amount;
+      const hasVisibleTransfer = actualDelta > 0 || result.rainbow || result.launches;
+      if (!hasVisibleTransfer || state.screen !== "play") {
+        return;
+      }
+      el.fuelTransferLayer.className = "fuel-transfer-layer";
+      void el.fuelTransferLayer.offsetWidth;
+      el.fuelTransferLayer.classList.add("is-active");
+      if (result.rainbow) {
+        el.fuelTransferLayer.classList.add("is-rainbow");
+      } else if (result.art === "mega" || actualDelta >= 12 || result.launches) {
+        el.fuelTransferLayer.classList.add("is-mega");
+      }
+      window.setTimeout(() => {
+        el.fuelTransferLayer.className = "fuel-transfer-layer";
+      }, 920);
+    }
+
+    function triggerRewardImpact(result) {
+      const impactClass = getFuelImpactClass(result);
+      clearRocketImpact();
+      void el.rocketMini.offsetWidth;
+      el.rocketMini.classList.add(impactClass);
+      el.rocketZone.classList.add(impactClass);
+      window.setTimeout(clearRocketImpact, 1080);
+    }
+
+    function finishProblem(result) {
+      renderStatus();
+      el.rocketMini.classList.remove("is-boosting");
+      void el.rocketMini.offsetWidth;
+      el.rocketMini.classList.add("is-boosting");
+      triggerRewardTransfer(result);
+      triggerRewardImpact(result);
+      FUEL_EVENT_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      FUEL_ART_CLASSES.forEach((className) => el.rewardPop.classList.remove(className));
+      el.rewardPop.classList.add(`fuel-event--${result.id}`);
+      if (result.art) {
+        el.rewardPop.classList.add(`reward-art--${result.art}`);
+      }
+      el.rewardTitle.textContent = result.title;
+      el.rewardDelta.textContent = getFuelEventDeltaLabel(result);
+      el.rewardMessage.textContent = result.message;
+      el.rewardNextButton.textContent = result.launches
+        ? "마법진 완성"
+        : state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
+      window.setTimeout(() => {
+        el.rewardPop.classList.add("is-visible");
+        playSound(getRewardSoundKind(result));
+        el.rewardNextButton.focus();
+      }, 840);
+    }
+
+    function nextAfterReward() {
+      if (state.lastFuelEvent?.launches || state.index + 1 >= TOTAL_QUESTIONS) {
+        showResult();
+        return;
+      }
+      state.index += 1;
+      playSound("next");
+      renderProblem();
+    }
+
+    function animateMeasureValue(targetFuel, finalLabel) {
+      const duration = 1500;
+      const startedAt = performance.now();
+      const target = getFuelPercent(targetFuel);
+
+      function tick(now) {
+        const progress = clamp((now - startedAt) / duration, 0, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(target * eased);
+        el.measureFill.style.setProperty("--measure-width", `${current}%`);
+        el.measurePercent.textContent = finalLabel === "무지개 점수" && progress > 0.84
+          ? finalLabel
+          : `점수 ${current}`;
+        if (progress < 1) {
+          window.requestAnimationFrame(tick);
+          return;
+        }
+        el.measurePercent.textContent = finalLabel;
+        el.finalEnergyText.textContent = finalLabel;
+      }
+
+      window.requestAnimationFrame(tick);
+    }
+
+    function scanResultPlanets(targetIndex) {
+      if (targetIndex < 0) {
+        return;
+      }
+      const chips = [...el.resultPlanetTrack.querySelectorAll(".planet-chip")];
+      const scanCount = Math.min(chips.length, targetIndex + 1);
+      chips.forEach((chip) => chip.classList.remove("is-scanning"));
+      chips.slice(0, scanCount).forEach((chip, index) => {
+        window.setTimeout(() => {
+          chips.forEach((item) => item.classList.remove("is-scanning"));
+          chip.classList.add("is-scanning");
+        }, index * 130);
+      });
+      window.setTimeout(() => {
+        chips.forEach((chip) => chip.classList.remove("is-scanning"));
+      }, scanCount * 130 + 520);
+    }
+
+    function showResult() {
+      const destination = getDestination();
+      const launched = Boolean(destination);
+      const fuelPercent = getFuelPercent();
+      const measureFuel = state.rainbowFuel ? MAX_FUEL : fuelPercent;
+      const measureLabel = state.rainbowFuel ? "무지개 점수" : `점수 ${fuelPercent}`;
+      el.resultRaster.src = launched ? destination.image : "result-retry-generated.webp";
+      el.resultScreen.classList.add("is-measuring");
+      el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowFuel);
+      document.getElementById("resultTitle").textContent = "점수 측정 중";
+      el.finalEnergyText.textContent = "측정 중";
+      el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.finalDestinationText.textContent = "측정 중";
+      el.praiseText.textContent = "마법진 안에 모인 점수를 재고 있어요.";
+      el.measureStatus.textContent = "점수 측정 중";
+      el.measurePercent.textContent = "점수 0";
+      el.measureFill.style.setProperty("--measure-width", "0%");
+      renderPlanetTrack(el.resultPlanetTrack, { targetIndex: -1, reachedIndex: -1 });
+      el.restartButton.hidden = true;
+      el.restartButton.disabled = true;
+      el.restartButton.textContent = launched ? "한 번 더" : "다시하기";
+      playSound("scan");
+      showScreen("result");
+      window.setTimeout(() => {
+        el.measureStatus.textContent = "마법진 점수";
+        animateMeasureValue(measureFuel, measureLabel);
+        renderPlanetTrack(el.resultPlanetTrack, {
+          targetIndex: launched ? destination.index : -1,
+          reachedIndex: launched ? destination.index : -1
+        });
+        scanResultPlanets(launched ? destination.index : -1);
+        playSound("measure");
+      }, 120);
+      window.setTimeout(() => {
+        el.resultScreen.classList.remove("is-measuring");
+        document.getElementById("resultTitle").textContent = launched ? `${destination.name} 등급!` : "점수 더 필요";
+        el.finalDestinationText.textContent = launched ? destination.name : "다시 도전";
+        el.praiseText.textContent = launched ? getPraise(destination) : getRetryMessage();
+        el.restartButton.hidden = false;
+        el.restartButton.disabled = false;
+        playSound("finish");
+      }, 2500);
+    }
+
+    function isLaunchSuccess() {
+      return Boolean(getDestination());
+    }
+
+    function getPraise(destination) {
+      if (destination.secret) {
+        return "무지개 점수가 켜져 전설 마법진까지 그렸어요!";
+      }
+      if (destination.index >= 4) {
+        return `${destination.name}! 반지름에 맞게 컴퍼스를 아주 잘 벌렸어요.`;
+      }
+      if (destination.index >= 2) {
+        return `${destination.name}까지 왔어요. 반지름만큼 컴퍼스를 잘 벌렸어요.`;
+      }
+      return `${destination.name}이에요. 다음엔 더 큰 마법진을 노려 봐요.`;
+    }
+
+    function getRetryMessage() {
+      const next = getNextPlanet(null);
+      if (state.correct >= 6) {
+        return `거의 다 왔어요. ${next.name}까지 한 번만 더 맞혀 봐요.`;
+      }
+      if (state.correct >= 3) {
+        return `점수가 조금 부족해요. 다시 하면 ${next.name}까지 갈 수 있어요.`;
+      }
+      return "괜찮아요. 지름이 아니라 반지름만큼 벌리면 더 멀리 갈 수 있어요.";
+    }
+
+    function setButtonsDisabled(disabled) {
+      [...el.choiceGrid.querySelectorAll("button")].forEach((button) => {
+        button.disabled = disabled;
+      });
+    }
+
+    function currentProblem() {
+      return state.problems[state.index];
+    }
+
+    function shuffle(items) {
+      const array = [...items];
+      for (let i = array.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function initAudio() {
+      if (state.audio) {
+        return;
+      }
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        return;
+      }
+      state.audio = new AudioContext();
+    }
+
+    function resumeAudio() {
+      initAudio();
+      if (!state.audio) {
+        return false;
+      }
+      if (state.audio.state === "suspended") {
+        state.audio.resume();
+      }
+      return true;
+    }
+
+    function stopBgm() {
+      state.bgmRunning = false;
+      if (state.bgmTimer) {
+        window.clearTimeout(state.bgmTimer);
+        state.bgmTimer = null;
+      }
+      if (!state.bgmGain || !state.audio) {
+        state.bgmGain = null;
+        return;
+      }
+      const gain = state.bgmGain;
+      const now = state.audio.currentTime;
+      gain.gain.cancelScheduledValues(now);
+      gain.gain.setTargetAtTime(0.0001, now, 0.18);
+      window.setTimeout(() => {
+        try {
+          gain.disconnect();
+        } catch (error) {
+          // Already disconnected.
+        }
+      }, 700);
+      state.bgmGain = null;
+    }
+
+    function startBgm() {
+      if (!state.soundsOn || state.bgmRunning || !resumeAudio()) {
+        return;
+      }
+      state.bgmRunning = true;
+      state.bgmGain = state.audio.createGain();
+      state.bgmGain.gain.setValueAtTime(0.0001, state.audio.currentTime);
+      state.bgmGain.gain.exponentialRampToValueAtTime(0.045, state.audio.currentTime + 1.2);
+      state.bgmGain.connect(state.audio.destination);
+      state.bgmStep = 0;
+      queueBgmLoop();
+    }
+
+    function queueBgmLoop() {
+      if (!state.bgmRunning || !state.audio || !state.bgmGain) {
+        return;
+      }
+      const phrases = [
+        [
+          { frequency: 130.81, at: 0, duration: 2.8, peak: 0.16, type: "sine" },
+          { frequency: 196, at: 0.35, duration: 1.8, peak: 0.12, type: "sine" },
+          { frequency: 329.63, at: 0.9, duration: 0.45, peak: 0.08, type: "triangle" },
+          { frequency: 392, at: 1.7, duration: 0.5, peak: 0.07, type: "triangle" },
+          { frequency: 261.63, at: 2.7, duration: 0.65, peak: 0.08, type: "triangle" }
+        ],
+        [
+          { frequency: 146.83, at: 0, duration: 2.7, peak: 0.15, type: "sine" },
+          { frequency: 220, at: 0.4, duration: 1.8, peak: 0.11, type: "sine" },
+          { frequency: 293.66, at: 0.7, duration: 0.48, peak: 0.08, type: "triangle" },
+          { frequency: 440, at: 1.55, duration: 0.45, peak: 0.07, type: "triangle" },
+          { frequency: 349.23, at: 2.45, duration: 0.62, peak: 0.08, type: "triangle" }
+        ],
+        [
+          { frequency: 164.81, at: 0, duration: 2.9, peak: 0.15, type: "sine" },
+          { frequency: 246.94, at: 0.45, duration: 1.9, peak: 0.1, type: "sine" },
+          { frequency: 415.3, at: 0.95, duration: 0.4, peak: 0.075, type: "triangle" },
+          { frequency: 493.88, at: 1.8, duration: 0.45, peak: 0.07, type: "triangle" },
+          { frequency: 329.63, at: 2.8, duration: 0.55, peak: 0.075, type: "triangle" }
+        ],
+        [
+          { frequency: 123.47, at: 0, duration: 3, peak: 0.14, type: "sine" },
+          { frequency: 185, at: 0.4, duration: 2, peak: 0.1, type: "sine" },
+          { frequency: 277.18, at: 0.75, duration: 0.42, peak: 0.075, type: "triangle" },
+          { frequency: 369.99, at: 1.65, duration: 0.48, peak: 0.07, type: "triangle" },
+          { frequency: 523.25, at: 2.65, duration: 0.65, peak: 0.08, type: "triangle" }
+        ]
+      ];
+      const now = state.audio.currentTime;
+      const notes = phrases[state.bgmStep % phrases.length];
+      state.bgmStep += 1;
+      notes.forEach(({ frequency, at, duration, peak, type }) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        oscillator.type = type;
+        oscillator.frequency.setValueAtTime(frequency, now + at);
+        oscillator.detune.setValueAtTime(-6 + Math.random() * 12, now + at);
+        gain.gain.setValueAtTime(0.0001, now + at);
+        gain.gain.exponentialRampToValueAtTime(peak, now + at + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + at + duration);
+        oscillator.connect(gain).connect(state.bgmGain);
+        oscillator.start(now + at);
+        oscillator.stop(now + at + duration + 0.1);
+      });
+      state.bgmTimer = window.setTimeout(queueBgmLoop, 5200);
+    }
+
+    function playSound(kind) {
+      if (!state.soundsOn) {
+        return;
+      }
+      if (!resumeAudio()) {
+        return;
+      }
+      const plans = {
+        start: [260, 330, 392],
+        correct: [440, 660],
+        try: [180, 150],
+        reward: [392, 523, 784],
+        rewardPositive: [392, 523, 659],
+        rewardMega: [330, 440, 659, 880],
+        rewardRainbow: [523, 659, 784, 1046],
+        rewardLaunch: [262, 523, 784],
+        rewardLoss: [247, 196, 147],
+        rewardEmpty: [196, 147, 110],
+        scan: [220, 294, 392],
+        measure: [330, 440, 660],
+        next: [330],
+        finish: [392, 523, 659, 880]
+      };
+      const frequencies = plans[kind] || [330];
+      frequencies.forEach((frequency, index) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        oscillator.type = "triangle";
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, state.audio.currentTime + index * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.085, state.audio.currentTime + index * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, state.audio.currentTime + index * 0.08 + 0.16);
+        oscillator.connect(gain).connect(state.audio.destination);
+        oscillator.start(state.audio.currentTime + index * 0.08);
+        oscillator.stop(state.audio.currentTime + index * 0.08 + 0.18);
+      });
+    }
+
+    el.startButton.addEventListener("click", () => {
+      startBgm();
+      playSound("start");
+      showScreen("tutorial");
+    });
+
+    el.tutorialNextButton.addEventListener("click", startGame);
+    el.rewardNextButton.addEventListener("click", nextAfterReward);
+    el.restartButton.addEventListener("click", () => {
+      startBgm();
+      playSound("start");
+      showScreen("cover");
+    });
+    el.soundToggle.addEventListener("click", () => {
+      state.soundsOn = !state.soundsOn;
+      el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
+      el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
+      if (state.soundsOn) {
+        startBgm();
+        playSound("next");
+      } else {
+        stopBgm();
+      }
+    });
+
+    renderStatus();
+  </script>
+</body>
+</html>
