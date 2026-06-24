@@ -271,6 +271,18 @@
       display: block;
     }
 
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     .cover {
       align-items: center;
       padding: clamp(70px, 10vw, 100px) clamp(24px, 5vw, 70px);
@@ -312,17 +324,14 @@
       z-index: 2;
       display: grid;
       justify-items: start;
-      gap: 22px;
+      gap: 20px;
     }
 
-    .hero-copy h1 {
-      max-width: 8.4em;
-      margin: 0;
-      color: #ffffff;
-      font-size: clamp(3rem, 7vw, 6.6rem);
-      line-height: 0.94;
-      font-weight: 1000;
-      text-shadow: 0 7px 0 rgba(0, 0, 0, 0.22), 0 0 28px rgba(96, 215, 255, 0.24);
+    .hero-title-art {
+      width: clamp(330px, 40vw, 520px);
+      max-width: 100%;
+      height: auto;
+      filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.28));
     }
 
     .hero-copy p {
@@ -446,6 +455,24 @@
       width: clamp(128px, 16vw, 180px);
       transform: rotate(4deg);
       filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.32));
+    }
+
+    .cover .lesson-badge {
+      padding: 0 14px;
+      border-color: rgba(255, 200, 87, 0.72);
+      background: rgba(42, 27, 5, 0.58);
+      color: #ffedb8;
+      font-size: clamp(0.88rem, 1.5vw, 1rem);
+      letter-spacing: 0;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    .cover #startButton {
+      min-width: 190px;
+      min-height: 72px;
+      padding: 0 44px;
+      font-size: clamp(1.22rem, 3vw, 1.58rem);
+      box-shadow: 0 16px 0 rgba(106, 70, 23, 0.34), 0 26px 42px rgba(0, 0, 0, 0.32);
     }
 
     .tutorial {
@@ -2512,10 +2539,11 @@
         <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
         <span class="unit-badge">3학년 2학기 1단원 3차시</span>
       </div>
-      <span class="lesson-badge">(몇십)×(몇십), (몇십몇)×(몇십)</span>
+      <span class="lesson-badge">0을 떼고 다시 붙이는 곱셈</span>
       <div class="cover-scene">
         <div class="hero-copy">
-          <h1 id="coverTitle">매스몬 0 공장</h1>
+          <h1 class="visually-hidden" id="coverTitle">매스몬 0 공장</h1>
+          <img class="hero-title-art" src="title-logo-generated.webp" alt="" aria-hidden="true">
           <p>핵심 곱을 계산하고 끝의 0을 알맞게 붙여요.</p>
           <button class="primary-button" id="startButton" type="button">시작</button>
         </div>

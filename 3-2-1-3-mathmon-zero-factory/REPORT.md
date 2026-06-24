@@ -32,7 +32,7 @@
 
 ### 첫 화면
 
-첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 0 공장과 컨베이어가 보이는 대표 장면 위에 게임 제목, 한 줄 목표, 시작 버튼을 HTML로 얹습니다.
+첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 0 공장과 컨베이어가 보이는 대표 장면 위에 GPT Image로 만든 독립 제목 로고(`title-logo-generated.webp`)를 얹고, 한 줄 목표와 시작 버튼은 HTML로 얹습니다. 제목 로고 원본은 `title-logo-chromakey.png`로 보관하고, 초록 배경 제거 PNG/WebP를 배포 자산으로 사용합니다.
 
 ### 설명 화면
 
@@ -70,6 +70,7 @@
 
 - `index.html`
 - `cover-generated.webp`
+- `title-logo-generated.webp`
 - `factory-conveyor-generated.webp`
 - `result-class-generated.webp`
 - `result-school-generated.webp`

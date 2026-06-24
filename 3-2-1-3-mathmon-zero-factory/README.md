@@ -28,6 +28,9 @@
 
 - `cover-generated.png`: 첫 화면 생성 이미지 원본
 - `cover-generated.webp`: 첫 화면 배포용 WebP
+- `title-logo-chromakey.png`: GPT Image로 만든 첫 화면 제목 로고 원본
+- `title-logo-generated.png`: 초록 배경 제거 후 크롭한 제목 로고 PNG
+- `title-logo-generated.webp`: 첫 화면 제목 로고 배포용 WebP
 - `factory-conveyor-generated.png`: 문제 화면 0 공장 배경 생성 이미지 원본
 - `factory-conveyor-generated.webp`: 문제 화면 0 공장 배경 배포용 WebP
 - `result-class-generated.png/webp`: 우리 반 출하 결과 화면
@@ -39,12 +42,13 @@
 - `result-space-generated.png/webp`: 무지개 부품 특별 출하 결과 화면
 - `result-retry-generated.png/webp`: 컨베이어 점검/다시하기 결과 화면
 
-첫 화면과 결과 화면은 생성 이미지를 배경으로 쓰고, 제목·목표·시작 버튼·생산량·정답 수·매스몬 카드처럼 매 판 달라지거나 클릭이 필요한 요소는 HTML로 얹습니다. 설명 화면과 문제 화면은 생성 이미지 0 공장 배경 위에 HTML/CSS 컨베이어 보드를 올려 `핵심 곱 -> 0 스티커 -> 완성 수`가 바로 보이게 했습니다. 성공 결과와 다시하기 결과는 서로 다른 RasterStage 배경을 사용합니다. 결과 화면의 매스몬 카드는 이번 판에서 받은 0 공장 매스몬 1장을 강조합니다.
+첫 화면과 결과 화면은 생성 이미지를 배경으로 씁니다. 첫 화면 제목은 CSS 텍스트가 아니라 GPT Image로 만든 독립 제목 로고(`title-logo-generated.webp`)를 얹고, 목표·시작 버튼·생산량·정답 수·매스몬 카드처럼 매 판 달라지거나 클릭이 필요한 요소는 HTML로 얹습니다. 설명 화면과 문제 화면은 생성 이미지 0 공장 배경 위에 HTML/CSS 컨베이어 보드를 올려 `핵심 곱 -> 0 스티커 -> 완성 수`가 바로 보이게 했습니다. 성공 결과와 다시하기 결과는 서로 다른 RasterStage 배경을 사용합니다. 결과 화면의 매스몬 카드는 이번 판에서 받은 0 공장 매스몬 1장을 강조합니다.
 
 ## 파일 구성
 
 - `index.html`: 게임 본문
 - `cover-generated.webp`: 첫 화면 RasterStage 배경
+- `title-logo-generated.webp`: 첫 화면 제목 로고 오버레이
 - `factory-conveyor-generated.webp`: 문제 화면 0 공장 배경
 - `result-*-generated.webp`: 출하 등급별 결과 RasterStage 배경
 - `eduitit-logo-mark.png`: 에듀잇티 로고
