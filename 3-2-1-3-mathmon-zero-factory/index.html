@@ -733,55 +733,27 @@
       position: relative;
       order: 2;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 230px;
-      grid-template-rows: 1fr;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: minmax(0, 1fr) auto;
       align-items: stretch;
-      gap: 12px;
+      gap: 8px;
       overflow: hidden;
-      padding: 12px;
+      padding: 10px 12px;
       isolation: isolate;
       --charge: 0;
       background: rgba(14, 12, 22, 0.72);
     }
 
     .rocket-zone::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      background:
-        radial-gradient(circle at 24% 52%, rgba(53, 217, 178, calc(0.08 + var(--charge) * 0.22)), transparent 0 22%, transparent 52%),
-        linear-gradient(90deg, rgba(8, 6, 14, 0.32), rgba(8, 6, 14, 0.68));
-      pointer-events: none;
+      display: none;
     }
 
     .rocket-zone::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 2;
-      background:
-        linear-gradient(90deg, rgba(96, 215, 255, calc(0.04 + var(--charge) * 0.12)), transparent 34%, rgba(255, 200, 87, calc(0.04 + var(--charge) * 0.12))),
-        radial-gradient(circle at 86% 44%, rgba(255, 200, 87, calc(0.08 + var(--charge) * 0.2)), transparent 0 12%, transparent 34%);
-      mix-blend-mode: screen;
-      opacity: calc(0.45 + var(--charge) * 0.42);
-      pointer-events: none;
+      display: none;
     }
 
     .launchpad-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center bottom;
-      opacity: 0.34;
-      filter: saturate(calc(0.82 + var(--charge) * 0.34)) brightness(calc(0.72 + var(--charge) * 0.16));
-      transform: scale(1.03);
-      transition: filter 0.7s ease;
-      pointer-events: none;
-      user-select: none;
+      display: none;
     }
 
     .launch-effects {
@@ -1038,7 +1010,7 @@
       grid-row: auto;
       align-self: stretch;
       align-content: center;
-      display: grid;
+      display: none;
       gap: 8px;
       padding: 10px;
       border: 1px solid rgba(255, 255, 255, 0.16);
@@ -1122,7 +1094,7 @@
 
     .shipment-slots {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(10, minmax(0, 1fr));
       gap: 6px;
     }
 
@@ -1133,7 +1105,7 @@
       place-items: center;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 6px;
+      border-radius: 7px;
       background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(0, 0, 0, 0.12)),
         rgba(14, 12, 22, 0.56);
@@ -1145,10 +1117,14 @@
 
     .shipment-slot::after {
       content: "";
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.16);
+      width: 70%;
+      max-width: 20px;
+      height: 13px;
+      border-radius: 4px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 42%),
+        rgba(255, 255, 255, 0.16);
+      box-shadow: inset 0 4px 0 rgba(0, 0, 0, 0.16);
     }
 
     .shipment-slot.is-current {
@@ -1164,11 +1140,15 @@
     }
 
     .shipment-slot.is-filled::after {
-      content: "0";
-      width: auto;
-      height: auto;
-      border-radius: 0;
-      background: transparent;
+      content: "";
+      width: 70%;
+      max-width: 20px;
+      height: 13px;
+      border-radius: 4px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.32), transparent 42%),
+        #9a680d;
+      box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.14);
     }
 
     .shipment-slot.is-defect {
@@ -1179,11 +1159,15 @@
     }
 
     .shipment-slot.is-defect::after {
-      content: "×";
-      width: auto;
-      height: auto;
-      border-radius: 0;
-      background: transparent;
+      content: "";
+      width: 70%;
+      max-width: 20px;
+      height: 13px;
+      border-radius: 4px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 42%),
+        #7b1530;
+      box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.12);
     }
 
     .planet-panel {
@@ -1356,45 +1340,41 @@
 
     .conveyor-lane {
       position: relative;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 28px minmax(0, 0.82fr) 28px minmax(0, 1fr);
-      align-items: center;
-      gap: 8px;
+      display: block;
       min-height: 100%;
       height: 100%;
-      padding: 22px 30px 16px;
+      padding: 0;
       overflow: hidden;
       border-radius: var(--radius);
-      background: rgba(14, 12, 22, 0.12);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 12px 22px rgba(0, 0, 0, 0.18);
+      background: #0c1824;
+      box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
     }
 
     .conveyor-lane::before {
-      content: "";
-      position: absolute;
-      z-index: 2;
-      left: 8%;
-      right: 8%;
-      top: 48%;
-      height: min(88px, 58%);
-      transform: translateY(-50%);
-      background: url("assets/toybox/toy-conveyor-belt-loop.webp") repeat-x center / auto 100%;
-      opacity: 0.76;
-      animation: conveyor-belt-loop 1.15s linear infinite;
-      pointer-events: none;
+      display: none;
+    }
+
+    .rocket-zone.is-shipping .conveyor-lane::before {
+      display: none;
     }
 
     .conveyor-art {
       position: absolute;
       z-index: 1;
-      inset: -8px -16px -16px;
-      width: calc(100% + 32px);
-      height: calc(100% + 28px);
+      inset: 0;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
       object-position: center;
-      opacity: 0.96;
+      opacity: 1;
+      filter: none;
       pointer-events: none;
       user-select: none;
+    }
+
+    .rocket-zone.is-shipping .conveyor-art {
+      opacity: 1;
+      filter: brightness(1.04) saturate(1.04);
     }
 
     .zero-flow-layer {
@@ -1411,6 +1391,14 @@
       z-index: 6;
       pointer-events: none;
       overflow: visible;
+    }
+
+    .inspection-gate {
+      display: none;
+    }
+
+    .rocket-zone.is-inspecting .inspection-gate {
+      display: none;
     }
 
     .zero-travel-token {
@@ -1450,21 +1438,7 @@
 
     .belt-part,
     .zero-sticker-row {
-      position: relative;
-      z-index: 3;
-      min-height: 52px;
-      display: grid;
-      place-items: center;
-      padding: 8px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: var(--radius);
-      color: #ffffff;
-      background: rgba(14, 12, 22, 0.66);
-      font-size: clamp(1rem, 2vw, 1.42rem);
-      font-weight: 1000;
-      line-height: 1;
-      text-align: center;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.14);
+      display: none;
     }
 
     .belt-part.is-current,
@@ -1512,13 +1486,39 @@
     }
 
     .belt-arrow {
-      display: grid;
-      place-items: center;
-      position: relative;
-      z-index: 3;
-      color: #ffe7a4;
-      font-size: 1.6rem;
+      display: none;
+    }
+
+    .shipment-goal {
+      position: absolute;
+      z-index: 7;
+      left: 22px;
+      bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 108px;
+      padding: 6px 12px 7px;
+      border: 1px solid rgba(255, 200, 87, 0.28);
+      border-radius: 999px;
+      background: rgba(12, 10, 18, 0.76);
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(0, 0, 0, 0.24);
+    }
+
+    .shipment-goal span {
+      display: none;
+    }
+
+    .shipment-goal strong {
+      color: #ffe27a;
+      font-size: clamp(0.92rem, 1.5vw, 1.04rem);
       font-weight: 1000;
+      white-space: nowrap;
+    }
+
+    .shipment-goal .shipment-slots {
+      display: none;
     }
 
     .factory-rule {
@@ -1588,105 +1588,87 @@
         linear-gradient(135deg, #ff8ca6, #ffe27a, #60d7ff, #c59bff);
     }
 
-    .result-mathmon-card {
+    .result-box-showcase {
+      position: relative;
+      min-height: 176px;
       display: grid;
-      grid-template-columns: 112px minmax(0, 1fr) auto;
+      grid-template-columns: minmax(170px, 0.75fr) minmax(0, 1.25fr);
       align-items: center;
-      gap: 12px;
-      min-height: 132px;
-      padding: 12px;
-      border: 1px solid rgba(255, 200, 87, 0.32);
+      gap: 10px;
+      padding: 10px 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 200, 87, 0.36);
       border-radius: var(--radius);
-      background: rgba(14, 12, 22, 0.58);
-      box-shadow: 0 0 28px rgba(255, 200, 87, 0.1);
+      background:
+        radial-gradient(circle at 26% 46%, rgba(255, 200, 87, 0.16), transparent 0 38%, transparent 58%),
+        rgba(14, 12, 22, 0.62);
+      box-shadow: 0 0 34px rgba(255, 200, 87, 0.14);
     }
 
-    .result-mathmon-card img {
-      width: 104px;
-      height: 104px;
+    .result-box-image {
+      width: min(190px, 100%);
+      aspect-ratio: 1 / 1;
       object-fit: contain;
-      filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.32));
+      justify-self: center;
+      filter: drop-shadow(0 24px 22px rgba(0, 0, 0, 0.38));
     }
 
-    .result-mathmon-copy {
+    .result-box-copy {
       display: grid;
-      gap: 4px;
+      gap: 6px;
       min-width: 0;
     }
 
-    .result-mathmon-copy span {
+    .result-box-copy span {
       display: block;
       color: #ffe7a4;
-      font-size: 0.86rem;
+      font-size: 0.9rem;
       font-weight: 950;
     }
 
-    .result-mathmon-copy strong {
+    .result-box-copy strong {
       display: block;
-      margin-top: 4px;
       color: #ffffff;
-      font-size: clamp(1.44rem, 3vw, 2.12rem);
+      font-size: clamp(1.45rem, 3vw, 2.08rem);
       font-weight: 1000;
       line-height: 1;
     }
 
-    .result-mathmon-copy p {
-      margin: 4px 0 0;
+    .result-box-copy p {
+      margin: 0;
       color: #fff0c6;
-      font-size: 0.94rem;
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
       font-weight: 850;
       line-height: 1.28;
     }
 
-    .mathmon-dex-strip {
-      display: grid;
-      grid-template-columns: repeat(10, 18px);
-      gap: 4px;
-      margin-top: 4px;
-    }
-
-    .mathmon-dex-dot {
-      width: 18px;
-      height: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    .result-companion {
+      display: inline-grid;
+      place-items: center;
+      justify-self: start;
+      width: 48px;
+      height: 48px;
+      padding: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
-      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
+      background: rgba(0, 0, 0, 0.2);
     }
 
-    .mathmon-dex-dot.is-earned {
-      border-color: rgba(53, 217, 178, 0.72);
-      background: linear-gradient(180deg, #b8ffe9, #35d9b2);
+    .result-companion img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.3));
     }
 
-    .mathmon-dex-dot.is-current {
-      border-color: rgba(255, 200, 87, 0.9);
-      background: linear-gradient(180deg, #ffe27a, #ffc857);
-      box-shadow: 0 0 0 3px rgba(255, 200, 87, 0.22), 0 0 18px rgba(255, 200, 87, 0.28);
-      transform: scale(1.12);
-    }
-
-    .download-button {
-      min-height: 46px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 14px;
-      border-radius: var(--radius);
-      color: #231400;
-      background: linear-gradient(180deg, #ffe27a, #ffc857);
-      font-size: 0.92rem;
-      font-weight: 1000;
-      text-decoration: none;
+    .result-companion strong {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
       white-space: nowrap;
-      box-shadow: 0 8px 0 rgba(106, 70, 23, 0.24);
-    }
-
-    .download-button.is-disabled {
-      pointer-events: none;
-      color: rgba(255, 255, 255, 0.74);
-      background: rgba(255, 255, 255, 0.12);
-      box-shadow: none;
     }
 
     .sum-row {
@@ -2140,8 +2122,13 @@
 
     .result {
       align-items: center;
-      padding: clamp(72px, 9vw, 92px) clamp(24px, 5vw, 62px) clamp(28px, 4vw, 44px);
+      padding: clamp(66px, 8vw, 84px) clamp(24px, 5vw, 62px) clamp(18px, 3vw, 28px);
       background: #171421;
+    }
+
+    .result .raster-bg {
+      object-position: 58% center;
+      filter: brightness(0.74) saturate(0.92);
     }
 
     .result::after {
@@ -2150,8 +2137,8 @@
       inset: 0;
       z-index: 1;
       background:
-        linear-gradient(90deg, transparent 0%, rgba(13, 10, 20, 0.28) 45%, rgba(13, 10, 20, 0.78) 100%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.22));
+        linear-gradient(90deg, rgba(13, 10, 20, 0.92) 0%, rgba(13, 10, 20, 0.88) 45%, rgba(13, 10, 20, 0.58) 62%, rgba(13, 10, 20, 0.86) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.34));
       pointer-events: none;
     }
 
@@ -2201,13 +2188,13 @@
 
     .result-copy {
       display: grid;
-      gap: 14px;
+      gap: 10px;
     }
 
     .result-copy h2 {
       margin: 0;
       color: #ffffff;
-      font-size: clamp(2.6rem, 6.5vw, 5.4rem);
+      font-size: clamp(2.4rem, 5.8vw, 4.7rem);
       line-height: 0.98;
       font-weight: 1000;
       text-shadow: 0 5px 18px rgba(0, 0, 0, 0.42);
@@ -2216,7 +2203,7 @@
     .praise {
       margin: 0;
       color: #ffe8ba;
-      font-size: clamp(1.14rem, 2.4vw, 1.45rem);
+      font-size: clamp(1.06rem, 2vw, 1.32rem);
       font-weight: 950;
       line-height: 1.35;
       text-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
@@ -2225,8 +2212,8 @@
     .result-measure {
       position: relative;
       display: grid;
-      gap: 10px;
-      padding: 14px;
+      gap: 8px;
+      padding: 10px;
       overflow: hidden;
       border: 1px solid rgba(96, 215, 255, 0.32);
       border-radius: var(--radius);
@@ -2266,13 +2253,13 @@
 
     .measure-top strong {
       color: #b8ffe9;
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-size: clamp(1.22rem, 2.5vw, 1.78rem);
       line-height: 1;
     }
 
     .measure-tube {
       position: relative;
-      height: 26px;
+      height: 20px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 999px;
@@ -2321,19 +2308,19 @@
     }
 
     .result-planet-track .planet-chip {
-      min-height: 40px;
-      font-size: 0.94rem;
+      min-height: 32px;
+      font-size: 0.82rem;
     }
 
     .result-stats {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
     }
 
     .result-stat {
-      min-height: 94px;
-      padding: 12px;
+      min-height: 72px;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: rgba(255, 255, 255, 0.08);
@@ -2350,9 +2337,13 @@
       display: block;
       margin-top: 6px;
       color: #ffffff;
-      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-size: clamp(1.28rem, 2.6vw, 1.86rem);
       font-weight: 1000;
       line-height: 1;
+    }
+
+    .result-stat[hidden] {
+      display: none;
     }
 
     .result-actions {
@@ -2644,7 +2635,7 @@
         grid-template-columns: 1fr;
       }
 
-      .result-mathmon-card {
+      .result-box-showcase {
         grid-template-columns: 1fr;
       }
     }
@@ -2715,7 +2706,7 @@
         <div class="hero-copy">
           <h1 class="visually-hidden" id="coverTitle">매스몬 0 공장</h1>
           <img class="hero-title-art" src="title-logo-generated.webp" alt="" aria-hidden="true">
-          <p>끝의 0을 잠깐 떼고, 나중에 다시 붙여요.</p>
+          <p>끝의 0을 잠깐 떼고 나중에 다시 붙여요.</p>
           <button class="primary-button" id="startButton" type="button">시작</button>
         </div>
         <div class="cover-visual" aria-hidden="true">
@@ -2785,7 +2776,8 @@
               <strong id="factoryInput">30 × 40</strong>
             </div>
             <div class="conveyor-lane">
-              <img class="conveyor-art" src="assets/toybox/toy-conveyor-stage.webp" alt="" aria-hidden="true">
+              <img class="conveyor-art" src="assets/toybox/toy-conveyor-quiet-stage.webp" alt="" aria-hidden="true">
+              <img class="inspection-gate" src="assets/toybox/box-inspection-gate.webp" alt="" aria-hidden="true">
               <div class="zero-flow-layer" id="zeroFlowLayer" aria-hidden="true"></div>
               <div class="toybox-flow-layer" id="toyboxFlowLayer" aria-hidden="true"></div>
               <div class="belt-part is-current" id="corePart">0 뗀 곱 ?</div>
@@ -2796,28 +2788,26 @@
             </div>
             <div class="factory-rule" id="factoryRule">끝의 0은 잠깐 떼고 계산해요.</div>
           </div>
-          <div class="fuel-panel">
+          <div class="shipment-goal" aria-label="상자 진행">
+            <span id="shipmentGoalText">맞히면 상자가 멀리 가요</span>
+            <strong id="boxGoalText">상자 0/10</strong>
+            <div class="shipment-slots" id="shipmentSlots"></div>
+          </div>
+          <div class="fuel-panel" aria-hidden="true">
             <div class="fuel-readout">
-              <span>공장 힘</span>
-              <strong id="fuelPercentText">모으는 중</strong>
+              <span>상자</span>
+              <strong id="fuelPercentText">이동 중</strong>
             </div>
             <div class="fuel-meter" aria-hidden="true">
               <span class="fuel-meter-fill" id="fuelMeterFill"></span>
             </div>
-            <div class="shipment-rack" aria-label="상자 칸">
-              <div class="shipment-rack-title">
-                <span>상자 칸</span>
-                <strong>문제마다 1칸</strong>
-              </div>
-              <div class="shipment-slots" id="shipmentSlots"></div>
-            </div>
             <p class="fuel-note" id="fuelNote">10문제를 풀면 상자가 어디까지 가는지 봐요.</p>
             <div class="planet-panel">
               <div class="planet-title">
-                <span>상자가 갈 곳</span>
+                <span>상자 길</span>
                 <strong id="destinationText">끝나면 확인</strong>
               </div>
-              <div class="planet-track" id="planetTrack" aria-label="상자가 갈 곳"></div>
+              <div class="planet-track" id="planetTrack" aria-label="상자가 갈 길"></div>
             </div>
           </div>
         </aside>
@@ -2881,42 +2871,36 @@
           <div class="launch-pad"></div>
         </div>
         <div class="result-copy">
-          <h2 id="resultTitle">공장 힘 확인</h2>
+          <h2 id="resultTitle">상자 확인</h2>
           <p class="praise" id="praiseText">0을 잘 붙여 상자를 보냈어요.</p>
-          <div class="result-measure" id="resultMeasure" aria-label="공장 힘 결과">
+          <div class="result-measure" id="resultMeasure" aria-label="상자 결과">
             <div class="measure-top">
-              <span id="measureStatus">공장 힘 확인 중</span>
-              <strong id="measurePercent">힘 0</strong>
+              <span id="measureStatus">상자 이동 중</span>
+              <strong id="measurePercent">출발</strong>
             </div>
             <div class="measure-tube" aria-hidden="true">
               <span class="measure-fill" id="measureFill"></span>
               <span class="measure-scan"></span>
             </div>
-            <div class="result-planet-track" id="resultPlanetTrack" aria-label="상자가 간 곳"></div>
+            <div class="result-planet-track" id="resultPlanetTrack" aria-label="상자가 간 길"></div>
           </div>
           <div class="result-stats">
-            <div class="result-stat">
-              <span>공장 힘</span>
-              <strong id="finalEnergyText">0</strong>
-            </div>
             <div class="result-stat">
               <span>맞힌 문제</span>
               <strong id="finalCorrectText">0/10</strong>
             </div>
-            <div class="result-stat">
-              <span>간 곳</span>
-              <strong id="finalDestinationText">우리 반</strong>
-            </div>
           </div>
-          <div class="result-mathmon-card">
-            <img id="resultMathmonImage" src="assets/mathmon/zero-factory-animal-pack/mathmon-zfa-01-hamzzimon.webp" alt="">
-            <div class="result-mathmon-copy">
-              <span>이번 카드</span>
-              <strong id="resultMathmonName">햄찌몬</strong>
-              <p id="resultMathmonCopy">모은 힘에 맞춰 매스몬 카드를 만나요.</p>
-              <div class="mathmon-dex-strip" id="mathmonDexStrip" aria-label="매스몬 카드 단계"></div>
+          <div class="result-box-showcase">
+            <img class="result-box-image" id="resultBoxImage" src="assets/toybox/box-tier-01-paper.webp" alt="">
+            <div class="result-box-copy">
+              <span>오늘 만든 상자</span>
+              <strong id="resultBoxName">종이 상자</strong>
+              <p id="resultBoxCopy">0을 붙여 완성한 상자예요.</p>
+              <div class="result-companion">
+                <img id="resultMathmonImage" src="assets/mathmon/zero-factory-animal-pack/mathmon-zfa-04-nyangnyangmon.webp" alt="">
+                <strong id="resultMathmonName">냥냥몬</strong>
+              </div>
             </div>
-            <a class="download-button is-disabled" id="downloadCardLink" href="#" download="mathmon-zero-factory-card.png" aria-disabled="true">준비 중</a>
           </div>
           <div class="result-actions">
             <button class="primary-button" id="restartButton" type="button">다시하기</button>
@@ -2931,7 +2915,7 @@
     const TOTAL_QUESTIONS = 10;
     const MAX_FUEL = 100;
     const DESTINATIONS = [
-      { id: "class", short: "반", name: "우리 반", min: 1, max: 15, image: "result-class-generated.webp" },
+      { id: "class", short: "반", name: "우리 반", min: 0, max: 15, image: "result-class-generated.webp" },
       { id: "school", short: "학", name: "학교", min: 16, max: 30, image: "result-school-generated.webp" },
       { id: "town", short: "동", name: "동네", min: 31, max: 45, image: "result-town-generated.webp" },
       { id: "city", short: "시", name: "도시", min: 46, max: 62, image: "result-city-generated.webp" },
@@ -2948,22 +2932,19 @@
       secret: true
     };
     const ALL_DESTINATIONS = [...DESTINATIONS, SECRET_DESTINATION];
-    const MATHMONS = [
-      { name: "햄찌몬", threshold: 0, minCorrect: 0, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-01-hamzzimon.webp", fileName: "hamzzimon.png", copy: "작은 0을 들고 상자를 처음 보내요!" },
-      { name: "토토몬", threshold: 10, minCorrect: 2, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-02-totomon.webp", fileName: "totomon.png", copy: "긴 귀로 붙일 0의 개수를 놓치지 않아요!" },
-      { name: "수달몬", threshold: 20, minCorrect: 4, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-03-sudalmon.webp", fileName: "sudalmon.png", copy: "완성한 수를 주머니에 쏙 담아요!" },
-      { name: "냥냥몬", threshold: 30, minCorrect: 5, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-04-nyangnyangmon.webp", fileName: "nyangnyangmon.png", copy: "붙일 0을 콕 집어 주는 매스몬이에요!" },
-      { name: "다람몬", threshold: 40, minCorrect: 6, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-05-darammon.webp", fileName: "darammon.png", copy: "0을 차곡차곡 모아 공장 힘을 올려요!" },
-      { name: "펭귄몬", threshold: 52, minCorrect: 7, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-06-penguinmon.webp", fileName: "penguinmon.png", copy: "0을 조심히 옮겨 답을 지켜요!" },
-      { name: "꼬부몬", threshold: 64, minCorrect: 8, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-07-kkobumon.webp", fileName: "kkobumon.png", copy: "천천히, 정확하게 붙일 0을 살펴요!" },
-      { name: "판다몬", threshold: 76, minCorrect: 8, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-08-pandamon.webp", fileName: "pandamon.png", copy: "큰 답에도 0 도장을 힘 있게 찍어 줘요!" },
-      { name: "부엉몬", threshold: 88, minCorrect: 9, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-09-bueongmon.webp", fileName: "bueongmon.png", copy: "끝의 0이 몇 개인지 꼼꼼히 살펴요!" },
-      { name: "별사슴몬", threshold: 98, minCorrect: 10, asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-10-byeolsaseummon.webp", fileName: "byeolsaseummon.png", copy: "별빛 0을 건네며 상자를 멀리 보내요!" }
-    ];
-    const SHIPMENT_BOX_REWARD = {
-      name: "상자",
-      asset: "assets/toybox/toybox-closed-shipping-box.webp"
+    const RESULT_COMPANION = {
+      name: "냥냥몬",
+      asset: "assets/mathmon/zero-factory-animal-pack/mathmon-zfa-04-nyangnyangmon.webp"
     };
+    const BOX_TIERS = [
+      { id: "paper", name: "종이 상자", threshold: 0, minCorrect: 0, asset: "assets/toybox/box-tier-01-paper.webp", copy: "오늘 만든 첫 상자예요." },
+      { id: "yellow", name: "노란 상자", threshold: 10, minCorrect: 2, asset: "assets/toybox/box-tier-02-yellow.webp", copy: "상자가 노랗게 빛났어요." },
+      { id: "strong", name: "튼튼 상자", threshold: 25, minCorrect: 4, asset: "assets/toybox/box-tier-03-strong.webp", copy: "멀리 가도 끄떡없는 상자예요." },
+      { id: "silver", name: "은빛 상자", threshold: 42, minCorrect: 6, asset: "assets/toybox/box-tier-04-silver.webp", copy: "은빛 포장이 반짝였어요." },
+      { id: "gold", name: "금빛 상자", threshold: 62, minCorrect: 7, asset: "assets/toybox/box-tier-05-gold.webp", copy: "금빛 상자가 됐어요." },
+      { id: "crown", name: "왕관 상자", threshold: 82, minCorrect: 9, asset: "assets/toybox/box-tier-06-crown.webp", copy: "왕관이 붙은 멋진 상자예요." },
+      { id: "rainbow", name: "무지개 상자", threshold: 100, minCorrect: 0, asset: "assets/toybox/box-tier-07-rainbow.webp", copy: "우주 길이 열렸어요." }
+    ];
     const QA_EVENT_ID = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname)
       ? new URLSearchParams(window.location.search).get("qaEvent")
       : "";
@@ -3002,8 +2983,7 @@
       lastFuelEvent: null,
       instantLaunch: false,
       soundsOn: true,
-      audio: null,
-      downloadCardUrl: ""
+      audio: null
     };
 
     const el = {
@@ -3020,6 +3000,8 @@
       fuelPercentText: document.getElementById("fuelPercentText"),
       fuelMeterFill: document.getElementById("fuelMeterFill"),
       fuelNote: document.getElementById("fuelNote"),
+      shipmentGoalText: document.getElementById("shipmentGoalText"),
+      boxGoalText: document.getElementById("boxGoalText"),
       shipmentSlots: document.getElementById("shipmentSlots"),
       destinationText: document.getElementById("destinationText"),
       planetTrack: document.getElementById("planetTrack"),
@@ -3056,14 +3038,12 @@
       measureFill: document.getElementById("measureFill"),
       resultPlanetTrack: document.getElementById("resultPlanetTrack"),
       praiseText: document.getElementById("praiseText"),
-      finalEnergyText: document.getElementById("finalEnergyText"),
       finalCorrectText: document.getElementById("finalCorrectText"),
-      finalDestinationText: document.getElementById("finalDestinationText"),
+      resultBoxImage: document.getElementById("resultBoxImage"),
+      resultBoxName: document.getElementById("resultBoxName"),
+      resultBoxCopy: document.getElementById("resultBoxCopy"),
       resultMathmonImage: document.getElementById("resultMathmonImage"),
       resultMathmonName: document.getElementById("resultMathmonName"),
-      resultMathmonCopy: document.getElementById("resultMathmonCopy"),
-      mathmonDexStrip: document.getElementById("mathmonDexStrip"),
-      downloadCardLink: document.getElementById("downloadCardLink"),
       restartButton: document.getElementById("restartButton")
     };
 
@@ -3169,7 +3149,8 @@
 
     function renderStatus() {
       el.progressText.textContent = `문제 ${Math.min(state.index + 1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
-      el.energyText.textContent = state.fuelPercent > 0 ? "상자 준비" : "시작 전";
+      const finishedBoxes = state.shipments.filter(Boolean).length;
+      el.energyText.textContent = `상자 ${finishedBoxes}/${TOTAL_QUESTIONS}`;
       el.chainText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 확인" : "끝나면 확인";
       const charge = getFuelPercent() / MAX_FUEL;
       const fuelPercent = getFuelPercent();
@@ -3178,10 +3159,14 @@
       el.rocketMini.style.setProperty("--fuel-height", `${Math.round(charge * 100)}%`);
       el.rocketZone.classList.toggle("is-rainbow", state.rainbowFuel);
       el.rocketMini.classList.toggle("is-rainbow", state.rainbowFuel);
-      el.fuelPercentText.textContent = state.rainbowFuel ? "무지개 상자" : "모으는 중";
+      el.fuelPercentText.textContent = state.rainbowFuel ? "무지개 상자" : "상자 이동";
       el.fuelMeterFill.style.setProperty("--fuel-width", `${fuelPercent}%`);
       el.destinationText.textContent = state.index + 1 >= TOTAL_QUESTIONS && state.screen === "play" ? "곧 확인" : "끝나면 확인";
       el.fuelNote.textContent = "10문제를 풀면 상자가 어디까지 가는지 봐요.";
+      el.shipmentGoalText.textContent = finishedBoxes >= TOTAL_QUESTIONS
+        ? "상자 보내기 끝"
+        : "맞히면 상자가 한 칸 가요";
+      el.boxGoalText.textContent = `상자 ${finishedBoxes}/${TOTAL_QUESTIONS}`;
       renderShipmentSlots();
       renderPlanetTrack(el.planetTrack, { targetIndex: -1, reachedIndex: -1 });
     }
@@ -3195,9 +3180,6 @@
         return { ...SECRET_DESTINATION, index: DESTINATIONS.length, started: true };
       }
       const fuel = getFuelPercent(fuelPercent);
-      if (fuel <= 0) {
-        return null;
-      }
       const index = DESTINATIONS.findIndex((destination) => fuel >= destination.min && fuel <= destination.max);
       const destination = DESTINATIONS[Math.max(index, 0)];
       return { ...destination, index: DESTINATIONS.indexOf(destination), started: true };
@@ -3305,8 +3287,8 @@
           optionType: "zeros",
           formula: `${problem.core.toLocaleString("ko-KR")} 뒤에 0 ?`,
           correct: problem.zeros,
-          prompt: "두 수 끝의 0을 세어 골라요",
-          meaning: "처음 두 수의 맨 끝 0만 세어요.",
+          prompt: "끝의 0이 몇 개인지 골라요",
+          meaning: "문제에 있는 두 수의 끝 0만 세어요.",
           hint: `맨 끝 0은 모두 ${problem.zeros}개예요.`,
           explain: problem.zeros === 0
             ? `0은 붙이지 않아요. 답은 ${problem.answer.toLocaleString("ko-KR")}!`
@@ -3451,76 +3433,44 @@
 
     function animateZeroDelivery(count) {
       el.zeroFlowLayer.innerHTML = "";
-      if (!count || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return Promise.resolve();
+      return Promise.resolve();
+    }
+
+    function getBoxTierForProduction() {
+      if (state.rainbowFuel) {
+        return BOX_TIERS[BOX_TIERS.length - 1];
       }
-
-      const layerRect = el.zeroFlowLayer.getBoundingClientRect();
-      const startRect = el.zeroStickerRow.getBoundingClientRect();
-      const endRect = el.finalPart.getBoundingClientRect();
-      const tokenSize = Math.min(64, Math.max(44, layerRect.width * 0.054));
-      const startY = startRect.top - layerRect.top + startRect.height * 0.5 - tokenSize * 0.5;
-      const endY = endRect.top - layerRect.top + endRect.height * 0.5 - tokenSize * 0.5;
-      const midY = Math.min(startY, endY) - 18;
-      const animations = [];
-
-      for (let index = 0; index < count; index += 1) {
-        const token = document.createElement("img");
-        const spread = (index - (count - 1) / 2) * 24;
-        const startX = startRect.left - layerRect.left + startRect.width * 0.5 - tokenSize * 0.5 + spread;
-        const endX = endRect.left - layerRect.left + endRect.width * 0.5 - tokenSize * 0.5 + spread * 0.35;
-        const midX = startX + (endX - startX) * 0.55;
-        token.className = "zero-travel-token";
-        token.src = "zero-token-generated.webp";
-        token.alt = "";
-        token.setAttribute("aria-hidden", "true");
-        token.style.width = `${tokenSize}px`;
-        token.style.height = `${tokenSize}px`;
-        el.zeroFlowLayer.appendChild(token);
-
-        if (!token.animate) {
-          token.remove();
-          continue;
+      const value = getFuelPercent();
+      let selected = BOX_TIERS[0];
+      BOX_TIERS.forEach((tier) => {
+        if (tier.id !== "rainbow" && value >= tier.threshold && state.correct >= tier.minCorrect) {
+          selected = tier;
         }
-
-        const animation = token.animate([
-          { transform: `translate(${startX}px, ${startY}px) scale(0.72) rotate(-8deg)`, opacity: 0 },
-          { offset: 0.12, transform: `translate(${startX + 16}px, ${startY - 8}px) scale(0.96) rotate(0deg)`, opacity: 1 },
-          { offset: 0.68, transform: `translate(${midX}px, ${midY}px) scale(1.08) rotate(10deg)`, opacity: 1 },
-          { transform: `translate(${endX}px, ${endY}px) scale(0.78) rotate(0deg)`, opacity: 1 }
-        ], {
-          duration: 760,
-          delay: index * 170,
-          easing: "cubic-bezier(.18,.78,.22,1)",
-          fill: "forwards"
-        });
-        animations.push(animation.finished.then(() => token.remove()));
-      }
-
-      return Promise.all(animations);
+      });
+      return selected;
     }
 
     function getToyboxForProduction() {
-      return SHIPMENT_BOX_REWARD;
+      return getBoxTierForProduction();
     }
 
     function getToyRewardLabel(event) {
       if (event.rainbow) {
-        return "무지개 상자!";
+        return "무지개 상자";
       }
       if (event.launches) {
-        return "문이 열렸어요!";
+        return "문이 열림";
       }
-      if (event.emptiesTank) {
-        return "컨베이어 멈춤";
+      if (event.pauses) {
+        return "잠깐 멈춤";
       }
       if (event.id === "megaFuel") {
-        return "상자 3개 출발!";
+        return "빠른 벨트";
       }
       if (event.id === "smallExplosion" || event.id === "leak" || event.amount < 0) {
-        return "상자 고치기";
+        return "고쳐서 보냄";
       }
-      return "상자 출발!";
+      return "상자 출발";
     }
 
     function getToyEventOverlay(event) {
@@ -3535,13 +3485,16 @@
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         return Promise.resolve();
       }
+      el.rocketZone.classList.add("is-shipping");
+      el.rocketZone.classList.add("is-inspecting");
       const toybox = getToyboxForProduction();
       const overlayAsset = getToyEventOverlay(event);
-      const copies = event?.id === "megaFuel" ? 3 : 1;
+      const copies = event?.id === "megaFuel" ? 2 : 1;
       const layerRect = el.toyboxFlowLayer.getBoundingClientRect();
       const boxSize = Math.min(126, Math.max(88, layerRect.width * 0.095));
       const startX = -boxSize * 1.25;
       const endX = layerRect.width - boxSize * 0.64;
+      const gateX = layerRect.width * 0.74 - boxSize * 0.5;
       const baseY = layerRect.height * 0.54 - boxSize * 0.5;
       const animations = [];
 
@@ -3572,23 +3525,25 @@
 
         const delay = index * 135;
         const drift = index * 28;
-        const keyframes = event?.emptiesTank
+        const keyframes = event?.pauses
           ? [
               { transform: `translate(${startX - drift}px, 0) scale(0.92)`, opacity: 0 },
-              { offset: 0.18, transform: `translate(${layerRect.width * 0.26 - drift}px, 0) scale(1)`, opacity: 1 },
-              { offset: 0.68, transform: `translate(${layerRect.width * 0.5 - drift}px, 0) scale(1) rotate(0deg)`, opacity: 1 },
-              { offset: 0.78, transform: `translate(${layerRect.width * 0.5 - drift}px, 0) scale(1) rotate(-4deg)`, opacity: 1 },
-              { offset: 0.88, transform: `translate(${layerRect.width * 0.5 - drift}px, 0) scale(1) rotate(4deg)`, opacity: 1 },
-              { transform: `translate(${layerRect.width * 0.5 - drift}px, 0) scale(0.96) rotate(0deg)`, opacity: 0.9 }
+              { offset: 0.18, transform: `translate(${layerRect.width * 0.24 - drift}px, 0) scale(1)`, opacity: 1 },
+              { offset: 0.46, transform: `translate(${gateX - drift}px, 0) scale(1.02) rotate(0deg)`, opacity: 1 },
+              { offset: 0.64, transform: `translate(${gateX - drift}px, 0) scale(1.02) rotate(-2deg)`, opacity: 1 },
+              { offset: 0.78, transform: `translate(${gateX - drift}px, 0) scale(1.02) rotate(2deg)`, opacity: 1 },
+              { transform: `translate(${gateX - drift}px, 0) scale(0.96) rotate(0deg)`, opacity: 0.9 }
             ]
           : [
               { transform: `translate(${startX - drift}px, 0) scale(0.92)`, opacity: 0 },
               { offset: 0.16, transform: `translate(${layerRect.width * 0.18 - drift}px, 0) scale(1)`, opacity: 1 },
-              { offset: 0.78, transform: `translate(${layerRect.width * 0.72 - drift}px, 0) scale(1.02)`, opacity: 1 },
+              { offset: 0.46, transform: `translate(${gateX - drift}px, 0) scale(1.04)`, opacity: 1 },
+              { offset: 0.64, transform: `translate(${gateX - drift}px, 0) scale(1.04)`, opacity: 1 },
+              { offset: 0.82, transform: `translate(${layerRect.width * 0.84 - drift}px, 0) scale(1.02)`, opacity: 1 },
               { transform: `translate(${endX - drift}px, 0) scale(0.98)`, opacity: 0 }
             ];
         const animation = box.animate(keyframes, {
-          duration: event?.emptiesTank ? 930 : 980,
+          duration: event?.pauses ? 1450 : 1520,
           delay,
           easing: "cubic-bezier(.18,.78,.22,1)",
           fill: "forwards"
@@ -3598,6 +3553,9 @@
 
       return Promise.all(animations).then(() => {
         el.toyboxFlowLayer.innerHTML = "";
+      }).finally(() => {
+        el.rocketZone.classList.remove("is-shipping");
+        el.rocketZone.classList.remove("is-inspecting");
       });
     }
 
@@ -3632,8 +3590,8 @@
         return {
           id: "normal",
           amount,
-          title: "상자 출발!",
-          message: "상자 출발!"
+          title: "상자 출발",
+          message: "상자 출발"
         };
       }
       if (roll < 78) {
@@ -3641,8 +3599,8 @@
         return {
           id: "smallExplosion",
           amount,
-          title: "상자 고치기",
-          message: "상자 고치기"
+          title: "고쳐서 보냄",
+          message: "고쳐서 보냄"
         };
       }
       if (roll < 88) {
@@ -3650,16 +3608,16 @@
         return {
           id: "megaFuel",
           amount,
-          title: "상자 3개 출발!",
-          message: "상자 3개 출발!"
+          title: "빠른 벨트",
+          message: "빠른 벨트"
         };
       }
       if (roll < 93) {
         return {
           id: "instantLaunch",
           amount: 10,
-          title: "문이 열렸어요!",
-          message: "문이 열렸어요!",
+          title: "문이 열림",
+          message: "문이 열림",
           launches: true
         };
       }
@@ -3667,16 +3625,16 @@
         return {
           id: "emptyTank",
           amount: 0,
-          title: "컨베이어 멈춤",
-          message: "컨베이어 멈춤",
-          emptiesTank: true
+          title: "잠깐 멈춤",
+          message: "잠깐 멈춤",
+          pauses: true
         };
       }
       return {
         id: "rainbowFuel",
         amount: 20,
-        title: "무지개 상자!",
-        message: "무지개 상자!",
+        title: "무지개 상자",
+        message: "무지개 상자",
         rainbow: true
       };
     }
@@ -3686,40 +3644,40 @@
         normal: {
           id: "normal",
           amount: 12,
-          title: "상자 출발!",
-          message: "상자 출발!"
+          title: "상자 출발",
+          message: "상자 출발"
         },
         megaFuel: {
           id: "megaFuel",
           amount: 32,
-          title: "상자 3개 출발!",
-          message: "상자 3개 출발!"
+          title: "빠른 벨트",
+          message: "빠른 벨트"
         },
         leak: {
           id: "leak",
           amount: -12,
-          title: "상자 고치기",
-          message: "상자 고치기"
+          title: "고쳐서 보냄",
+          message: "고쳐서 보냄"
         },
         instantLaunch: {
           id: "instantLaunch",
           amount: 10,
-          title: "문이 열렸어요!",
-          message: "문이 열렸어요!",
+          title: "문이 열림",
+          message: "문이 열림",
           launches: true
         },
         emptyTank: {
           id: "emptyTank",
           amount: 0,
-          title: "컨베이어 멈춤",
-          message: "컨베이어 멈춤",
-          emptiesTank: true
+          title: "잠깐 멈춤",
+          message: "잠깐 멈춤",
+          pauses: true
         },
         rainbowFuel: {
           id: "rainbowFuel",
           amount: 20,
-          title: "무지개 상자!",
-          message: "무지개 상자!",
+          title: "무지개 상자",
+          message: "무지개 상자",
           rainbow: true
         }
       };
@@ -3739,8 +3697,8 @@
       return {
         id: "leak",
         amount,
-        title: "상자 고치기",
-        message: "상자 고치기"
+        title: "고쳐서 보냄",
+        message: "고쳐서 보냄"
       };
     }
 
@@ -3828,31 +3786,28 @@
       const destination = getDestination();
       const launched = Boolean(destination);
       const fuelPercent = getFuelPercent();
-      const measureLabel = state.rainbowFuel ? "무지개" : `힘 ${fuelPercent}`;
-      const summaryProductionLabel = state.rainbowFuel ? "무지개" : `${fuelPercent}`;
+      const boxTier = getBoxTierForProduction();
       el.resultRaster.src = launched ? destination.image : "result-retry-generated.webp";
       el.resultScreen.classList.add("is-measuring");
       el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowFuel);
-      document.getElementById("resultTitle").textContent = "공장 힘 확인 중";
-      el.finalEnergyText.textContent = "확인 중";
+      document.getElementById("resultTitle").textContent = "상자 확인 중";
       el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
-      el.finalDestinationText.textContent = "확인 중";
-      el.praiseText.textContent = "상자가 어디까지 갔는지 보고 있어요.";
-      el.measureStatus.textContent = "공장 힘 확인 중";
-      el.measurePercent.textContent = "힘 0";
+      el.praiseText.textContent = "잠깐만 기다려요.";
+      el.measureStatus.textContent = "상자가 간 길";
+      el.measurePercent.textContent = "확인";
       el.measureFill.style.setProperty("--measure-width", "0%");
       renderPlanetTrack(el.resultPlanetTrack, { targetIndex: -1, reachedIndex: -1 });
-      setResultMathmon(getMathmonForProduction());
+      setResultBox(boxTier);
+      setResultCompanion(getResultCompanion());
       el.restartButton.hidden = true;
       el.restartButton.disabled = true;
       el.restartButton.textContent = launched ? "한 번 더" : "다시하기";
       playSound("scan");
       showScreen("result");
       window.setTimeout(() => {
-        el.measureStatus.textContent = "상자가 간 곳 확인 중";
-        el.measurePercent.textContent = measureLabel;
+        el.measureStatus.textContent = "상자가 간 길";
+        el.measurePercent.textContent = "이동 중";
         el.measureFill.style.setProperty("--measure-width", `${fuelPercent}%`);
-        el.finalEnergyText.textContent = summaryProductionLabel;
         renderPlanetTrack(el.resultPlanetTrack, {
           targetIndex: launched ? destination.index : -1,
           reachedIndex: launched ? destination.index : -1
@@ -3861,10 +3816,11 @@
       }, 120);
       window.setTimeout(() => {
         el.resultScreen.classList.remove("is-measuring");
-        document.getElementById("resultTitle").textContent = launched ? `${destination.name}까지 갔어요!` : "다시 보내 봐요";
-        el.measureStatus.textContent = launched ? "상자가 간 곳" : "다음 목표";
-        el.finalDestinationText.textContent = launched ? destination.name : "다시 도전";
-        el.praiseText.textContent = launched ? getPraise(destination) : getRetryMessage();
+        document.getElementById("resultTitle").textContent = `${boxTier.name} 완성!`;
+        el.measureStatus.textContent = launched ? "상자가 간 길" : "다음 목표";
+        el.measurePercent.textContent = launched ? "도착" : "다음";
+        el.praiseText.textContent = getPraise(destination, boxTier);
+        setResultBox(boxTier);
         el.restartButton.hidden = false;
         el.restartButton.disabled = false;
         playSound("finish");
@@ -3875,17 +3831,18 @@
       return Boolean(getDestination());
     }
 
-    function getPraise(destination) {
-      if (destination.secret) {
-        return "무지개 상자가 반짝였어요!";
+    function getPraise(destination, boxTier = getBoxTierForProduction()) {
+      return getJourneyLine(destination, boxTier);
+    }
+
+    function getJourneyLine(destination, boxTier = getBoxTierForProduction()) {
+      if (!destination) {
+        return "다음엔 더 멀리 보내 봐요.";
       }
-      if (destination.index >= 5) {
-        return "0을 끝까지 잘 살폈어요.";
+      if (boxTier.id === "rainbow" || destination.secret) {
+        return "우주 길이 열렸어요.";
       }
-      if (destination.index >= 3) {
-        return "0 없는 곱셈과 붙일 0을 잘 골랐어요.";
-      }
-      return "다음엔 상자를 더 멀리 보내 봐요.";
+      return `${destination.name}까지 갔어요.`;
     }
 
     function getRetryMessage() {
@@ -3894,189 +3851,26 @@
         return `거의 다 왔어요. ${next.name}까지 가려면 0 개수를 한 번만 더 살펴요.`;
       }
       if (state.correct >= 3) {
-        return `공장 힘이 조금 모자라요. 다시 하면 ${next.name}까지 갈 수 있어요.`;
+        return `조금만 더 가면 ${next.name}까지 갈 수 있어요.`;
       }
       return "괜찮아요. 0 없는 곱셈을 먼저 보고, 0을 다시 붙이면 돼요.";
     }
 
-    function getMathmonForProduction() {
-      const production = state.rainbowFuel ? MAX_FUEL : getFuelPercent();
-      let selected = MATHMONS[0];
-      MATHMONS.forEach((mathmon) => {
-        if (production >= mathmon.threshold && state.correct >= mathmon.minCorrect) {
-          selected = mathmon;
-        }
-      });
-      return selected;
+    function getResultCompanion() {
+      return RESULT_COMPANION;
     }
 
-    function setDownloadPending() {
-      if (state.downloadCardUrl) {
-        URL.revokeObjectURL(state.downloadCardUrl);
-        state.downloadCardUrl = "";
-      }
-      el.downloadCardLink.href = "#";
-      el.downloadCardLink.textContent = "준비 중";
-      el.downloadCardLink.classList.add("is-disabled");
-      el.downloadCardLink.setAttribute("aria-disabled", "true");
+    function setResultBox(boxTier) {
+      el.resultBoxImage.src = boxTier.asset;
+      el.resultBoxImage.alt = boxTier.name;
+      el.resultBoxName.textContent = boxTier.name;
+      el.resultBoxCopy.textContent = boxTier.copy;
     }
 
-    function setResultMathmon(mathmon) {
+    function setResultCompanion(mathmon) {
       el.resultMathmonImage.src = mathmon.asset;
       el.resultMathmonImage.alt = mathmon.name;
       el.resultMathmonName.textContent = mathmon.name;
-      el.resultMathmonCopy.textContent = mathmon.copy;
-      renderMathmonDexStrip(mathmon);
-      setDownloadPending();
-      prepareMathmonDownload(mathmon);
-    }
-
-    function renderMathmonDexStrip(selectedMathmon) {
-      const production = state.rainbowFuel ? MAX_FUEL : getFuelPercent();
-      const selectedIndex = MATHMONS.indexOf(selectedMathmon);
-      el.mathmonDexStrip.innerHTML = "";
-      MATHMONS.forEach((mathmon, index) => {
-        const dot = document.createElement("span");
-        dot.className = "mathmon-dex-dot";
-        dot.title = mathmon.name;
-        if (production >= mathmon.threshold && state.correct >= mathmon.minCorrect) {
-          dot.classList.add("is-earned");
-        }
-        if (index === selectedIndex) {
-          dot.classList.add("is-current");
-        }
-        el.mathmonDexStrip.appendChild(dot);
-      });
-    }
-
-    function loadImage(src) {
-      return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.onload = () => resolve(image);
-        image.onerror = reject;
-        image.src = src;
-      });
-    }
-
-    function canvasBlob(canvas) {
-      return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
-    }
-
-    function drawFittedText(context, text, x, y, maxWidth, startSize, minSize, color) {
-      let size = startSize;
-      do {
-        context.font = `900 ${size}px system-ui, sans-serif`;
-        size -= 2;
-      } while (size > minSize && context.measureText(text).width > maxWidth);
-      context.fillStyle = color;
-      context.fillText(text, x, y);
-    }
-
-    function roundRect(context, x, y, width, height, radius) {
-      const r = Math.min(radius, width / 2, height / 2);
-      context.beginPath();
-      context.moveTo(x + r, y);
-      context.lineTo(x + width - r, y);
-      context.quadraticCurveTo(x + width, y, x + width, y + r);
-      context.lineTo(x + width, y + height - r);
-      context.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
-      context.lineTo(x + r, y + height);
-      context.quadraticCurveTo(x, y + height, x, y + height - r);
-      context.lineTo(x, y + r);
-      context.quadraticCurveTo(x, y, x + r, y);
-      context.closePath();
-    }
-
-    async function buildMathmonDownloadCard(mathmon) {
-      const canvas = document.createElement("canvas");
-      canvas.width = 1200;
-      canvas.height = 800;
-      const context = canvas.getContext("2d");
-      const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient.addColorStop(0, "#10283a");
-      gradient.addColorStop(0.48, "#17423a");
-      gradient.addColorStop(1, "#3a2a12");
-      context.fillStyle = gradient;
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      context.strokeStyle = "rgba(255, 255, 255, 0.08)";
-      context.lineWidth = 2;
-      for (let x = 0; x <= canvas.width; x += 72) {
-        context.beginPath();
-        context.moveTo(x, 0);
-        context.lineTo(x, canvas.height);
-        context.stroke();
-      }
-      for (let y = 0; y <= canvas.height; y += 72) {
-        context.beginPath();
-        context.moveTo(0, y);
-        context.lineTo(canvas.width, y);
-        context.stroke();
-      }
-
-      context.fillStyle = "rgba(14, 12, 22, 0.44)";
-      context.fillRect(74, 74, 1052, 652);
-      context.strokeStyle = "rgba(255, 200, 87, 0.72)";
-      context.lineWidth = 6;
-      roundRect(context, 74, 74, 1052, 652, 34);
-      context.stroke();
-
-      context.fillStyle = "rgba(255, 255, 255, 0.1)";
-      context.fillRect(80, 536, 1040, 54);
-      context.fillStyle = "rgba(255, 200, 87, 0.32)";
-      for (let x = 96; x < 1120; x += 86) {
-        context.fillRect(x, 552, 54, 18);
-      }
-
-      context.fillStyle = "#ffe27a";
-      context.font = "900 48px system-ui, sans-serif";
-      context.fillText("매스몬 0 공장 카드", 112, 134);
-      context.fillStyle = "#ffffff";
-      context.font = "900 84px system-ui, sans-serif";
-      context.fillText(mathmon.name, 112, 230);
-      context.fillStyle = "#d8fff2";
-      context.font = "800 36px system-ui, sans-serif";
-      context.fillText(`공장 힘 ${state.rainbowFuel ? "무지개" : getFuelPercent()} · 정답 ${state.correct}/${TOTAL_QUESTIONS}`, 112, 292);
-      context.fillStyle = "rgba(255, 200, 87, 0.16)";
-      roundRect(context, 112, 332, 420, 138, 18);
-      context.fill();
-      context.fillStyle = "#ffe7a4";
-      context.font = "900 32px system-ui, sans-serif";
-      context.fillText("이번 매스몬", 148, 386);
-      context.fillStyle = "#ffffff";
-      context.font = "900 44px system-ui, sans-serif";
-      context.fillText(mathmon.name, 148, 438);
-      const image = await loadImage(mathmon.asset);
-      context.drawImage(image, 692, 136, 370, 370);
-      context.fillStyle = "rgba(255, 255, 255, 0.12)";
-      roundRect(context, 112, 622, 976, 72, 18);
-      context.fill();
-      drawFittedText(context, mathmon.copy, 144, 670, 912, 36, 24, "#ffffff");
-      return canvasBlob(canvas);
-    }
-
-    async function prepareMathmonDownload(mathmon) {
-      try {
-        const blob = await buildMathmonDownloadCard(mathmon);
-        if (!blob) {
-          throw new Error("card blob missing");
-        }
-        if (state.downloadCardUrl) {
-          URL.revokeObjectURL(state.downloadCardUrl);
-        }
-        state.downloadCardUrl = URL.createObjectURL(blob);
-        el.downloadCardLink.href = state.downloadCardUrl;
-        el.downloadCardLink.download = `${mathmon.fileName.replace(".png", "")}-zero-factory-card.png`;
-        el.downloadCardLink.textContent = "카드 받기";
-        el.downloadCardLink.classList.remove("is-disabled");
-        el.downloadCardLink.setAttribute("aria-disabled", "false");
-      } catch (error) {
-        el.downloadCardLink.href = mathmon.asset;
-        el.downloadCardLink.download = mathmon.fileName;
-        el.downloadCardLink.textContent = "이미지 받기";
-        el.downloadCardLink.classList.remove("is-disabled");
-        el.downloadCardLink.setAttribute("aria-disabled", "false");
-      }
     }
 
     function setButtonsDisabled(disabled) {

@@ -18,7 +18,7 @@
       "webp": "webp/toybox-zfa-01-hamzzimon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-02-totomon",
@@ -29,7 +29,7 @@
       "webp": "webp/toybox-zfa-02-totomon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-03-sudalmon",
@@ -40,7 +40,7 @@
       "webp": "webp/toybox-zfa-03-sudalmon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-04-nyangnyangmon",
@@ -51,7 +51,7 @@
       "webp": "webp/toybox-zfa-04-nyangnyangmon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-05-darammon",
@@ -62,7 +62,7 @@
       "webp": "webp/toybox-zfa-05-darammon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-06-penguinmon",
@@ -73,7 +73,7 @@
       "webp": "webp/toybox-zfa-06-penguinmon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-07-kkobumon",
@@ -84,7 +84,7 @@
       "webp": "webp/toybox-zfa-07-kkobumon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-08-pandamon",
@@ -95,7 +95,7 @@
       "webp": "webp/toybox-zfa-08-pandamon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-09-bueongmon",
@@ -106,7 +106,7 @@
       "webp": "webp/toybox-zfa-09-bueongmon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-zfa-10-byeolsaseummon",
@@ -117,7 +117,7 @@
       "webp": "webp/toybox-zfa-10-byeolsaseummon.webp",
       "runtimeWebp": null,
       "status": "retired-character-reveal",
-      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon should be revealed only at the result card."
+      "notes": "Preserved source experiment only. Do not use for intermediate rewards because Mathmon is only a small companion on the final result screen."
     },
     {
       "id": "toybox-closed-shipping-box",
@@ -134,16 +134,27 @@
       "kind": "reward-stage",
       "png": "png/toy-conveyor-stage.png",
       "webp": "webp/toy-conveyor-stage.webp",
-      "runtimeWebp": "assets/toybox/toy-conveyor-stage.webp",
-      "status": "active-runtime"
+      "runtimeWebp": null,
+      "status": "legacy-busy-stage",
+      "notes": "Preserved earlier stage. Runtime now uses toy-conveyor-quiet-stage for the play screen."
     },
     {
       "id": "toy-conveyor-belt-loop",
       "kind": "reward-stage",
       "png": "png/toy-conveyor-belt-loop.png",
       "webp": "webp/toy-conveyor-belt-loop.webp",
-      "runtimeWebp": "assets/toybox/toy-conveyor-belt-loop.webp",
-      "status": "active-runtime"
+      "runtimeWebp": null,
+      "status": "legacy-busy-stage",
+      "notes": "Preserved earlier loop. Runtime no longer repeats a CSS belt layer on the play screen."
+    },
+    {
+      "id": "toy-conveyor-quiet-stage",
+      "kind": "play-conveyor-stage",
+      "png": "png/toy-conveyor-quiet-stage.png",
+      "webp": "webp/toy-conveyor-quiet-stage.webp",
+      "runtimeWebp": "assets/toybox/toy-conveyor-quiet-stage.webp",
+      "status": "active-runtime",
+      "notes": "Generated quiet conveyor art for the play screen. No text, labels, arrows, progress slots, or characters."
     },
     {
       "id": "toy-reward-showcase-frame",
@@ -186,13 +197,100 @@
       "webp": "webp/toy-rainbow-foil.webp",
       "runtimeWebp": "assets/toybox/toy-rainbow-foil.webp",
       "status": "active-runtime"
+    },
+    {
+      "id": "box-tier-01-paper",
+      "kind": "box-tier",
+      "koName": "종이 상자",
+      "png": "png/box-tier-01-paper.png",
+      "webp": "webp/box-tier-01-paper.webp",
+      "runtimeWebp": "assets/toybox/box-tier-01-paper.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-tier-02-yellow",
+      "kind": "box-tier",
+      "koName": "노란 상자",
+      "png": "png/box-tier-02-yellow.png",
+      "webp": "webp/box-tier-02-yellow.webp",
+      "runtimeWebp": "assets/toybox/box-tier-02-yellow.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-tier-03-strong",
+      "kind": "box-tier",
+      "koName": "튼튼 상자",
+      "png": "png/box-tier-03-strong.png",
+      "webp": "webp/box-tier-03-strong.webp",
+      "runtimeWebp": "assets/toybox/box-tier-03-strong.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-tier-04-silver",
+      "kind": "box-tier",
+      "koName": "은빛 상자",
+      "png": "png/box-tier-04-silver.png",
+      "webp": "webp/box-tier-04-silver.webp",
+      "runtimeWebp": "assets/toybox/box-tier-04-silver.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-tier-05-gold",
+      "kind": "box-tier",
+      "koName": "금빛 상자",
+      "png": "png/box-tier-05-gold.png",
+      "webp": "webp/box-tier-05-gold.webp",
+      "runtimeWebp": "assets/toybox/box-tier-05-gold.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-tier-06-crown",
+      "kind": "box-tier",
+      "koName": "왕관 상자",
+      "png": "png/box-tier-06-crown.png",
+      "webp": "webp/box-tier-06-crown.webp",
+      "runtimeWebp": "assets/toybox/box-tier-06-crown.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-tier-07-rainbow",
+      "kind": "box-tier",
+      "koName": "무지개 상자",
+      "png": "png/box-tier-07-rainbow.png",
+      "webp": "webp/box-tier-07-rainbow.webp",
+      "runtimeWebp": "assets/toybox/box-tier-07-rainbow.webp",
+      "status": "active-runtime",
+      "notes": "Final reward box tier asset. No Mathmon character is visible."
+    },
+    {
+      "id": "box-inspection-gate",
+      "kind": "inspection-gate",
+      "koName": "검사문",
+      "png": "png/box-inspection-gate.png",
+      "webp": "webp/box-inspection-gate.webp",
+      "runtimeWebp": "assets/toybox/box-inspection-gate.webp",
+      "status": "active-runtime",
+      "notes": "Inspection gate shown during reward suspense."
     }
   ],
-  "runtimePolicy": "Intermediate rewards must show only a closed shipping/toy box. Mathmon characters are revealed only on the final result card.",
+  "runtimePolicy": "Runtime rewards center on one closed/tiered box. Mathmon may appear only as a small companion sticker, not as a collection or deck.",
   "activeRuntimeIds": [
+    "box-tier-01-paper",
+    "box-tier-02-yellow",
+    "box-tier-03-strong",
+    "box-tier-04-silver",
+    "box-tier-05-gold",
+    "box-tier-06-crown",
+    "box-tier-07-rainbow",
+    "box-inspection-gate",
     "toybox-closed-shipping-box",
-    "toy-conveyor-stage",
-    "toy-conveyor-belt-loop",
+    "toy-conveyor-quiet-stage",
     "toy-defect-sticker",
     "toy-stop-sign",
     "toy-rainbow-foil"
