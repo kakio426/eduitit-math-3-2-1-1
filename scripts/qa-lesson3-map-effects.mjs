@@ -333,9 +333,11 @@ async function runModalDelayCheck(viewport) {
   const beforeModal = await readMarkerSnapshot();
   assert(beforeModal.classes.includes("is-map-hop"), `${viewport.name}/modal-delay: marker effect did not start before modal: ${JSON.stringify(beforeModal)}`);
   assert(!beforeModal.rewardVisible, `${viewport.name}/modal-delay: reward modal opened before map effect finished`);
+  assertSnapshotSafe(beforeModal, viewport.name, "modal-delay-before");
   await waitUntil("document.getElementById('rewardPop').classList.contains('is-visible')", `${viewport.name}/modal-delay: reward modal did not open after marker effect`, 1400);
   const afterModal = await readMarkerSnapshot();
   assert(afterModal.rewardVisible, `${viewport.name}/modal-delay: reward modal not visible after delay`);
+  assertSnapshotSafe(afterModal, viewport.name, "modal-delay-after");
   return { beforeModal, afterModal };
 }
 
