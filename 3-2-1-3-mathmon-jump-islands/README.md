@@ -48,11 +48,10 @@
 - 설명: `tutorial-generated.webp`
 - 문제 지도: `play-map-strip-source.png`, `play-map-strip-generated.webp`, `mathmon-zfa-04-nyangnyangmon.webp` 현재 위치 마커
 - 바람: `reward-tailwind-generated.webp`, `reward-headwind-generated.webp`, `reward-pause-generated.webp`, `reward-gust-generated.webp`, `reward-rainbow-generated.webp`, `reward-shaky-generated.webp`
-- 결과: `result-start-integrated-generated.webp`, `result-sand-integrated-generated.webp`, `result-forest-integrated-generated.webp`, `result-cloud-integrated-generated.webp`, `result-starlight-integrated-generated.webp`, `result-rainbow-integrated-generated.webp`
-- 결과 제목 스탬프: `result-stamp-arrival-generated.webp`, `result-stamp-ready-generated.webp`
+- 결과: `result-final-start-generated.webp`, `result-final-sand-generated.webp`, `result-final-forest-generated.webp`, `result-final-cloud-generated.webp`, `result-final-starlight-generated.webp`, `result-final-rainbow-generated.webp`
 - 매스몬: `_shared/mathmon/zero-factory-animal-pack/`의 `mathmon-zfa-04-nyangnyangmon.webp`
 
-생성 이미지에는 문제, 선택지, 점수, 버튼, 섬 이름, 보상 문구를 넣지 않았습니다. 보상 모달 이미지는 매스몬을 장면 안에 포함하지만, 결과 라벨과 `다음`/`보기` 버튼은 HTML입니다.
+문제와 보상 모달의 생성 이미지에는 문제, 선택지, 점수, 버튼, 섬 이름을 넣지 않았습니다. 결과 화면은 `result-final-*` 완성형 래스터 위에 맞힌 문제 수만 HTML로 얹고, 다시하기는 투명 HTML 버튼으로 클릭 영역을 제공합니다.
 
 ## QA
 

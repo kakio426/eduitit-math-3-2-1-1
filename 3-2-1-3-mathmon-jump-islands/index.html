@@ -327,9 +327,7 @@
     }
 
     .result::after {
-      background:
-        linear-gradient(90deg, rgba(12, 10, 20, 0.02) 0%, rgba(12, 10, 20, 0.08) 52%, rgba(12, 10, 20, 0.34) 100%),
-        linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.12));
+      display: none;
     }
 
     .cover-scene {
@@ -1212,6 +1210,48 @@
       gap: 10px;
     }
 
+    .result-count-overlay {
+      position: absolute;
+      z-index: 3;
+      left: 62.7%;
+      top: 65.7%;
+      width: 21.6%;
+      height: 7.8%;
+      display: grid;
+      place-items: center;
+      color: #2a1b08;
+      font-size: clamp(2rem, 3.8vw, 3.25rem);
+      font-weight: 1000;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+      text-shadow: 0 2px 0 rgba(255, 255, 255, 0.55);
+      pointer-events: none;
+    }
+
+    .result-restart-hitbox {
+      position: absolute;
+      z-index: 4;
+      left: 66.1%;
+      top: 78.2%;
+      width: 17.7%;
+      height: 9.8%;
+      border: 0;
+      border-radius: 18px;
+      background: transparent;
+      color: transparent;
+      box-shadow: none;
+    }
+
+    .result-restart-hitbox:focus-visible {
+      outline: 5px solid rgba(255, 255, 255, 0.9);
+      outline-offset: 4px;
+    }
+
+    .result-restart-hitbox:active {
+      transform: translateY(1px);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *,
       *::before,
@@ -1539,42 +1579,26 @@
       </section>
 
       <section class="screen result" id="resultScreen" data-result-reveal-phase="idle" aria-labelledby="resultTitle">
-        <img class="raster-bg" id="resultRaster" src="result-start-integrated-generated.webp" alt="">
+        <img class="raster-bg" id="resultRaster" src="result-final-start-generated.webp" alt="">
         <div class="top-row">
           <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
           <span class="unit-badge">3학년 2학기 1단원 3차시</span>
         </div>
-        <div class="result-layout">
-          <div class="result-art-spacer" aria-hidden="true"></div>
-          <div class="result-copy">
-            <div class="result-reveal-status" id="resultRevealStatus" data-result-reveal-phase="idle" aria-live="polite">
-              <span class="result-reveal-kicker" id="resultRevealKicker">점프 길을 살펴봐요.</span>
-              <div class="result-reveal-track" aria-hidden="true">
-                <span class="result-reveal-step" data-phase="jump-path-scan"></span>
-                <span class="result-reveal-step" data-phase="landing-marker"></span>
-                <span class="result-reveal-step" data-phase="island-reveal"></span>
-              </div>
-            </div>
-            <h2 class="result-title" id="resultTitle" data-result-title-mode="text">
-              <span class="result-title-text" id="resultTitleText">모래섬 도착!</span>
-              <span class="result-island-name" id="resultIslandNameText">모래섬</span>
-              <span class="visually-hidden" id="resultTitleSuffixText"> 도착!</span>
-              <img class="result-title-art" id="resultTitleArt" src="result-stamp-arrival-generated.webp" alt="" aria-hidden="true">
-            </h2>
-            <p id="praiseText">0을 가리고 곱한 뒤 0을 잘 붙였어요.</p>
-            <div class="result-stats">
-              <div class="result-stat">
-                <span>맞힌 문제</span>
-                <strong id="finalCorrectText">0/10</strong>
-              </div>
-              <div class="result-stat">
-                <span>도착한 곳</span>
-                <strong id="finalIslandText">모래섬</strong>
-              </div>
-            </div>
-            <div class="result-actions">
-              <button class="primary-button" id="restartButton" type="button">다시하기</button>
-            </div>
+        <h2 class="visually-hidden" id="resultTitle">모래섬 도착!</h2>
+        <p class="visually-hidden" id="praiseText">0을 가리고 곱한 뒤 0을 잘 붙였어요.</p>
+        <span class="visually-hidden" id="finalIslandText">모래섬</span>
+        <div class="result-count-overlay" id="resultCountOverlay" aria-live="polite" aria-label="맞힌 문제 0/10">
+          <strong id="finalCorrectText">0/10</strong>
+        </div>
+        <button class="result-restart-hitbox" id="restartButton" type="button" aria-label="다시하기">
+          <span class="visually-hidden">다시하기</span>
+        </button>
+        <div class="result-reveal-status visually-hidden" id="resultRevealStatus" data-result-reveal-phase="idle" aria-live="polite">
+          <span class="result-reveal-kicker" id="resultRevealKicker">점프 길을 살펴봐요.</span>
+          <div class="result-reveal-track" aria-hidden="true">
+            <span class="result-reveal-step" data-phase="jump-path-scan"></span>
+            <span class="result-reveal-step" data-phase="landing-marker"></span>
+            <span class="result-reveal-step" data-phase="island-reveal"></span>
           </div>
         </div>
       </section>
@@ -1587,12 +1611,12 @@
     const BASE_FIRST_TRY_DISTANCE = 5;
     const STEP_CONFIRM_DELAY = 920;
     const ISLANDS = [
-      { id: "start", name: "출발섬", minDistance: 0, minCorrect: 0, image: "result-start-integrated-generated.webp" },
-      { id: "sand", name: "모래섬", minDistance: 1, minCorrect: 0, image: "result-sand-integrated-generated.webp" },
-      { id: "forest", name: "숲섬", minDistance: 34, minCorrect: 5, image: "result-forest-integrated-generated.webp" },
-      { id: "cloud", name: "구름섬", minDistance: 60, minCorrect: 8, image: "result-cloud-integrated-generated.webp" },
-      { id: "starlight", name: "별빛섬", minDistance: 86, minCorrect: 9, image: "result-starlight-integrated-generated.webp" },
-      { id: "rainbow", name: "무지개섬", minDistance: 96, minCorrect: 10, image: "result-rainbow-integrated-generated.webp", requiresRainbow: true }
+      { id: "start", name: "출발섬", minDistance: 0, minCorrect: 0, image: "result-final-start-generated.webp" },
+      { id: "sand", name: "모래섬", minDistance: 1, minCorrect: 0, image: "result-final-sand-generated.webp" },
+      { id: "forest", name: "숲섬", minDistance: 34, minCorrect: 5, image: "result-final-forest-generated.webp" },
+      { id: "cloud", name: "구름섬", minDistance: 60, minCorrect: 8, image: "result-final-cloud-generated.webp" },
+      { id: "starlight", name: "별빛섬", minDistance: 86, minCorrect: 9, image: "result-final-starlight-generated.webp" },
+      { id: "rainbow", name: "무지개섬", minDistance: 96, minCorrect: 10, image: "result-final-rainbow-generated.webp", requiresRainbow: true }
     ];
     const REWARD_EVENTS = [
       { id: "tailwind", label: "살랑 바람", weight: 6400, min: 2, max: 5 },
@@ -1955,10 +1979,7 @@
       resultRevealSteps: [...document.querySelectorAll(".result-reveal-step")],
       resultRaster: document.getElementById("resultRaster"),
       resultTitle: document.getElementById("resultTitle"),
-      resultTitleText: document.getElementById("resultTitleText"),
-      resultIslandNameText: document.getElementById("resultIslandNameText"),
-      resultTitleSuffixText: document.getElementById("resultTitleSuffixText"),
-      resultTitleArt: document.getElementById("resultTitleArt"),
+      resultCountOverlay: document.getElementById("resultCountOverlay"),
       praiseText: document.getElementById("praiseText"),
       finalCorrectText: document.getElementById("finalCorrectText"),
       finalIslandText: document.getElementById("finalIslandText"),
@@ -2455,20 +2476,12 @@
     };
 
     const setResultTitleText = (text) => {
-      el.resultTitle.dataset.resultTitleMode = "text";
-      el.resultTitleText.textContent = text;
-      el.resultIslandNameText.textContent = "";
-      el.resultTitleSuffixText.textContent = "";
+      el.resultTitle.textContent = text;
     };
 
     const setResultTitleForIsland = (island) => {
       const isStart = island.id === "start";
-      el.resultTitle.dataset.resultTitleMode = "art";
-      el.resultTitleText.textContent = isStart ? `${island.name}에서 다시 준비!` : `${island.name} 도착!`;
-      el.resultIslandNameText.textContent = isStart ? `${island.name}에서` : island.name;
-      el.resultTitleSuffixText.textContent = isStart ? " 다시 준비!" : " 도착!";
-      el.resultTitleArt.src = isStart ? "result-stamp-ready-generated.webp" : "result-stamp-arrival-generated.webp";
-      el.resultTitleArt.dataset.titleArt = isStart ? "ready" : "arrival";
+      el.resultTitle.textContent = isStart ? `${island.name}에서 다시 준비!` : `${island.name} 도착!`;
     };
 
     const showQaResultIsland = (id) => {
@@ -2503,7 +2516,8 @@
       el.resultRaster.src = island.image;
       setResultTitleText(RESULT_REVEAL_LABELS["jump-path-scan"]);
       el.praiseText.textContent = "어디까지 갔는지 볼까요?";
-      el.finalCorrectText.textContent = "보고 있어요";
+      el.finalCorrectText.textContent = "";
+      el.resultCountOverlay.setAttribute("aria-label", "맞힌 문제를 보고 있어요");
       el.finalIslandText.textContent = "찾고 있어요";
       el.restartButton.disabled = true;
       setResultRevealPhase("jump-path-scan");
@@ -2558,6 +2572,7 @@
       setResultTitleForIsland(island);
       el.praiseText.textContent = getResultPraise(island);
       el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.resultCountOverlay.setAttribute("aria-label", `맞힌 문제 ${state.correct}/${TOTAL_QUESTIONS}`);
       el.finalIslandText.textContent = island.name;
       el.restartButton.disabled = false;
       setResultRevealPhase("complete");

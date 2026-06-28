@@ -86,26 +86,24 @@
 - `reward-gust-source.png`, `reward-gust-generated.webp`
 - `reward-rainbow-source.png`, `reward-rainbow-generated.webp`
 - `reward-shaky-source.png`, `reward-shaky-generated.webp`
-- `result-start-integrated-generated.webp`
-- `result-sand-integrated-generated.webp`
-- `result-forest-integrated-generated.webp`
-- `result-cloud-integrated-generated.webp`
-- `result-starlight-integrated-generated.webp`
-- `result-rainbow-integrated-generated.webp`
-- `result-stamp-arrival-generated.webp`
-- `result-stamp-ready-generated.webp`
+- `result-final-start-source.png`, `result-final-start-generated.webp`
+- `result-final-sand-source.png`, `result-final-sand-generated.webp`
+- `result-final-forest-source.png`, `result-final-forest-generated.webp`
+- `result-final-cloud-source.png`, `result-final-cloud-generated.webp`
+- `result-final-starlight-source.png`, `result-final-starlight-generated.webp`
+- `result-final-rainbow-source.png`, `result-final-rainbow-generated.webp`
 - `mathmon-zfa-04-nyangnyangmon.webp`
 
-첫 화면, 결과 화면, 상단 지도 현재 위치 마커의 동행 매스몬은 `_shared/mathmon/zero-factory-animal-pack/`의 냥냥몬 WebP를 runtime에 씁니다. 보상 모달은 예외적으로 매스몬이 장면 안에 함께 생성된 결과별 이미지를 사용합니다. 보상 모달 안에는 기존 매스몬 WebP를 별도 `<img>`로 붙이지 않습니다.
+첫 화면과 상단 지도 현재 위치 마커의 동행 매스몬은 `_shared/mathmon/zero-factory-animal-pack/`의 냥냥몬 WebP를 runtime에 씁니다. 보상 모달과 `result-final-*` 결과 화면은 매스몬이 장면 안에 함께 생성된 이미지를 사용합니다. 보상 모달과 결과 장면 안에는 기존 매스몬 WebP를 별도 `<img>`로 붙이지 않습니다.
 
-문제 지도는 built-in `image_gen`으로 새로 생성한 원본을 `play-map-strip-source.png`로 보관하고, runtime에서는 `1280x190` WebP인 `play-map-strip-generated.webp`를 사용합니다. `출발섬`, `모래섬`, `숲섬`, `구름섬`, `별빛섬`, `무지개섬` 6개가 한 화면 안에 항상 들어옵니다. 현재 위치는 `현재` 텍스트 배지 대신 `mathmon-zfa-04-nyangnyangmon.webp` 마커가 섬 중앙 위로 이동하는 방식입니다. 새 이미지 자산은 만들지 않았고, 기존 냥냥몬 WebP를 그대로 사용했습니다.
+문제 지도는 built-in `image_gen`으로 새로 생성한 원본을 `play-map-strip-source.png`로 보관하고, runtime에서는 `1280x190` WebP인 `play-map-strip-generated.webp`를 사용합니다. `출발섬`, `모래섬`, `숲섬`, `구름섬`, `별빛섬`, `무지개섬` 6개가 한 화면 안에 항상 들어옵니다. 현재 위치는 `현재` 텍스트 배지 대신 `mathmon-zfa-04-nyangnyangmon.webp` 마커가 섬 중앙 위로 이동하는 방식입니다. 지도 마커 효과에는 새 이미지 자산을 만들지 않았고, 기존 냥냥몬 WebP를 그대로 사용했습니다.
 
 ## RasterStage 안전 구역
 
 - 첫 화면: 왼쪽 제목·목표·시작 버튼 영역과 오른쪽 장면 영역을 분리했습니다.
 - 문제 화면: 상단 전체 섬 지도, 가운데 큰 문제와 단일 계산판, 하단 선택지를 고정 구역으로 나눴습니다.
 - 보상 화면: 중앙 generated art 위에 보상 문구 한 개와 버튼 한 개만 둡니다. 매스몬과 바람 효과는 결과별 생성 이미지 안에 포함합니다.
-- 결과 화면: 오른쪽 요약 영역을 HTML 오버레이로 쓰고, 왼쪽 장면은 이미지가 담당합니다.
+- 결과 화면: `result-final-*` 래스터가 도착 섬과 다시하기 버튼 모양을 담당하고, 맞힌 문제 수와 실제 클릭 영역만 HTML 오버레이로 둡니다.
 - 소리 버튼과 상단 배지는 같은 기준선을 쓰고, 문제·선택지를 덮지 않습니다.
 
 ## Humanizer 학생 문구 QA
