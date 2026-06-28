@@ -1,4 +1,22 @@
-# Local agent and harness files
+# Local-only files
 AGENTS.md
 CLAUDE.md
 .claude/
+.omo/
+.tmp-qa/
+mathmon-box-run-handoff.md
+
+# Local production notes
+DESIGN.md
+LESSON_COMMONS.md
+SERIES_CONTRACT.md
+**/PLAN.md
+**/IMAGE_PLAN.md
+**/QUALITY_AUDIT.md
+**/screenshots/lockdown-qa/
+**/screenshots/product-design-audit/
+**/screenshots/**/verification-report.json
+_shared/mathmon/README.md
+_shared/mathmon/STYLE_GUIDE.md
+_shared/mathmon/*_GUIDE.md
+_shared/mathmon/*_CONTRACT.md

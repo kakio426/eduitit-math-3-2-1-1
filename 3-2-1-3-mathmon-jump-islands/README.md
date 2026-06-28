@@ -51,8 +51,8 @@
 - 결과: `result-start-generated.webp`, `result-sand-generated.webp`, `result-forest-generated.webp`, `result-cloud-generated.webp`, `result-starlight-generated.webp`, `result-rainbow-generated.webp`
 - 매스몬: `_shared/mathmon/zero-factory-animal-pack/`의 `mathmon-zfa-04-nyangnyangmon.webp`
 
-생성 이미지에는 문제, 선택지, 점수, 버튼, 섬 이름, 보상 문구를 넣지 않았습니다. 보상 모달 이미지는 매스몬을 장면 안에 포함하지만, 결과 라벨과 `다음`/`보기` 버튼은 HTML입니다. 자세한 RasterStage 안전 구역은 `IMAGE_PLAN.md`에 정리했습니다.
+생성 이미지에는 문제, 선택지, 점수, 버튼, 섬 이름, 보상 문구를 넣지 않았습니다. 보상 모달 이미지는 매스몬을 장면 안에 포함하지만, 결과 라벨과 `다음`/`보기` 버튼은 HTML입니다.
 
 ## QA
 
-새 보상 모달 이미지 6종은 `.tmp-qa/lesson3-reward-modal-integrated/reward-modal-contact.png`에서 한 번에 확인했습니다. 이후 `.tmp-qa/lesson3-phase5-full-surface/qa-report.md`로 첫 화면부터 결과 화면까지 다시 캡처해 텍스트 넘침과 요소 겹침 0건을 확인했습니다. 현재 위치 매스몬 마커는 `.tmp-qa/lesson3-map-mathmon-marker/metrics.json`에서 여섯 섬 좌표와 `현재` 글자 미노출을 확인했습니다. 대표 스크린샷은 `screenshots/`에 있습니다.
+새 보상 모달 이미지 6종, 첫 화면부터 결과 화면까지의 흐름, 현재 위치 매스몬 마커를 다시 확인했습니다. 텍스트 넘침과 요소 겹침 0건, 지도 밖 이탈 0건, 학생 화면 `현재` 글자 미노출을 확인했습니다. 대표 스크린샷은 `screenshots/`에 있습니다.

@@ -72,7 +72,7 @@
 
 ## 생성 이미지와 매스몬
 
-사용 자산은 `IMAGE_PLAN.md`의 safe zone에 맞춰 연결했습니다.
+사용 자산은 Stage 안에서 문제, 선택지, 점수, 버튼을 가리지 않도록 연결했습니다.
 
 - `cover-generated.webp`
 - `title-poster-source.png`, `title-poster-generated.png`, `title-poster-generated.webp`, `title-poster-transparent-raw.png`
@@ -106,7 +106,7 @@
 
 ## Humanizer 학생 문구 QA
 
-학생이 보는 한국어를 `/Users/yubyeongju/.agents/skills/humanizer/SKILL.md` 기준으로 확인했습니다.
+학생이 보는 한국어는 초3 학생이 소리 내어 읽어도 자연스러운지 기준으로 확인했습니다.
 
 - 어려운 말과 제작자 말은 화면에 남기지 않았습니다.
 - 첫 화면 목표: `0을 잠깐 가리고 먼저 곱한 뒤, 0을 붙여 섬을 건너요.`
@@ -119,11 +119,7 @@
 
 ## 텍스트 넘침·요소 겹침 QA
 
-실제 브라우저에서 아래 상태를 캡처했습니다. 새 보상 모달 이미지 6종은 `.tmp-qa/lesson3-reward-modal-integrated/reward-modal-contact.png`로 확인했고, 이후 `.tmp-qa/lesson3-phase5-full-surface/qa-report.md`로 전체 화면을 다시 확인했습니다. 이번 지도 마커 수정 뒤에는 `.tmp-qa/lesson3-map-mathmon-marker/metrics.json`에서 여섯 섬 모두 마커 중심 오차 1px 이내, 마커 이미지 로드 성공, 지도 밖 이탈 0건, 학생 화면 `현재` 글자 노출 0건을 확인했습니다.
-
-보상 문구 수정 뒤에는 `.tmp-qa/lesson3-wind-wording/metrics.json`으로 1280x800, 1024x768 설명 화면과 `조금 더 갔어요` 보상 모달을 다시 확인했습니다. 두 화면 크기 모두 옛 바람 이름 0건, 텍스트 넘침 0건, Stage 밖 요소 0건으로 통과했습니다.
-
-Phase 5 전체 화면 QA 중 결과 요약 숫자/섬 이름의 `line-height`가 너무 타이트해 세로 overflow로 잡힌 부분을 수정했습니다. 수정 뒤 재검증에서 첫 화면, 설명, 문제 1단계, 문제 2단계, 보상, 결과 공개 전, 결과, 오답 힌트, 태블릿 가로 문제, 세로 보호막 모두 overflow 0건으로 통과했습니다.
+실제 브라우저에서 아래 상태를 캡처했습니다. 보상 모달, 지도 마커, 보상 문구, 결과 요약 숫자와 섬 이름을 다시 확인했고, 첫 화면, 설명, 문제 1단계, 문제 2단계, 보상, 결과 공개 전, 결과, 오답 힌트, 태블릿 가로 문제, 세로 보호막 모두 텍스트 넘침과 요소 겹침 0건으로 통과했습니다.
 
 | 파일 | 화면 | 상태 |
 | --- | --- | --- |
@@ -136,25 +132,10 @@ Phase 5 전체 화면 QA 중 결과 요약 숫자/섬 이름의 `line-height`가
 | `screenshots/result-measurement.png` | 1280x800 | 도착 전 살펴보기 |
 | `screenshots/result.png` | 1280x800 | 결과 |
 | `screenshots/tablet-landscape-play.png` | 1024x768 | 태블릿 가로 문제 |
-| `.tmp-qa/lesson3-wind-wording/tablet-landscape-tutorial.png` | 1024x768 | 태블릿 가로 설명 |
-| `.tmp-qa/lesson3-wind-wording/tablet-landscape-reward.png` | 1024x768 | 태블릿 가로 보상 |
 | `screenshots/portrait-guard.png` | 390x844 | 세로 화면 보호막 |
 
 ## 검증 증거
 
-- 등록 확인: `.omo/evidence/mathmon-lesson3-island-jump/task-8-registration.txt`
-- 금지 문구 확인: `.omo/evidence/mathmon-lesson3-island-jump/task-8-forbidden-copy.txt`
-- 스크린샷 목록: `.omo/evidence/mathmon-lesson3-island-jump/task-8-screenshots.txt`
-- 문서 커버리지: `.omo/evidence/mathmon-lesson3-island-jump/task-8-doc-coverage.txt`
-- 반복 문구 guard: `.omo/evidence/mathmon-lesson3-island-jump/task-8-repeat-copy-guard.txt`
-- Stage 검사: `.omo/evidence/mathmon-lesson3-island-jump/task-8-stage.txt`
-- diff 공백 검사: `.omo/evidence/mathmon-lesson3-island-jump/task-8-diff-check.txt`
-- Humanizer QA: `.omo/evidence/mathmon-lesson3-island-jump/task-8-humanizer.md`
-- 브라우저 QA: `.omo/evidence/mathmon-lesson3-island-jump/task-8-browser-qa.md`
-- 현재 위치 매스몬 마커 QA: `.tmp-qa/lesson3-map-mathmon-marker/metrics.json`, `.tmp-qa/lesson3-map-mathmon-marker/map-marker-sand.png`, `.tmp-qa/lesson3-map-mathmon-marker/map-marker-rainbow.png`
 - 단계 정답 확인 QA: `node scripts/qa-lesson3-step-feedback.mjs`(1280×800), `LESSON3_QA_NAME=tablet-landscape LESSON3_QA_WIDTH=1024 LESSON3_QA_HEIGHT=768 LESSON3_QA_PORT=9252 node scripts/qa-lesson3-step-feedback.mjs`
-- Phase 1 브라우저 QA: `.tmp-qa/lesson3-phase1/metrics.json`, `.tmp-qa/lesson3-phase1/reward-metrics.json`
-- 새 Phase 2 브라우저 QA: `.tmp-qa/lesson3-phase2-raster-map/qa-report.json`
-- 보상 모달 통합 이미지 contact sheet: `.tmp-qa/lesson3-reward-modal-integrated/reward-modal-contact.png`
-- 보상 모달 통합 이미지 브라우저 QA: `.tmp-qa/lesson3-reward-modal-integrated/qa-report.json`
-- Phase 5 전체 화면 QA: `.tmp-qa/lesson3-phase5-full-surface/qa-report.md`, `.tmp-qa/lesson3-phase5-full-surface/qa-report.json`
+- Stage 검사: `node scripts/check-stage-ratio.mjs`
+- 브라우저 QA: 첫 화면, 설명, 문제 1단계, 문제 2단계, 보상, 결과 공개 전, 결과, 오답 힌트, 태블릿 가로 문제, 세로 보호막 캡처 확인
