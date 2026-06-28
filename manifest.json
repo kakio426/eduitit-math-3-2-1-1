@@ -34,14 +34,14 @@
     },
     {
       "id": "3-2-1-3",
-      "folder": "3-2-1-3-mathmon-zero-factory",
-      "title": "매스몬 0 공장",
+      "folder": "3-2-1-3-mathmon-jump-islands",
+      "title": "매스몬 10배 점프섬",
       "grade": 3,
       "semester": 2,
       "unit": 1,
       "lesson": 3,
       "subject": "수학",
-      "learningGoal": "(몇십)×(몇십), (몇십몇)×(몇십)에서 핵심 곱을 계산하고 끝의 0을 알맞게 붙인다.",
+      "learningGoal": "(몇십)×(몇십), (몇십몇)×(몇십)을 0을 가리고 먼저 곱한 뒤 0을 붙이는 모습으로 계산한다.",
       "entryFile": "index.html"
     },
     {

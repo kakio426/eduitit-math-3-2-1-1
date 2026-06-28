@@ -20,7 +20,7 @@ ai mart/
   _archive/
   3-2-1-1-mathmon-box-run/
   3-2-1-2-mathmon-rocket-charge/
-  3-2-1-3-mathmon-zero-factory/
+  3-2-1-3-mathmon-jump-islands/
   3-2-1-4-mathmon-fusion/
   3-2-2-1-mathmon-divide-farm/
   3-2-2-2-mathmon-elevator/
@@ -63,7 +63,7 @@ ai mart/
 | --- | --- | --- | --- |
 | 3학년 2학기 1단원 1차시 | `3-2-1-1-mathmon-box-run` | 매스몬 상자런 | 받아올림 없는 세 자리 수 × 한 자리 수 |
 | 3학년 2학기 1단원 2차시 | `3-2-1-2-mathmon-rocket-charge` | 매스몬 로켓발사 대작전 | 받아올림 있는 세 자리 수 × 한 자리 수 |
-| 3학년 2학기 1단원 3차시 | `3-2-1-3-mathmon-zero-factory` | 매스몬 0 공장 | (몇십)×(몇십), (몇십몇)×(몇십) |
+| 3학년 2학기 1단원 3차시 | `3-2-1-3-mathmon-jump-islands` | 매스몬 10배 점프섬 | 0을 가리고 먼저 곱한 뒤 0 붙이기 |
 | 3학년 2학기 1단원 4차시 | `3-2-1-4-mathmon-fusion` | 매스몬 로봇 합체 | (몇)×(몇십몇), (몇십몇)×(몇십몇) |
 | 3학년 2학기 2단원 1차시 | `3-2-2-1-mathmon-divide-farm` | 매스몬 나누기 농장 | 내림 없는 몇십몇 ÷ 몇 |
 | 3학년 2학기 2단원 2차시 | `3-2-2-2-mathmon-elevator` | 매스몬 엘리베이터 | 내림 있는 두 자리 수 ÷ 한 자리 수 |

@@ -1,0 +1,2356 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3학년 2학기 1단원 · 매스몬 10배 점프섬 | 에듀잇티</title>
+  <style>
+    :root {
+      --page: #111018;
+      --panel: #201a2d;
+      --panel-soft: #2b243a;
+      --ink: #fff8e8;
+      --muted: #d7cadb;
+      --line: rgba(255, 255, 255, 0.16);
+      --mint: #35d9b2;
+      --amber: #ffc857;
+      --rose: #ff5d7a;
+      --sky: #60d7ff;
+      --violet: #b88cff;
+      --deep: #0e0c16;
+      --radius: 8px;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        linear-gradient(180deg, rgba(255, 200, 87, 0.08) 0 1px, transparent 1px 80px),
+        linear-gradient(90deg, rgba(96, 215, 255, 0.07) 0 1px, transparent 1px 96px),
+        linear-gradient(135deg, #111018 0%, #1f1a2d 46%, #0e0c16 100%);
+      overflow-x: hidden;
+      word-break: keep-all;
+    }
+
+    button {
+      font: inherit;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+    }
+
+    .phone-blocker {
+      display: none;
+    }
+
+    .game {
+      --stage-padding: clamp(10px, 2vw, 24px);
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: var(--stage-padding);
+    }
+
+    .stage-shell {
+      --stage-inset: clamp(14px, 2vw, 22px);
+      --sound-button-size: clamp(30px, 3vw, 34px);
+      --sound-gap: clamp(8px, 1vw, 12px);
+      --sound-reserve: calc(var(--sound-button-size) + var(--sound-gap));
+      --top-control-pad-x: 9px;
+      --top-control-icon-gap: 7px;
+      position: relative;
+      width: min(1280px, calc((100dvh - 48px) * 1.6), 100%);
+      aspect-ratio: 16 / 10;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: auto;
+      aspect-ratio: 16 / 10;
+      display: none;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(150deg, rgba(255, 255, 255, 0.06), transparent 34%),
+        linear-gradient(180deg, #251e32, #171421);
+      box-shadow: var(--shadow);
+    }
+
+    .screen.is-active {
+      display: grid;
+    }
+
+    .top-row {
+      position: absolute;
+      top: var(--stage-inset);
+      left: var(--stage-inset);
+      right: calc(var(--stage-inset) + var(--sound-reserve));
+      z-index: 4;
+      height: var(--sound-button-size);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sound-gap);
+      pointer-events: none;
+    }
+
+    .brand-badge,
+    .unit-badge,
+    .lesson-badge,
+    .mini-badge,
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      width: fit-content;
+      max-width: max-content;
+      min-height: var(--sound-button-size);
+      padding: 0 var(--top-control-pad-x);
+      gap: var(--top-control-icon-gap);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(14, 12, 22, 0.7);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 900;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+      white-space: nowrap;
+    }
+
+    .brand-badge img {
+      width: 20px;
+      height: 20px;
+      margin-right: 0;
+      border-radius: 5px;
+    }
+
+    .unit-badge {
+      border-color: rgba(96, 215, 255, 0.5);
+      color: #c8f3ff;
+    }
+
+    .lesson-badge {
+      position: absolute;
+      left: clamp(14px, 2vw, 22px);
+      bottom: clamp(14px, 2vw, 22px);
+      z-index: 3;
+      border-color: rgba(255, 200, 87, 0.56);
+      color: #ffe0a3;
+    }
+
+    .primary-button,
+    .ghost-button,
+    .choice-button {
+      border: 0;
+      border-radius: var(--radius);
+      font-weight: 1000;
+      letter-spacing: 0;
+      line-height: 1;
+      transition: transform 0.14s ease, box-shadow 0.14s ease, filter 0.14s ease, border-color 0.14s ease;
+    }
+
+    .primary-button,
+    .ghost-button {
+      min-height: 58px;
+      padding: 0 28px;
+      font-size: 1.18rem;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.34), 0 22px 38px rgba(0, 0, 0, 0.3);
+    }
+
+    .primary-button {
+      color: #2a1700;
+      background: linear-gradient(180deg, #ffe27a, #ffb83d);
+    }
+
+    .ghost-button {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: none;
+    }
+
+    .primary-button:hover,
+    .ghost-button:hover,
+    .choice-button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .primary-button:active,
+    .ghost-button:active,
+    .choice-button:active {
+      transform: translateY(1px);
+    }
+
+    .primary-button:focus-visible,
+    .ghost-button:focus-visible,
+    .choice-button:focus-visible,
+    .sound-toggle:focus-visible {
+      outline: 4px solid rgba(255, 255, 255, 0.86);
+      outline-offset: 4px;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .sound-toggle {
+      position: absolute;
+      top: var(--stage-inset);
+      right: var(--stage-inset);
+      z-index: 60;
+      display: grid;
+      place-items: center;
+      width: var(--sound-button-size);
+      min-width: 0;
+      height: var(--sound-button-size);
+      min-height: 0;
+      padding: 0;
+      border: 1px solid rgba(255, 232, 186, 0.34);
+      border-radius: 999px;
+      color: rgba(255, 238, 198, 0.92);
+      background: rgba(14, 12, 22, 0.42);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.16);
+      font-size: 0;
+      line-height: 1;
+      backdrop-filter: blur(10px);
+    }
+
+    .sound-toggle::before,
+    .sound-toggle::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    .sound-toggle svg {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      display: block;
+      transform: translate(-50%, -50%);
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .sound-off-stroke {
+      display: none;
+    }
+
+    .stage-shell .top-row {
+      right: calc(var(--stage-inset) + var(--sound-reserve));
+    }
+
+    .stage-shell .hud {
+      padding-right: var(--sound-reserve);
+    }
+
+    .sound-toggle[aria-pressed="false"] {
+      border-color: rgba(215, 202, 219, 0.34);
+      color: var(--muted);
+      background: rgba(14, 12, 22, 0.32);
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-wave {
+      display: none;
+    }
+
+    .sound-toggle[aria-pressed="false"] .sound-off-stroke {
+      display: block;
+    }
+
+    .cover,
+    .tutorial,
+    .result {
+      align-items: center;
+      padding: 88px 64px 44px;
+      background: #171421;
+    }
+
+    .raster-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background:
+        radial-gradient(circle at 68% 34%, rgba(96, 215, 255, 0.28), transparent 0 18%, transparent 42%),
+        radial-gradient(circle at 28% 66%, rgba(255, 200, 87, 0.18), transparent 0 20%, transparent 46%),
+        linear-gradient(135deg, #17263f, #24334c 46%, #111018);
+    }
+
+    .cover::after,
+    .tutorial::after,
+    .result::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(12, 10, 20, 0.78) 0%, rgba(12, 10, 20, 0.42) 42%, transparent 74%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.18));
+      pointer-events: none;
+    }
+
+    .cover-scene {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(320px, 0.94fr) minmax(360px, 1.06fr);
+      align-items: center;
+      gap: 54px;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      justify-items: start;
+      gap: 18px;
+      transform: translateY(-28px);
+    }
+
+    .hero-title-art {
+      display: block;
+      width: min(520px, 100%);
+      height: auto;
+      min-height: 126px;
+      margin: -6px 0 -6px -8px;
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.24));
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .hero-copy p {
+      max-width: 560px;
+      margin: 0;
+      color: #ffe8ba;
+      font-size: 1.42rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .cover #startButton {
+      min-width: 190px;
+      min-height: 72px;
+      padding: 0 44px;
+      font-size: 1.42rem;
+      box-shadow: 0 16px 0 rgba(106, 70, 23, 0.34), 0 26px 42px rgba(0, 0, 0, 0.32);
+    }
+
+    .cover-visual {
+      position: relative;
+      min-height: 470px;
+      display: grid;
+      place-items: center;
+    }
+
+    .mathmon-companion {
+      display: block;
+      width: min(280px, 48%);
+      height: auto;
+      filter: drop-shadow(0 22px 26px rgba(0, 0, 0, 0.28));
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .cover-mathmon {
+      justify-self: center;
+      align-self: end;
+      transform: translateY(-18px);
+    }
+
+    .island-preview {
+      display: none;
+      width: min(500px, 100%);
+      aspect-ratio: 5 / 3;
+      align-items: end;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 18px;
+      background: rgba(14, 12, 22, 0.34);
+      box-shadow: 0 26px 54px rgba(0, 0, 0, 0.26);
+    }
+
+    .island-preview span {
+      display: block;
+      min-height: 66px;
+      border-radius: 50% 50% 40% 40%;
+      background: linear-gradient(180deg, rgba(120, 242, 200, 0.9), rgba(255, 200, 87, 0.9));
+      filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.22));
+    }
+
+    .island-preview span:nth-child(2) {
+      min-height: 92px;
+      background: linear-gradient(180deg, #8bf0ff, #35d9b2);
+    }
+
+    .island-preview span:nth-child(3) {
+      min-height: 124px;
+      background: linear-gradient(180deg, #ffe27a, #ffb83d);
+    }
+
+    .island-preview span:nth-child(4) {
+      min-height: 154px;
+      background: linear-gradient(180deg, #d8c2ff, #7fbfff);
+    }
+
+    .island-preview span:nth-child(5) {
+      min-height: 184px;
+      background: linear-gradient(180deg, #ff8ca6, #ffe27a 44%, #60d7ff);
+    }
+
+    .tutorial-layout,
+    .result-layout {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(360px, 0.72fr) minmax(360px, 1fr);
+      align-items: center;
+      gap: 52px;
+    }
+
+    .tutorial-copy,
+    .result-copy {
+      display: grid;
+      gap: 18px;
+      max-width: 720px;
+    }
+
+    .result-reveal-status {
+      display: grid;
+      gap: 10px;
+      width: min(440px, 100%);
+    }
+
+    .result-reveal-kicker {
+      color: var(--mint);
+      font-size: 1rem;
+      font-weight: 1000;
+      line-height: 1.2;
+    }
+
+    .result-reveal-track {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+
+    .result-reveal-step {
+      min-height: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      transition: opacity 0.22s ease, transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+    }
+
+    .result-reveal-step.is-active {
+      border-color: rgba(255, 200, 87, 0.78);
+      background: linear-gradient(90deg, var(--amber), var(--mint));
+      transform: translateY(-2px);
+    }
+
+    .result-reveal-step.is-done {
+      border-color: rgba(53, 217, 178, 0.7);
+      background: var(--mint);
+      opacity: 0.82;
+    }
+
+    .result[data-result-reveal-phase="complete"] .result-reveal-status {
+      display: none;
+    }
+
+    .tutorial-copy h2,
+    .result-copy h2 {
+      margin: 0;
+      color: #ffffff;
+      min-height: 1.16em;
+      font-size: 3rem;
+      line-height: 1.12;
+      font-weight: 1000;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius);
+      background: rgba(26, 21, 36, 0.68);
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 950;
+      line-height: 1.28;
+      backdrop-filter: blur(10px);
+    }
+
+    .steps b {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius);
+      color: #201000;
+      background: var(--amber);
+      font-size: 1.2rem;
+    }
+
+    .tutorial-art-spacer,
+    .result-art-spacer {
+      position: relative;
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .result-mathmon {
+      align-self: end;
+      justify-self: center;
+      width: min(260px, 54%);
+      transform: translateY(-18px);
+    }
+
+    .play {
+      grid-template-rows: auto 1fr;
+      padding: var(--stage-inset);
+    }
+
+    .hud {
+      display: grid;
+      grid-template-columns: minmax(210px, auto) 1fr auto;
+      align-items: start;
+      gap: 12px;
+      min-height: var(--sound-button-size);
+      margin-bottom: 12px;
+    }
+
+    .hud .brand-badge,
+    .hud .unit-badge,
+    .hud .status-badge {
+      position: static;
+      pointer-events: auto;
+    }
+
+    .hud-center {
+      min-width: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .play-layout {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 150px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .island-map,
+    .problem-panel {
+      min-height: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.075);
+    }
+
+    .island-map {
+      position: relative;
+      overflow: hidden;
+      background: rgba(14, 12, 22, 0.3);
+    }
+
+    .map-raster {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .map-label-layer {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+      padding: 8px 14px 10px;
+    }
+
+    .map-label-layer::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      height: 54%;
+      background: linear-gradient(180deg, transparent, rgba(14, 12, 22, 0.44));
+      pointer-events: none;
+    }
+
+    .island-chip {
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      min-width: 0;
+      min-height: 0;
+      padding: 0 2px;
+      border: 2px solid transparent;
+      border-radius: 14px;
+      color: #ffffff;
+      background: transparent;
+      text-align: center;
+      transition: opacity 0.18s ease, border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+    }
+
+    .island-name {
+      width: max-content;
+      max-width: 100%;
+      min-height: 25px;
+      display: inline-grid;
+      place-items: center;
+      padding: 3px 9px 4px;
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      border-radius: 999px;
+      background: rgba(14, 12, 22, 0.62);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+      font-size: 0.9rem;
+      font-weight: 1000;
+      line-height: 1.1;
+      overflow-wrap: keep-all;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.38);
+    }
+
+    .island-chip.is-reached {
+      background: rgba(53, 217, 178, 0.08);
+      border-color: rgba(53, 217, 178, 0.54);
+    }
+
+    .island-chip.is-current {
+      border-color: rgba(255, 200, 87, 0.86);
+      background: rgba(255, 200, 87, 0.13);
+      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.22), 0 0 24px rgba(255, 200, 87, 0.24);
+    }
+
+    .map-mathmon-marker {
+      position: absolute;
+      z-index: 3;
+      top: 14px;
+      left: 0;
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      filter: drop-shadow(0 9px 10px rgba(0, 0, 0, 0.34));
+      pointer-events: none;
+      user-select: none;
+      opacity: 0;
+      transform: translate(-50%, 0) scale(0.92);
+      transition: left 0.46s cubic-bezier(0.2, 0.9, 0.24, 1), opacity 0.18s ease, transform 0.46s cubic-bezier(0.2, 0.9, 0.24, 1);
+    }
+
+    .map-mathmon-marker.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+
+    .island-chip.is-next {
+      border-color: rgba(96, 215, 255, 0.62);
+      background: rgba(96, 215, 255, 0.09);
+    }
+
+    .problem-panel {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto auto;
+      gap: 12px;
+      padding: 16px 18px 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.065), rgba(255, 255, 255, 0.035)),
+        rgba(26, 22, 34, 0.78);
+    }
+
+    .problem-heading {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+    }
+
+    .problem-progress {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 30px;
+      padding: 0 12px;
+      border: 1px solid rgba(255, 200, 87, 0.38);
+      border-radius: 999px;
+      color: #ffeab0;
+      background: rgba(255, 200, 87, 0.12);
+      font-size: 0.86rem;
+      font-weight: 1000;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .problem-heading h2 {
+      width: 100%;
+      min-height: 64px;
+      margin: 0;
+      color: #ffffff;
+      font-size: 3.4rem;
+      line-height: 1.1;
+      font-weight: 1000;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .step-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      min-height: 0;
+    }
+
+    .jump-stage {
+      width: min(760px, 100%);
+      min-height: 0;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(14, 12, 22, 0.44);
+      display: grid;
+      grid-template-rows: auto minmax(108px, 1fr) auto;
+      place-items: center;
+      gap: 12px;
+      padding: 18px 20px;
+      text-align: center;
+    }
+
+    .jump-stage strong {
+      color: #fff0c6;
+      font-size: 1.28rem;
+      line-height: 1.25;
+    }
+
+    .jump-transform {
+      display: grid;
+      place-items: center;
+      min-width: min(420px, 100%);
+      min-height: 108px;
+      padding: 18px 20px;
+      border-radius: var(--radius);
+      color: #231400;
+      background: linear-gradient(180deg, #fff0a8, #ffc857);
+      font-size: 2.42rem;
+      font-weight: 1000;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .jump-transform.is-step-confirmed {
+      animation: step-confirm-pulse 620ms ease;
+    }
+
+    @keyframes step-confirm-pulse {
+      0% {
+        filter: brightness(1);
+        transform: scale(1);
+      }
+      42% {
+        filter: brightness(1.12);
+        transform: scale(1.035);
+      }
+      100% {
+        filter: brightness(1);
+        transform: scale(1);
+      }
+    }
+
+    .hint-line {
+      width: min(560px, 100%);
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      padding: 7px 12px;
+      border: 1px solid rgba(96, 215, 255, 0.36);
+      border-radius: 999px;
+      color: #d7f7ff;
+      background: rgba(96, 215, 255, 0.12);
+      font-size: 1rem;
+      font-weight: 950;
+      line-height: 1.2;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .hint-line[hidden] {
+      display: none;
+    }
+
+    .prompt {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 200, 87, 0.26);
+      border-radius: var(--radius);
+      background: rgba(255, 200, 87, 0.08);
+      color: #fff0c6;
+      font-size: 1.12rem;
+      font-weight: 950;
+      line-height: 1.35;
+      text-align: center;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: minmax(68px, 1fr);
+      gap: 10px;
+    }
+
+    .choice-button {
+      height: 100%;
+      min-height: 0;
+      padding: 8px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-size: 1.2rem;
+      overflow-wrap: anywhere;
+    }
+
+    .choice-button.is-correct {
+      color: #10271f;
+      border-color: rgba(53, 217, 178, 0.86);
+      background: linear-gradient(180deg, #b8ffe9, #35d9b2);
+    }
+
+    .choice-button.is-wrong {
+      color: #ffffff;
+      border-color: rgba(255, 93, 122, 0.78);
+      background: rgba(255, 93, 122, 0.32);
+    }
+
+    .reward-pop {
+      position: absolute;
+      z-index: 10;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      background: rgba(14, 12, 22, 0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .reward-pop.is-visible {
+      display: grid;
+    }
+
+    .reward-card {
+      width: min(740px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 12px;
+      background: rgba(14, 12, 22, 0.72);
+      box-shadow: 0 36px 90px rgba(0, 0, 0, 0.44);
+      text-align: center;
+    }
+
+    .reward-visual {
+      --reward-modal-image: url("reward-tailwind-generated.webp");
+      position: relative;
+      width: min(640px, 100%);
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      background:
+        linear-gradient(180deg, rgba(14, 12, 22, 0.04), rgba(14, 12, 22, 0.16)),
+        var(--reward-modal-image) center / cover no-repeat;
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+    }
+
+    .reward-pop[data-reward="tailwind"] .reward-visual {
+      --reward-modal-image: url("reward-tailwind-generated.webp");
+    }
+
+    .reward-pop[data-reward="headwind"] .reward-visual {
+      --reward-modal-image: url("reward-headwind-generated.webp");
+    }
+
+    .reward-pop[data-reward="pause"] .reward-visual {
+      --reward-modal-image: url("reward-pause-generated.webp");
+    }
+
+    .reward-pop[data-reward="gust"] .reward-visual {
+      --reward-modal-image: url("reward-gust-generated.webp");
+    }
+
+    .reward-pop[data-reward="rainbow"] .reward-visual {
+      --reward-modal-image: url("reward-rainbow-generated.webp");
+    }
+
+    .reward-pop[data-reward="shaky"] .reward-visual {
+      --reward-modal-image: url("reward-shaky-generated.webp");
+    }
+
+    .reward-label {
+      position: absolute;
+      z-index: 2;
+      top: 18px;
+      left: 50%;
+      display: inline-grid;
+      place-items: center;
+      min-width: 220px;
+      min-height: 78px;
+      padding: 8px 22px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 16px;
+      color: #241500;
+      background: linear-gradient(180deg, rgba(255, 231, 128, 0.96), rgba(255, 184, 61, 0.96));
+      font-size: 2.2rem;
+      font-weight: 1000;
+      line-height: 1.05;
+      white-space: normal;
+      box-shadow: 0 14px 0 rgba(106, 70, 23, 0.28), 0 22px 30px rgba(0, 0, 0, 0.28);
+      transform: translateX(-50%);
+    }
+
+    .result-copy p {
+      margin: 0;
+      color: #ffe8ba;
+      font-size: 1.24rem;
+      font-weight: 950;
+      line-height: 1.35;
+    }
+
+    .result-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .result-stat {
+      min-height: 94px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .result-stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 850;
+    }
+
+    .result-stat strong {
+      display: block;
+      margin-top: 6px;
+      color: #ffffff;
+      font-size: 2rem;
+      font-weight: 1000;
+      line-height: 1.16;
+      overflow-wrap: anywhere;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .cover,
+      .tutorial,
+      .result {
+        padding: 78px 28px 34px;
+      }
+
+      .cover-scene,
+      .tutorial-layout,
+      .result-layout {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .cover-visual,
+      .tutorial-art-spacer,
+      .result-art-spacer {
+        min-height: 240px;
+      }
+
+      .play-layout {
+        grid-template-rows: 128px minmax(0, 1fr);
+      }
+
+      .step-board {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 1100px) and (orientation: landscape) {
+      .game {
+        --stage-padding: 10px;
+      }
+
+      .stage-shell {
+        --stage-inset: 14px;
+      }
+
+      .tutorial {
+        padding: 64px 48px 24px;
+      }
+
+      .tutorial-copy {
+        gap: 12px;
+      }
+
+      .tutorial-copy h2 {
+        font-size: 2.42rem;
+        line-height: 1.04;
+      }
+
+      .tutorial .steps {
+        gap: 8px;
+      }
+
+      .tutorial .steps li {
+        grid-template-columns: 38px minmax(0, 1fr);
+        min-height: 58px;
+        padding: 8px 10px;
+        gap: 10px;
+        font-size: 1.04rem;
+      }
+
+      .tutorial .steps b {
+        width: 38px;
+        height: 38px;
+        font-size: 1.04rem;
+      }
+
+      .tutorial #tutorialNextButton {
+        min-height: 52px;
+        padding: 0 24px;
+        font-size: 1.05rem;
+      }
+
+      .play-layout {
+        grid-template-rows: 128px minmax(0, 1fr);
+        gap: 10px;
+      }
+
+      .hud {
+        margin-bottom: 10px;
+      }
+
+      .island-map {
+        border-radius: 10px;
+      }
+
+      .map-label-layer {
+        gap: 6px;
+        padding: 7px 10px 8px;
+      }
+
+      .island-name {
+        min-height: 22px;
+        padding: 2px 7px 3px;
+        font-size: 0.78rem;
+      }
+
+      .map-mathmon-marker {
+        top: 9px;
+        width: 48px;
+        height: 48px;
+      }
+
+      .problem-panel {
+        gap: 10px;
+        padding: 14px;
+      }
+
+      .problem-heading {
+        gap: 6px;
+      }
+
+      .problem-heading h2 {
+        min-height: 54px;
+        font-size: 2.9rem;
+      }
+
+      .step-board {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .jump-stage {
+        grid-template-rows: auto minmax(82px, 1fr) auto;
+        gap: 8px;
+        padding: 12px;
+      }
+
+      .jump-stage strong {
+        font-size: 1.08rem;
+      }
+
+      .jump-transform {
+        min-height: 82px;
+        font-size: 1.92rem;
+      }
+
+      .hint-line {
+        min-height: 30px;
+        padding: 5px 10px;
+        font-size: 0.9rem;
+      }
+
+      .prompt {
+        min-height: 38px;
+        padding: 6px 10px;
+        font-size: 1rem;
+      }
+
+      .choice-grid {
+        grid-template-rows: minmax(58px, 1fr);
+      }
+
+      .choice-button {
+        font-size: 1.05rem;
+      }
+    }
+
+    @media (max-width: 900px) and (orientation: portrait) {
+      .game,
+      .sound-toggle {
+        display: none;
+      }
+
+      .phone-blocker {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 28px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .phone-blocker div {
+        width: min(420px, 100%);
+        padding: 24px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+      }
+
+      .phone-blocker h1 {
+        margin: 0 0 10px;
+        font-size: 1.7rem;
+      }
+
+      .phone-blocker p {
+        margin: 0;
+        color: var(--muted);
+        font-weight: 850;
+        line-height: 1.45;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="phone-blocker" aria-hidden="true">
+    <div>
+      <h1>가로 화면에서 플레이해요</h1>
+      <p>태블릿이나 컴퓨터에서 10배 점프섬을 시작해요.</p>
+    </div>
+  </div>
+
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800" data-cover-standard="generated-title-overlay">
+    <div class="stage-shell" data-active-screen="cover">
+      <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+          <path class="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+          <path class="sound-wave" d="M18.5 5.8a9 9 0 0 1 0 12.4"></path>
+          <path class="sound-off-stroke" d="M4.5 4.5 19.5 19.5"></path>
+        </svg>
+      </button>
+
+      <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
+        <img class="raster-bg" src="cover-generated.webp" alt="">
+        <div class="top-row">
+          <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+          <span class="unit-badge">3학년 2학기 1단원 3차시</span>
+        </div>
+        <span class="lesson-badge">(몇십)×(몇십), (몇십몇)×(몇십)</span>
+        <div class="cover-scene">
+          <div class="hero-copy">
+            <h1 class="visually-hidden" id="coverTitle">매스몬 10배 점프섬</h1>
+            <img class="hero-title-art" src="title-poster-generated.webp" alt="" aria-hidden="true">
+            <p>0을 잠깐 가리고 먼저 곱한 뒤 0을 붙여 섬을 건너요.</p>
+            <button class="primary-button" id="startButton" type="button">시작</button>
+          </div>
+          <div class="cover-visual" aria-hidden="true">
+            <img class="mathmon-companion cover-mathmon" src="mathmon-zfa-04-nyangnyangmon.webp" alt="">
+            <div class="island-preview">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle">
+        <img class="raster-bg" src="tutorial-generated.webp" alt="">
+        <div class="top-row">
+          <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+          <span class="unit-badge">3학년 2학기 1단원 3차시</span>
+        </div>
+        <div class="tutorial-layout">
+          <div class="tutorial-copy">
+            <span class="mini-badge">어떻게 해요?</span>
+            <h2 id="tutorialTitle">두 번 고르면 점프해요.</h2>
+            <ol class="steps">
+              <li><b>1</b><span>0을 잠깐 가려요.</span></li>
+              <li><b>2</b><span>남은 곱셈을 먼저 해요.</span></li>
+              <li><b>3</b><span>가렸던 0을 붙여요.</span></li>
+              <li><b>4</b><span>바람에 따라 점프 길이 달라져요.</span></li>
+            </ol>
+            <button class="primary-button" id="tutorialNextButton" type="button">점프 시작</button>
+          </div>
+          <div class="tutorial-art-spacer" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="screen play" id="playScreen" aria-labelledby="questionText">
+        <header class="hud">
+          <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+          <div class="hud-center">
+            <span class="status-badge" id="progressText">문제 1/10</span>
+          </div>
+          <span class="unit-badge">3차시</span>
+        </header>
+        <div class="play-layout">
+          <div class="island-map" id="islandMap" data-art-slot="play-map-strip-generated" aria-label="점프섬 지도">
+            <img class="map-raster" src="play-map-strip-generated.webp" alt="">
+            <div class="map-label-layer" id="mapLabelLayer"></div>
+            <img class="map-mathmon-marker" id="mapMathmonMarker" src="mathmon-zfa-04-nyangnyangmon.webp" alt="" aria-hidden="true">
+          </div>
+          <section class="problem-panel" aria-live="polite">
+            <div class="problem-heading">
+              <span class="problem-progress" id="stepText">1단계</span>
+              <h2 id="questionText">30 × 40</h2>
+            </div>
+            <div class="step-board">
+              <div class="jump-stage">
+                <strong id="stepPrompt">0을 잠깐 가리고 곱해요.</strong>
+                <div class="jump-transform" id="jumpTransform">3 × 4 = ?</div>
+                <div class="hint-line" id="hintLine" hidden></div>
+              </div>
+            </div>
+            <div class="prompt" id="promptText">먼저 답을 골라요.</div>
+            <div class="choice-grid" id="choiceGrid"></div>
+          </section>
+        </div>
+        <div class="reward-pop" id="rewardPop" role="dialog" aria-modal="true" aria-labelledby="rewardTitle">
+          <div class="reward-card">
+            <div class="reward-visual" data-art-slot="reward-modal-generated" aria-hidden="true">
+              <div class="reward-label" id="rewardLabel">살랑 바람</div>
+            </div>
+            <h3 class="visually-hidden" id="rewardTitle">바람</h3>
+            <button class="primary-button" id="rewardNextButton" type="button">다음</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen result" id="resultScreen" data-result-reveal-phase="idle" aria-labelledby="resultTitle">
+        <img class="raster-bg" id="resultRaster" src="result-start-generated.webp" alt="">
+        <div class="top-row">
+          <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
+          <span class="unit-badge">3학년 2학기 1단원 3차시</span>
+        </div>
+        <div class="result-layout">
+          <div class="result-art-spacer" aria-hidden="true">
+            <img class="mathmon-companion result-mathmon" src="mathmon-zfa-04-nyangnyangmon.webp" alt="">
+          </div>
+          <div class="result-copy">
+            <div class="result-reveal-status" id="resultRevealStatus" data-result-reveal-phase="idle" aria-live="polite">
+              <span class="result-reveal-kicker" id="resultRevealKicker">점프 길을 살펴봐요.</span>
+              <div class="result-reveal-track" aria-hidden="true">
+                <span class="result-reveal-step" data-phase="jump-path-scan"></span>
+                <span class="result-reveal-step" data-phase="landing-marker"></span>
+                <span class="result-reveal-step" data-phase="island-reveal"></span>
+              </div>
+            </div>
+            <h2 id="resultTitle">모래섬 도착!</h2>
+            <p id="praiseText">0을 가리고 곱한 뒤 0을 잘 붙였어요.</p>
+            <div class="result-stats">
+              <div class="result-stat">
+                <span>맞힌 문제</span>
+                <strong id="finalCorrectText">0/10</strong>
+              </div>
+              <div class="result-stat">
+                <span>도착한 곳</span>
+                <strong id="finalIslandText">모래섬</strong>
+              </div>
+            </div>
+            <div class="result-actions">
+              <button class="primary-button" id="restartButton" type="button">다시하기</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const TOTAL_QUESTIONS = 10;
+    const MAX_JUMP_DISTANCE = 100;
+    const BASE_FIRST_TRY_DISTANCE = 5;
+    const STEP_CONFIRM_DELAY = 920;
+    const FINAL_CONFIRM_DELAY = 1280;
+    const ISLANDS = [
+      { id: "start", name: "출발섬", minDistance: 0, minCorrect: 0, image: "result-start-generated.webp" },
+      { id: "sand", name: "모래섬", minDistance: 1, minCorrect: 0, image: "result-sand-generated.webp" },
+      { id: "forest", name: "숲섬", minDistance: 34, minCorrect: 5, image: "result-forest-generated.webp" },
+      { id: "cloud", name: "구름섬", minDistance: 60, minCorrect: 8, image: "result-cloud-generated.webp" },
+      { id: "starlight", name: "별빛섬", minDistance: 86, minCorrect: 9, image: "result-starlight-generated.webp" },
+      { id: "rainbow", name: "무지개섬", minDistance: 96, minCorrect: 10, image: "result-rainbow-generated.webp", requiresRainbow: true }
+    ];
+    const REWARD_EVENTS = [
+      { id: "tailwind", label: "살랑 바람", weight: 6400, min: 2, max: 5 },
+      { id: "headwind", label: "앞바람", weight: 1700, min: -8, max: -4 },
+      { id: "pause", label: "잠깐 멈춤", weight: 1284, min: 0, max: 0 },
+      { id: "gust", label: "쌩쌩 바람", weight: 598, min: 8, max: 13 },
+      { id: "rainbow", label: "무지개 길", weight: 18, min: 14, max: 14, rainbow: true }
+    ];
+    const MISTAKE_REWARD_EVENT = {
+      id: "shaky",
+      label: "길이 흔들렸어요",
+      min: -14,
+      max: -8
+    };
+    const RESULT_REVEAL_MODEL = ["jump-path-scan", "landing-marker", "island-reveal"];
+    const RESULT_REVEAL_LABELS = {
+      "jump-path-scan": "점프 길을 살펴봐요.",
+      "landing-marker": "도착한 곳을 찾았어요.",
+      "island-reveal": "섬이 보여요.",
+      complete: "도착!"
+    };
+
+    const Lesson3MathModel = (() => {
+      const SCALE_LABELS = {
+        tenfold: "0 한 개 붙이기",
+        hundredfold: "0 두 개 붙이기"
+      };
+
+      function createSeededRandom(seed = 12345) {
+        let value = Number(seed) || 12345;
+        value %= 2147483647;
+        if (value <= 0) {
+          value += 2147483646;
+        }
+        return () => {
+          value = (value * 16807) % 2147483647;
+          return (value - 1) / 2147483646;
+        };
+      }
+
+      function shuffle(items, random = Math.random) {
+        const copy = [...items];
+        for (let index = copy.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(random() * (index + 1));
+          [copy[index], copy[swapIndex]] = [copy[swapIndex], copy[index]];
+        }
+        return copy;
+      }
+
+      function uniqueValues(values) {
+        return [...new Set(values)].filter((value) => value > 0);
+      }
+
+      function makeProblem(data) {
+        const smallExpression = `${data.leftSmall} × ${data.rightSmall}`;
+        const transformText = `${smallExpression} = ${data.smallProduct}  |  ${data.smallProduct} → ${data.finalAnswer.toLocaleString("ko-KR")}`;
+        const problem = {
+          id: `${data.type}-${data.leftFactor}-${data.rightFactor}`,
+          type: data.type,
+          question: `${data.leftFactor} × ${data.rightFactor}`,
+          leftFactor: data.leftFactor,
+          rightFactor: data.rightFactor,
+          leftSmall: data.leftSmall,
+          rightSmall: data.rightSmall,
+          smallExpression,
+          smallProduct: data.smallProduct,
+          scaleMultiplier: data.scaleMultiplier,
+          scaleLabel: data.scaleLabel,
+          finalAnswer: data.finalAnswer,
+          transformText,
+          rewardBranch: "positive"
+        };
+        problem.steps = buildSteps(problem);
+        return problem;
+      }
+
+      function generateCandidateBank() {
+        const hundredfold = [];
+        const tenfold = [];
+        for (let a = 2; a <= 9; a += 1) {
+          for (let b = 2; b <= 9; b += 1) {
+            if (a === 2 && b === 2) {
+              continue;
+            }
+            const smallProduct = a * b;
+            hundredfold.push(makeProblem({
+              type: "hundredfold",
+              leftFactor: a * 10,
+              rightFactor: b * 10,
+              leftSmall: a,
+              rightSmall: b,
+              smallProduct,
+              scaleMultiplier: 100,
+              scaleLabel: SCALE_LABELS.hundredfold,
+              finalAnswer: smallProduct * 100
+            }));
+          }
+        }
+        for (let ab = 12; ab <= 98; ab += 1) {
+          if (ab % 10 === 0) {
+            continue;
+          }
+          for (let c = 2; c <= 9; c += 1) {
+            const smallProduct = ab * c;
+            tenfold.push(makeProblem({
+              type: "tenfold",
+              leftFactor: ab,
+              rightFactor: c * 10,
+              leftSmall: ab,
+              rightSmall: c,
+              smallProduct,
+              scaleMultiplier: 10,
+              scaleLabel: SCALE_LABELS.tenfold,
+              finalAnswer: smallProduct * 10
+            }));
+          }
+        }
+        return { hundredfold, tenfold };
+      }
+
+      function chooseProblems(candidates, count, usedAnswers, random, factorUses) {
+        const picked = [];
+        const shuffled = shuffle(candidates, random);
+        for (const candidate of shuffled) {
+          if (picked.length >= count) {
+            break;
+          }
+          if (usedAnswers.has(candidate.finalAnswer)) {
+            continue;
+          }
+          const key = candidate.type === "hundredfold"
+            ? `h-${Math.min(candidate.leftSmall, candidate.rightSmall)}`
+            : `t-${candidate.rightSmall}`;
+          if ((factorUses.get(key) || 0) >= 2) {
+            continue;
+          }
+          if (candidate.finalAnswer === 400 || candidate.smallProduct <= 9) {
+            const easyCount = picked.filter((item) => item.finalAnswer === 400 || item.smallProduct <= 9).length;
+            if (easyCount >= 1) {
+              continue;
+            }
+          }
+          picked.push(candidate);
+          usedAnswers.add(candidate.finalAnswer);
+          factorUses.set(key, (factorUses.get(key) || 0) + 1);
+        }
+        if (picked.length !== count) {
+          throw new Error(`Could not pick ${count} ${candidates[0]?.type || "problem"} problems`);
+        }
+        return picked;
+      }
+
+      function generateRun(seed = Date.now()) {
+        const random = typeof seed === "function" ? seed : createSeededRandom(seed);
+        const bank = generateCandidateBank();
+        const usedAnswers = new Set();
+        const factorUses = new Map();
+        const hundredfold = chooseProblems(bank.hundredfold, 5, usedAnswers, random, factorUses);
+        const tenfold = chooseProblems(bank.tenfold, 5, usedAnswers, random, factorUses);
+        return shuffle([...hundredfold, ...tenfold], random).map((problem, index) => ({
+          ...problem,
+          runIndex: index,
+          mistakeTouched: false,
+          rewardBranch: "positive"
+        }));
+      }
+
+      function buildSmallProductChoices(problem) {
+        const offByFactor = problem.leftSmall * (problem.rightSmall + 1);
+        const offByDigit = problem.smallProduct + (problem.smallProduct >= 100 ? 10 : 1);
+        const underDigit = problem.smallProduct - (problem.smallProduct >= 100 ? 10 : 1);
+        return shuffle(uniqueValues([problem.smallProduct, offByFactor, offByDigit, underDigit]).slice(0, 3));
+      }
+
+      function buildFootingChoices() {
+        return [SCALE_LABELS.tenfold, SCALE_LABELS.hundredfold, "0 세 개 붙이기"];
+      }
+
+      function buildSteps(problem) {
+        return [
+          {
+            id: "smallProduct",
+            label: "먼저 곱하기",
+            correct: problem.smallProduct,
+            prompt: "0을 잠깐 가리고 곱해요.",
+            instruction: "먼저 답을 골라요.",
+            preview: `${problem.smallExpression} = ?`,
+            hint: `${problem.smallExpression}를 차근차근 곱해요.`,
+            reveal: `${problem.smallExpression} = ${problem.smallProduct}`,
+            choices: () => buildSmallProductChoices(problem)
+          },
+          {
+            id: "scaleFooting",
+            label: problem.scaleLabel,
+            correct: problem.scaleLabel,
+            prompt: "가렸던 0을 다시 붙여요.",
+            instruction: "0을 몇 개 붙일까요?",
+            preview: `${problem.smallProduct} → ?`,
+            hint: "처음 문제에서 가린 0을 세어 봐요.",
+            reveal: `${problem.smallProduct} → ${problem.finalAnswer.toLocaleString("ko-KR")}`,
+            choices: buildFootingChoices
+          }
+        ];
+      }
+
+      function applyMistakeBranch(problem) {
+        return {
+          ...problem,
+          mistakeTouched: true,
+          rewardBranch: "shaky"
+        };
+      }
+
+      function getRewardBranch(problem) {
+        return problem.mistakeTouched ? "shaky" : "positive";
+      }
+
+      function validateFooting(problem, label) {
+        return problem.scaleLabel === label;
+      }
+
+      return {
+        SCALE_LABELS,
+        createSeededRandom,
+        generateCandidateBank,
+        generateRun,
+        buildSteps,
+        buildSmallProductChoices,
+        buildFootingChoices,
+        applyMistakeBranch,
+        getRewardBranch,
+        validateFooting
+      };
+    })();
+
+    if (location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname)) {
+      window.__lesson3MathModel = Lesson3MathModel;
+    }
+
+    const isLocalQaEnvironment = () => {
+      return location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname);
+    };
+
+    const normalizeProblemQa = (value) => {
+      if (["tenfold", "10x", "10"].includes(value)) {
+        return "tenfold";
+      }
+      if (["hundredfold", "100x", "100"].includes(value)) {
+        return "hundredfold";
+      }
+      return null;
+    };
+
+    const normalizeRewardQa = (value) => {
+      if (["mistake", "shaky"].includes(value)) {
+        return "shaky";
+      }
+      const event = REWARD_EVENTS.find((item) => item.id === value);
+      return event ? event.id : null;
+    };
+
+    const normalizeResultQa = (value) => {
+      const island = ISLANDS.find((item) => item.id === value);
+      return island ? island.id : null;
+    };
+
+    const createQaConfig = () => {
+      const config = {
+        enabled: false,
+        seed: null,
+        problemType: null,
+        nextRewardId: null,
+        resultIslandId: null
+      };
+      if (!isLocalQaEnvironment()) {
+        return config;
+      }
+      const searchParams = new URLSearchParams(location.search);
+      const qa = searchParams.get("qa") || "";
+      config.enabled = true;
+      config.seed = searchParams.has("seed") ? Number(searchParams.get("seed")) : null;
+      config.problemType = normalizeProblemQa(qa) || normalizeProblemQa(searchParams.get("qaProblem") || "");
+      config.nextRewardId = normalizeRewardQa(searchParams.get("qaReward") || "") || normalizeRewardQa(qa);
+      config.resultIslandId = normalizeResultQa(searchParams.get("qaResult") || "");
+      return config;
+    };
+
+    const QA = createQaConfig();
+
+    const state = {
+      screen: "cover",
+      problems: [],
+      problemIndex: 0,
+      stepIndex: 0,
+      stepAttempts: 0,
+      problemMistakeTouched: false,
+      problemResults: [],
+      correct: 0,
+      jumpDistance: 0,
+      rainbowPath: false,
+      lastRewardEvent: null,
+      resultRevealModel: RESULT_REVEAL_MODEL,
+      resultRevealPhase: "idle",
+      resultRevealTimers: [],
+      resultRevealRunId: 0,
+      soundsOn: true,
+      audio: null,
+      bgmGain: null,
+      bgmTimer: null,
+      bgmRunning: false
+    };
+
+    const el = {
+      stageShell: document.querySelector(".stage-shell"),
+      coverScreen: document.getElementById("coverScreen"),
+      tutorialScreen: document.getElementById("tutorialScreen"),
+      playScreen: document.getElementById("playScreen"),
+      resultScreen: document.getElementById("resultScreen"),
+      startButton: document.getElementById("startButton"),
+      tutorialNextButton: document.getElementById("tutorialNextButton"),
+      soundToggle: document.getElementById("soundToggle"),
+      islandMap: document.getElementById("islandMap"),
+      mapLabelLayer: document.getElementById("mapLabelLayer"),
+      mapMathmonMarker: document.getElementById("mapMathmonMarker"),
+      progressText: document.getElementById("progressText"),
+      stepText: document.getElementById("stepText"),
+      questionText: document.getElementById("questionText"),
+      stepPrompt: document.getElementById("stepPrompt"),
+      jumpTransform: document.getElementById("jumpTransform"),
+      hintLine: document.getElementById("hintLine"),
+      promptText: document.getElementById("promptText"),
+      choiceGrid: document.getElementById("choiceGrid"),
+      rewardPop: document.getElementById("rewardPop"),
+      rewardLabel: document.getElementById("rewardLabel"),
+      rewardNextButton: document.getElementById("rewardNextButton"),
+      resultRevealStatus: document.getElementById("resultRevealStatus"),
+      resultRevealKicker: document.getElementById("resultRevealKicker"),
+      resultRevealSteps: [...document.querySelectorAll(".result-reveal-step")],
+      resultRaster: document.getElementById("resultRaster"),
+      resultTitle: document.getElementById("resultTitle"),
+      praiseText: document.getElementById("praiseText"),
+      finalCorrectText: document.getElementById("finalCorrectText"),
+      finalIslandText: document.getElementById("finalIslandText"),
+      restartButton: document.getElementById("restartButton")
+    };
+
+    function showScreen(name) {
+      state.screen = name;
+      el.stageShell.dataset.activeScreen = name;
+      [el.coverScreen, el.tutorialScreen, el.playScreen, el.resultScreen].forEach((screen) => {
+        screen.classList.remove("is-active");
+      });
+      document.getElementById(`${name}Screen`).classList.add("is-active");
+    }
+
+    function startGame() {
+      state.problems = orderProblemsForQa(Lesson3MathModel.generateRun(QA.seed ? QA.seed : Date.now()));
+      state.problemIndex = 0;
+      state.stepIndex = 0;
+      state.stepAttempts = 0;
+      state.problemMistakeTouched = false;
+      state.problemResults = [];
+      state.correct = 0;
+      state.jumpDistance = 0;
+      state.rainbowPath = false;
+      state.lastRewardEvent = null;
+      clearResultRevealTimers();
+      setResultRevealPhase("idle");
+      playSound("start");
+      showScreen("play");
+      renderMap();
+      renderProblem();
+    }
+
+    function currentProblem() {
+      if (!state.problems.length) {
+        state.problems = orderProblemsForQa(Lesson3MathModel.generateRun(12345));
+      }
+      return state.problems[state.problemIndex % state.problems.length];
+    }
+
+    const orderProblemsForQa = (problems) => {
+      if (!QA.enabled || !QA.problemType) {
+        return problems;
+      }
+      const forcedIndex = problems.findIndex((problem) => problem.type === QA.problemType);
+      if (forcedIndex <= 0) {
+        return problems;
+      }
+      const ordered = [...problems];
+      const [forcedProblem] = ordered.splice(forcedIndex, 1);
+      ordered.unshift(forcedProblem);
+      return ordered;
+    };
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    function randomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function getReachedIsland(distance = state.jumpDistance, correct = state.correct, rainbowPath = state.rainbowPath) {
+      for (let index = ISLANDS.length - 1; index >= 0; index -= 1) {
+        const island = ISLANDS[index];
+        if (island.requiresRainbow && !rainbowPath) {
+          continue;
+        }
+        if (distance >= island.minDistance && correct >= island.minCorrect) {
+          return { ...island, index };
+        }
+      }
+      return { ...ISLANDS[0], index: 0 };
+    }
+
+    function pickRewardEvent() {
+      let roll = Math.floor(Math.random() * 10000);
+      for (const event of REWARD_EVENTS) {
+        if (roll < event.weight) {
+          const amount = randomInt(event.min, event.max);
+          return { ...event, amount };
+        }
+        roll -= event.weight;
+      }
+      const fallback = REWARD_EVENTS[REWARD_EVENTS.length - 1];
+      return { ...fallback, amount: fallback.max };
+    }
+
+    function createForcedRewardEvent(id) {
+      if (id === "shaky") {
+        return {
+          ...MISTAKE_REWARD_EVENT,
+          amount: MISTAKE_REWARD_EVENT.max
+        };
+      }
+      const event = REWARD_EVENTS.find((item) => item.id === id);
+      return event ? { ...event, amount: event.max } : null;
+    }
+
+    const consumeQaRewardEvent = (firstTry) => {
+      if (!QA.enabled || !QA.nextRewardId) {
+        return null;
+      }
+      const id = QA.nextRewardId;
+      QA.nextRewardId = null;
+      if ((!firstTry && id !== "shaky") || (firstTry && id === "shaky")) {
+        return null;
+      }
+      return createForcedRewardEvent(id);
+    };
+
+    function createMistakeRewardEvent() {
+      return {
+        ...MISTAKE_REWARD_EVENT,
+        amount: randomInt(MISTAKE_REWARD_EVENT.min, MISTAKE_REWARD_EVENT.max)
+      };
+    }
+
+    function applyIslandReward(firstTry) {
+      const event = consumeQaRewardEvent(firstTry) || (firstTry ? pickRewardEvent() : createMistakeRewardEvent());
+      const baseDistance = firstTry ? BASE_FIRST_TRY_DISTANCE : 0;
+      if (firstTry) {
+        state.correct += 1;
+      }
+      state.jumpDistance = clamp(state.jumpDistance + baseDistance + event.amount, 0, MAX_JUMP_DISTANCE);
+      if (event.rainbow) {
+        state.rainbowPath = true;
+      }
+      state.lastRewardEvent = {
+        ...event,
+        firstTry,
+        distance: state.jumpDistance,
+        reachedIsland: getReachedIsland()
+      };
+      return state.lastRewardEvent;
+    }
+
+    if (isLocalQaEnvironment()) {
+      window.__lesson3IslandRewardModel = {
+        islands: ISLANDS,
+        rewardEvents: REWARD_EVENTS,
+        mistakeEvent: MISTAKE_REWARD_EVENT,
+        baseFirstTryDistance: BASE_FIRST_TRY_DISTANCE,
+        maxJumpDistance: MAX_JUMP_DISTANCE,
+        resultRevealModel: RESULT_REVEAL_MODEL,
+        getReachedIsland
+      };
+    }
+
+    function renderMap() {
+      const reached = getReachedIsland().index;
+      const nextIndex = Math.min(reached + 1, ISLANDS.length - 1);
+      el.mapLabelLayer.innerHTML = "";
+      ISLANDS.forEach((island, index) => {
+        const chip = document.createElement("span");
+        chip.className = "island-chip";
+        chip.setAttribute("aria-label", island.name);
+        const name = document.createElement("span");
+        name.className = "island-name";
+        name.textContent = island.name;
+        chip.appendChild(name);
+        if (index <= reached) {
+          chip.classList.add("is-reached");
+        }
+        if (index === reached) {
+          chip.classList.add("is-current");
+          chip.setAttribute("aria-current", "location");
+          chip.setAttribute("aria-label", `${island.name} 현재 위치`);
+        }
+        if (index === nextIndex && index !== reached) {
+          chip.classList.add("is-next");
+        }
+        el.mapLabelLayer.appendChild(chip);
+      });
+      positionMapMathmon();
+    }
+
+    function positionMapMathmon() {
+      window.requestAnimationFrame(() => {
+        const currentChip = el.mapLabelLayer.querySelector(".island-chip.is-current");
+        if (!currentChip || !el.mapMathmonMarker) {
+          return;
+        }
+        const mapRect = el.islandMap.getBoundingClientRect();
+        const chipRect = currentChip.getBoundingClientRect();
+        const markerLeft = chipRect.left - mapRect.left + chipRect.width / 2;
+        el.mapMathmonMarker.style.left = `${markerLeft}px`;
+        el.mapMathmonMarker.classList.add("is-visible");
+      });
+    }
+
+    function renderProblem() {
+      const problem = currentProblem();
+      state.stepIndex = 0;
+      state.stepAttempts = 0;
+      state.problemMistakeTouched = false;
+      el.rewardPop.classList.remove("is-visible");
+      el.rewardPop.removeAttribute("data-reward");
+      el.progressText.textContent = `문제 ${state.problemIndex + 1}/${TOTAL_QUESTIONS}`;
+      el.questionText.textContent = problem.question;
+      renderStep();
+    }
+
+    function renderStep() {
+      const problem = currentProblem();
+      const steps = Lesson3MathModel.buildSteps(problem);
+      el.hintLine.hidden = true;
+      el.hintLine.textContent = "";
+      el.jumpTransform.classList.remove("is-step-confirmed");
+
+      if (state.stepIndex === 0) {
+        const step = steps[0];
+        el.stepText.textContent = "1단계";
+        el.stepPrompt.textContent = step.prompt;
+        el.jumpTransform.textContent = step.preview;
+        el.promptText.textContent = step.instruction;
+        renderChoices(step.choices(), step.correct);
+        return;
+      }
+
+      if (state.stepIndex === 1) {
+        const step = steps[1];
+        el.stepText.textContent = "2단계";
+        el.stepPrompt.textContent = step.prompt;
+        el.jumpTransform.textContent = step.preview;
+        el.promptText.textContent = step.instruction;
+        renderChoices(step.choices(), step.correct);
+        return;
+      }
+
+      el.stepText.textContent = "답 완성";
+      el.stepPrompt.textContent = "답이 완성됐어요.";
+      el.jumpTransform.textContent = problem.transformText;
+      el.promptText.textContent = "바람을 볼까요?";
+      el.choiceGrid.innerHTML = "";
+      pulseJumpTransform();
+      window.setTimeout(showReward, FINAL_CONFIRM_DELAY);
+    }
+
+    function renderChoices(values, correctValue) {
+      el.choiceGrid.innerHTML = "";
+      values.forEach((value) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice-button";
+        button.textContent = typeof value === "number" ? value.toLocaleString("ko-KR") : value;
+        button.addEventListener("click", () => handleChoice(value, correctValue, button));
+        el.choiceGrid.appendChild(button);
+      });
+    }
+
+    function handleChoice(value, correctValue, button) {
+      const problem = currentProblem();
+      const step = Lesson3MathModel.buildSteps(problem)[state.stepIndex];
+      const isCorrect = value === correctValue;
+      button.classList.add(isCorrect ? "is-correct" : "is-wrong");
+      if (isCorrect) {
+        if (step.id !== "scaleFooting") {
+          playSound("correct");
+        }
+      } else {
+        playSound("wrong");
+      }
+      if (isCorrect) {
+        completeStep(step, false);
+        return;
+      }
+
+      state.stepAttempts += 1;
+      state.problemMistakeTouched = true;
+      button.disabled = true;
+      if (state.stepAttempts === 1) {
+        el.promptText.textContent = "다시 골라요.";
+        el.hintLine.textContent = step.hint;
+        el.hintLine.hidden = false;
+        return;
+      }
+      completeStep(step, true);
+    }
+
+    function completeStep(step, revealed) {
+      [...el.choiceGrid.querySelectorAll("button")].forEach((choice) => {
+        choice.disabled = true;
+        if (choice.textContent === formatChoice(step.correct)) {
+          choice.classList.add("is-correct");
+        }
+      });
+      el.hintLine.hidden = true;
+      el.hintLine.textContent = "";
+      if (revealed) {
+        el.promptText.textContent = `정답은 ${formatChoice(step.correct)}예요.`;
+      } else if (step.id === "scaleFooting") {
+        el.promptText.textContent = "맞았어요. 답이 완성됐어요.";
+      } else {
+        el.promptText.textContent = "맞았어요. 다음은 0 붙이기예요.";
+      }
+      el.jumpTransform.textContent = step.reveal;
+      pulseJumpTransform();
+      if (!revealed && step.id === "scaleFooting") {
+        playSound(currentProblem().scaleMultiplier === 100 ? "hundredfold" : "tenfold");
+      }
+      window.setTimeout(() => {
+        state.stepIndex += 1;
+        state.stepAttempts = 0;
+        renderStep();
+      }, STEP_CONFIRM_DELAY);
+    }
+
+    function formatChoice(value) {
+      return typeof value === "number" ? value.toLocaleString("ko-KR") : value;
+    }
+
+    function pulseJumpTransform() {
+      el.jumpTransform.classList.remove("is-step-confirmed");
+      void el.jumpTransform.offsetWidth;
+      el.jumpTransform.classList.add("is-step-confirmed");
+    }
+
+    function showReward() {
+      const problem = currentProblem();
+      const completedProblem = state.problemMistakeTouched ? Lesson3MathModel.applyMistakeBranch(problem) : problem;
+      const rewardBranch = QA.enabled && QA.nextRewardId === "shaky" ? "shaky" : Lesson3MathModel.getRewardBranch(completedProblem);
+      const event = applyIslandReward(rewardBranch === "positive");
+      state.problemResults.push({
+        problemId: problem.id,
+        mistakeTouched: rewardBranch === "shaky",
+        rewardBranch,
+        rewardEvent: event.id,
+        jumpDistance: event.distance,
+        reachedIsland: event.reachedIsland.name
+      });
+      renderMap();
+      el.rewardLabel.textContent = event.label;
+      el.rewardPop.dataset.reward = event.id;
+      el.rewardNextButton.textContent = state.problemIndex + 1 >= TOTAL_QUESTIONS ? "보기" : "다음";
+      el.rewardPop.classList.add("is-visible");
+      playSound(`reward-${event.id}`);
+      el.rewardNextButton.focus();
+    }
+
+    function nextAfterReward() {
+      if (state.problemIndex + 1 >= TOTAL_QUESTIONS) {
+        showResult();
+        return;
+      }
+      state.problemIndex += 1;
+      playSound("next");
+      renderProblem();
+    }
+
+    const showResult = () => {
+      const island = getReachedIsland();
+      startResultReveal(island);
+    };
+
+    const showQaResultIsland = (id) => {
+      if (!isLocalQaEnvironment()) {
+        return false;
+      }
+      const islandIndex = ISLANDS.findIndex((item) => item.id === id);
+      if (islandIndex < 0) {
+        return false;
+      }
+      const island = ISLANDS[islandIndex];
+      state.correct = island.minCorrect;
+      state.jumpDistance = island.minDistance;
+      state.rainbowPath = Boolean(island.requiresRainbow);
+      state.lastRewardEvent = null;
+      clearResultRevealTimers();
+      setResultRevealPhase("idle");
+      startResultReveal({ ...island, index: islandIndex });
+      return true;
+    };
+
+    const startResultReveal = (island) => {
+      if (state.resultRevealPhase !== "idle" && state.resultRevealPhase !== "complete") {
+        return;
+      }
+      if (state.screen === "result" && state.resultRevealPhase === "complete") {
+        return;
+      }
+      clearResultRevealTimers();
+      state.resultRevealRunId += 1;
+      const runId = state.resultRevealRunId;
+      el.resultRaster.src = island.image;
+      el.resultTitle.textContent = RESULT_REVEAL_LABELS["jump-path-scan"];
+      el.praiseText.textContent = "어디까지 갔는지 볼까요?";
+      el.finalCorrectText.textContent = "보고 있어요";
+      el.finalIslandText.textContent = "찾고 있어요";
+      el.restartButton.disabled = true;
+      setResultRevealPhase("jump-path-scan");
+      showScreen("result");
+
+      const reducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const phaseDurations = reducedMotion ? [40, 40, 40] : [560, 560, 640];
+      let elapsed = phaseDurations[0];
+
+      RESULT_REVEAL_MODEL.slice(1).forEach((phase, index) => {
+        const timer = window.setTimeout(() => {
+          if (runId !== state.resultRevealRunId) {
+            return;
+          }
+          setResultRevealPhase(phase);
+        }, elapsed);
+        state.resultRevealTimers.push(timer);
+        elapsed += phaseDurations[index + 1];
+      });
+
+      const finalTimer = window.setTimeout(() => {
+        if (runId !== state.resultRevealRunId) {
+          return;
+        }
+        finishResultReveal(island);
+      }, elapsed);
+      state.resultRevealTimers.push(finalTimer);
+    };
+
+    const setResultRevealPhase = (phase) => {
+      const previousPhase = state.resultRevealPhase;
+      state.resultRevealPhase = phase;
+      el.resultScreen.dataset.resultRevealPhase = phase;
+      el.resultRevealStatus.dataset.resultRevealPhase = phase;
+      el.resultRevealKicker.textContent = RESULT_REVEAL_LABELS[phase] || "점프 길을 살펴봐요.";
+      el.resultRevealSteps.forEach((step) => {
+        const stepIndex = RESULT_REVEAL_MODEL.indexOf(step.dataset.phase);
+        const phaseIndex = RESULT_REVEAL_MODEL.indexOf(phase);
+        step.classList.toggle("is-active", step.dataset.phase === phase);
+        step.classList.toggle("is-done", phase === "complete" || (phaseIndex >= 0 && stepIndex < phaseIndex));
+      });
+      if (phase !== "complete") {
+        el.resultTitle.textContent = RESULT_REVEAL_LABELS[phase] || "점프 길을 살펴봐요.";
+      }
+      if (phase !== previousPhase && RESULT_REVEAL_MODEL.includes(phase)) {
+        playSound(`reveal-${phase}`);
+      }
+    };
+
+    const finishResultReveal = (island) => {
+      clearResultRevealTimers();
+      el.resultTitle.textContent = island.id === "start" ? `${island.name}에서 다시 준비!` : `${island.name} 도착!`;
+      el.praiseText.textContent = getResultPraise(island);
+      el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.finalIslandText.textContent = island.name;
+      el.restartButton.disabled = false;
+      setResultRevealPhase("complete");
+      playSound("finish");
+      el.restartButton.focus();
+    };
+
+    const getResultPraise = (island) => {
+      if (island.id === "start") {
+        return "출발섬에서 다시 뛸 수 있어요.";
+      }
+      if (island.id === "sand") {
+        return "모래섬까지 왔어요. 다시 뛰면 더 멀리 가요.";
+      }
+      return "0을 가리고 곱한 뒤 0을 붙였어요.";
+    };
+
+    const clearResultRevealTimers = () => {
+      state.resultRevealTimers.forEach((timer) => window.clearTimeout(timer));
+      state.resultRevealTimers = [];
+    };
+
+    function initAudio() {
+      if (state.audio) {
+        return;
+      }
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) {
+        return;
+      }
+      state.audio = new AudioContext();
+    }
+
+    function resumeAudio() {
+      initAudio();
+      if (!state.audio) {
+        return false;
+      }
+      if (state.audio.state === "suspended") {
+        state.audio.resume();
+      }
+      return true;
+    }
+
+    function startBgm() {
+      if (!state.soundsOn || state.bgmRunning || !resumeAudio()) {
+        return;
+      }
+      state.bgmRunning = true;
+      state.bgmGain = state.audio.createGain();
+      state.bgmGain.gain.setValueAtTime(0.0001, state.audio.currentTime);
+      state.bgmGain.gain.exponentialRampToValueAtTime(0.035, state.audio.currentTime + 0.8);
+      state.bgmGain.connect(state.audio.destination);
+      queueBgmLoop();
+    }
+
+    function queueBgmLoop() {
+      if (!state.bgmRunning || !state.audio || !state.bgmGain) {
+        return;
+      }
+      [196, 247, 294].forEach((frequency, index) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        const now = state.audio.currentTime + index * 0.18;
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(frequency, now);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.08, now + 0.04);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+        oscillator.connect(gain).connect(state.bgmGain);
+        oscillator.start(now);
+        oscillator.stop(now + 1.7);
+      });
+      state.bgmTimer = window.setTimeout(queueBgmLoop, 4200);
+    }
+
+    function stopBgm() {
+      state.bgmRunning = false;
+      if (state.bgmTimer) {
+        window.clearTimeout(state.bgmTimer);
+        state.bgmTimer = null;
+      }
+      if (state.bgmGain && state.audio) {
+        state.bgmGain.gain.setTargetAtTime(0.0001, state.audio.currentTime, 0.12);
+      }
+      state.bgmGain = null;
+    }
+
+    const SOUND_CUE_PLANS = {
+      start: { type: "triangle", notes: [260, 330, 392], gain: 0.055, spacing: 0.07, duration: 0.15 },
+      correct: { type: "triangle", notes: [523, 659], gain: 0.07, spacing: 0.07, duration: 0.14 },
+      wrong: { type: "sawtooth", notes: [220, 174], gain: 0.04, spacing: 0.07, duration: 0.13 },
+      try: { type: "sawtooth", notes: [220, 174], gain: 0.04, spacing: 0.07, duration: 0.13 },
+      tenfold: { type: "triangle", notes: [330, 440, 550], gain: 0.058, spacing: 0.06, duration: 0.14 },
+      hundredfold: { type: "square", notes: [392, 587, 784], gain: 0.047, spacing: 0.06, duration: 0.14 },
+      "reward-tailwind": { type: "triangle", notes: [392, 494, 587], gain: 0.052, spacing: 0.06, duration: 0.14 },
+      "reward-headwind": { type: "sawtooth", notes: [294, 247, 220], gain: 0.038, spacing: 0.055, duration: 0.12 },
+      "reward-pause": { type: "sine", notes: [262], gain: 0.035, spacing: 0.06, duration: 0.18 },
+      "reward-gust": { type: "triangle", notes: [440, 660, 880], gain: 0.055, spacing: 0.045, duration: 0.12 },
+      "reward-rainbow": { type: "sine", notes: [523, 659, 784, 1047], gain: 0.052, spacing: 0.055, duration: 0.13 },
+      "reward-shaky": { type: "sawtooth", notes: [196, 165, 147], gain: 0.035, spacing: 0.055, duration: 0.12 },
+      "reveal-jump-path-scan": { type: "sine", notes: [247, 330], gain: 0.038, spacing: 0.08, duration: 0.14 },
+      "reveal-landing-marker": { type: "triangle", notes: [330, 392], gain: 0.042, spacing: 0.07, duration: 0.13 },
+      "reveal-island-reveal": { type: "triangle", notes: [392, 523, 659], gain: 0.048, spacing: 0.06, duration: 0.14 },
+      next: { type: "triangle", notes: [330], gain: 0.045, spacing: 0.06, duration: 0.12 },
+      finish: { type: "triangle", notes: [392, 523, 659, 880], gain: 0.06, spacing: 0.065, duration: 0.15 }
+    };
+
+    function playSound(kind) {
+      if (!state.soundsOn || !resumeAudio()) {
+        return;
+      }
+      const plan = SOUND_CUE_PLANS[kind] || SOUND_CUE_PLANS.next;
+      plan.notes.forEach((frequency, index) => {
+        const oscillator = state.audio.createOscillator();
+        const gain = state.audio.createGain();
+        const startAt = state.audio.currentTime + index * plan.spacing;
+        oscillator.type = plan.type;
+        oscillator.frequency.value = frequency;
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.exponentialRampToValueAtTime(plan.gain, startAt + 0.018);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + plan.duration);
+        oscillator.connect(gain).connect(state.audio.destination);
+        oscillator.start(startAt);
+        oscillator.stop(startAt + plan.duration + 0.02);
+      });
+    }
+
+    el.startButton.addEventListener("click", () => {
+      startBgm();
+      playSound("start");
+      showScreen("tutorial");
+    });
+    el.tutorialNextButton.addEventListener("click", startGame);
+    el.rewardNextButton.addEventListener("click", nextAfterReward);
+    el.restartButton.addEventListener("click", () => {
+      startBgm();
+      showScreen("cover");
+    });
+    el.soundToggle.addEventListener("click", () => {
+      state.soundsOn = !state.soundsOn;
+      el.soundToggle.setAttribute("aria-label", state.soundsOn ? "소리 켜짐" : "소리 꺼짐");
+      el.soundToggle.setAttribute("aria-pressed", String(state.soundsOn));
+      if (state.soundsOn) {
+        startBgm();
+        playSound("next");
+      } else {
+        stopBgm();
+      }
+    });
+    window.addEventListener("resize", positionMapMathmon);
+
+    renderMap();
+
+    if (isLocalQaEnvironment()) {
+      window.__lesson3Qa = {
+        forceNextReward(id) {
+          const rewardId = normalizeRewardQa(id);
+          if (!rewardId) {
+            return false;
+          }
+          QA.nextRewardId = rewardId;
+          return true;
+        },
+        setFirstProblem(type) {
+          const problemType = normalizeProblemQa(type);
+          if (!problemType) {
+            return false;
+          }
+          QA.problemType = problemType;
+          state.problems = orderProblemsForQa(state.problems);
+          return true;
+        },
+        showResultIsland: showQaResultIsland,
+        startGame
+      };
+      if (QA.resultIslandId) {
+        window.setTimeout(() => showQaResultIsland(QA.resultIslandId), 0);
+      }
+    }
+  </script>
+</body>
+</html>
