@@ -156,12 +156,16 @@ async function readFeedbackSnapshot() {
 (() => ({
   stepText: document.getElementById("stepText").textContent.trim(),
   prompt: document.getElementById("promptText").textContent.trim(),
+  promptHidden: document.getElementById("promptText").hidden,
   transform: document.getElementById("jumpTransform").textContent.trim(),
-  promptFits: document.getElementById("promptText").scrollWidth <= document.getElementById("promptText").clientWidth + 1
-    && document.getElementById("promptText").scrollHeight <= document.getElementById("promptText").clientHeight + 1,
+  promptFits: document.getElementById("promptText").hidden || (
+    document.getElementById("promptText").scrollWidth <= document.getElementById("promptText").clientWidth + 1
+    && document.getElementById("promptText").scrollHeight <= document.getElementById("promptText").clientHeight + 1
+  ),
   transformFits: document.getElementById("jumpTransform").scrollWidth <= document.getElementById("jumpTransform").clientWidth + 1
     && document.getElementById("jumpTransform").scrollHeight <= document.getElementById("jumpTransform").clientHeight + 1,
-  rewardButtonText: document.querySelector(".reward-check-button")?.textContent.trim() || "",
+  rewardButtonLabel: document.querySelector(".reward-check-button")?.getAttribute("aria-label") || "",
+  rewardButtonImage: document.querySelector(".reward-check-button img")?.getAttribute("src") || "",
   rewardVisible: document.getElementById("rewardPop").classList.contains("is-visible")
 }))()
 `);
@@ -203,7 +207,9 @@ async function runScenario(viewport) {
   await delay(1200);
   const heldSnapshot = await readFeedbackSnapshot();
   assert(heldSnapshot.transform === secondStep.finalExpression, `${viewport.name}: completed expression was not simplified to the final equation: ${JSON.stringify(heldSnapshot)}`);
-  assert(heldSnapshot.rewardButtonText === "바람 보기", `${viewport.name}: reward check button did not appear: ${JSON.stringify(heldSnapshot)}`);
+  assert(heldSnapshot.promptHidden, `${viewport.name}: completed prompt should be hidden: ${JSON.stringify(heldSnapshot)}`);
+  assert(heldSnapshot.rewardButtonLabel === "어떤 바람이 불까?", `${viewport.name}: generated reward image button did not appear: ${JSON.stringify(heldSnapshot)}`);
+  assert(heldSnapshot.rewardButtonImage.endsWith("reward-wind-button-generated.webp"), `${viewport.name}: generated reward image button asset was not used: ${JSON.stringify(heldSnapshot)}`);
   assert(heldSnapshot.promptFits && heldSnapshot.transformFits, `${viewport.name}: completed expression text overflowed: ${JSON.stringify(heldSnapshot)}`);
   assert(!heldSnapshot.rewardVisible, `${viewport.name}: reward modal opened before the student pressed the reward button: ${JSON.stringify(heldSnapshot)}`);
 
