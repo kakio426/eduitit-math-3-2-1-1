@@ -483,10 +483,12 @@
       padding: 18px;
       border-radius: 8px;
       background: rgba(14, 12, 22, 0.46);
-      font-size: clamp(1.8rem, 3.8vw, 3.4rem);
-      line-height: 1.05;
+      font-size: clamp(1.72rem, 3.2vw, 2.75rem);
+      line-height: 1.08;
       font-weight: 1000;
-      overflow-wrap: anywhere;
+      overflow-wrap: normal;
+      word-break: keep-all;
+      text-wrap: balance;
     }
 
     .step-board {
@@ -645,8 +647,9 @@
       display: grid;
     }
 
-    .reward-card,
-    .result-card {
+    .reward-card {
+      position: relative;
+      z-index: 2;
       width: min(760px, 88%);
       border-radius: 8px;
       border: 1px solid var(--line);
@@ -655,17 +658,7 @@
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
     }
 
-    .result-card {
-      position: relative;
-      z-index: 2;
-      align-self: end;
-      margin-bottom: 42px;
-      padding: 22px 28px 24px;
-      background: rgba(14, 12, 22, 0.62);
-      backdrop-filter: blur(4px);
-    }
-
-    .route-label {
+    .upgrade-label {
       min-height: 70px;
       display: grid;
       place-items: center;
@@ -676,62 +669,241 @@
       color: var(--amber);
     }
 
-    .route-meter {
-      height: 42px;
-      border-radius: 999px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid var(--line);
+    .truck-preview {
       position: relative;
-    }
-
-    .route-meter-fill {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--mint), var(--sky), var(--amber));
-      transition: width 620ms ease;
-    }
-
-    .route-meter-text {
-      position: absolute;
-      inset: 0;
+      min-height: 176px;
+      border-radius: 8px;
+      overflow: hidden;
       display: grid;
       place-items: center;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255, 200, 87, 0.18), transparent 52%),
+        rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+    }
+
+    .truck-visual {
+      position: relative;
+      width: min(440px, 92%);
+      height: 126px;
+      transform-origin: center bottom;
+      transition: transform 420ms ease, filter 420ms ease;
+    }
+
+    .truck-body {
+      position: absolute;
+      left: 112px;
+      right: 24px;
+      top: 30px;
+      height: 62px;
+      border-radius: 8px 16px 10px 8px;
+      background: linear-gradient(135deg, #ffd15f, #f7a91d);
+      border: 3px solid rgba(255, 248, 232, 0.78);
+      box-shadow: inset 0 -12px 0 rgba(116, 75, 0, 0.12);
+    }
+
+    .truck-cab {
+      position: absolute;
+      left: 30px;
+      top: 42px;
+      width: 118px;
+      height: 52px;
+      border-radius: 34px 12px 10px 12px;
+      background: linear-gradient(135deg, #ffe08a, #f5a31c);
+      border: 3px solid rgba(255, 248, 232, 0.78);
+      box-shadow: inset 0 -10px 0 rgba(116, 75, 0, 0.12);
+    }
+
+    .truck-window {
+      position: absolute;
+      left: 68px;
+      top: 50px;
+      width: 48px;
+      height: 26px;
+      border-radius: 12px 8px 7px 8px;
+      background: linear-gradient(135deg, #9ce8ff, #3c9ed7);
+      border: 2px solid rgba(255, 248, 232, 0.7);
+    }
+
+    .truck-wheel {
+      position: absolute;
+      bottom: 16px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #d9f4ff 0 28%, #263047 30% 58%, #0e0c16 60%);
+      border: 3px solid rgba(255, 255, 255, 0.72);
+    }
+
+    .truck-wheel.is-front {
+      left: 86px;
+    }
+
+    .truck-wheel.is-back {
+      right: 74px;
+    }
+
+    .truck-stripe,
+    .truck-light,
+    .truck-wing,
+    .truck-aura {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 420ms ease, transform 420ms ease;
+    }
+
+    .truck-stripe {
+      left: 144px;
+      right: 54px;
+      top: 54px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--mint), var(--sky));
+    }
+
+    .truck-light {
+      left: 34px;
+      bottom: 40px;
+      width: 24px;
+      height: 12px;
+      border-radius: 999px;
+      background: #fff3a8;
+      box-shadow: 0 0 18px rgba(255, 243, 168, 0.95);
+    }
+
+    .truck-wing {
+      right: 18px;
+      top: 0;
+      width: 112px;
+      height: 40px;
+      border-radius: 80% 18% 60% 18%;
+      background: linear-gradient(135deg, #f5f7ff, #78dfff);
+      transform: rotate(-10deg);
+      box-shadow: 0 0 22px rgba(96, 215, 255, 0.42);
+    }
+
+    .truck-aura {
+      inset: 10px 0 0;
+      border-radius: 999px;
+      background: radial-gradient(circle at 50% 58%, rgba(255, 200, 87, 0.36), transparent 55%);
+      filter: blur(10px);
+    }
+
+    .truck-preview[data-stage="slight"] .truck-stripe,
+    .truck-preview[data-stage="slight"] .truck-light,
+    .truck-preview[data-stage="cool"] .truck-stripe,
+    .truck-preview[data-stage="cool"] .truck-light,
+    .truck-preview[data-stage="super"] .truck-stripe,
+    .truck-preview[data-stage="super"] .truck-light {
+      opacity: 1;
+    }
+
+    .truck-preview[data-stage="cool"] .truck-visual,
+    .truck-preview[data-stage="super"] .truck-visual {
+      transform: scale(1.06);
+      filter: saturate(1.12) brightness(1.08);
+    }
+
+    .truck-preview[data-stage="cool"] .truck-body,
+    .truck-preview[data-stage="super"] .truck-body {
+      box-shadow:
+        inset 0 -12px 0 rgba(116, 75, 0, 0.12),
+        0 0 26px rgba(96, 215, 255, 0.34);
+    }
+
+    .truck-preview[data-stage="super"] .truck-wing,
+    .truck-preview[data-stage="super"] .truck-aura {
+      opacity: 1;
+    }
+
+    .truck-preview[data-stage="super"] .truck-stripe {
+      background: linear-gradient(90deg, var(--mint), var(--sky), var(--violet), var(--amber));
+      height: 14px;
+    }
+
+    .stage-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 16px 0 0;
+    }
+
+    .stage-dot {
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.13);
+      border: 1px solid var(--line);
+    }
+
+    .stage-dot.is-lit {
+      background: linear-gradient(90deg, var(--mint), var(--amber));
+      box-shadow: 0 0 16px rgba(255, 200, 87, 0.28);
+    }
+
+    .reward-stage {
+      margin: 14px 0 0;
+      color: var(--ink);
       font-weight: 1000;
-      color: var(--deep);
-      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.32);
+      font-size: clamp(1rem, 1.9vw, 1.22rem);
     }
 
     .reward-change {
-      margin: 18px 0 28px;
+      margin: 14px 0 28px;
       color: var(--muted);
       font-weight: 950;
       font-size: 1.1rem;
     }
 
-    .result-place {
-      margin: 0 0 14px;
-      color: var(--amber);
-      font-size: clamp(2rem, 4.8vw, 4rem);
-      line-height: 1.05;
-      font-weight: 1000;
+    .result-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    .result-summary,
-    .result-next {
-      margin: 0 auto 14px;
-      max-width: 58ch;
-      color: var(--muted);
-      font-size: 1.1rem;
-      font-weight: 900;
-      line-height: 1.35;
+    .result-title-art {
+      position: absolute;
+      top: 74px;
+      left: 50%;
+      width: min(720px, 74%);
+      max-height: 190px;
+      object-fit: contain;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.38));
     }
 
-    .result-actions {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-top: 26px;
+    .result[data-result-tier="super"] .result-title-art {
+      top: 66px;
+      width: min(840px, 82%);
+    }
+
+    .result-retry-hitbox {
+      position: absolute;
+      left: 50%;
+      bottom: 62px;
+      width: min(232px, 23%);
+      min-width: 174px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      transform: translateX(-50%);
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .result-retry-hitbox:focus-visible {
+      outline: 4px solid rgba(96, 215, 255, 0.86);
+      outline-offset: 4px;
+      border-radius: 8px;
+    }
+
+    .result-retry-art {
+      display: block;
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.28));
+      pointer-events: none;
     }
 
     .visually-hidden {
@@ -845,7 +1017,7 @@
             <div class="tutorial-card">
               <div class="card-mark">3</div>
               <strong>한도보다 가벼워야 해요.</strong>
-              <p>맞으면 택배가 더 멀리 가요.</p>
+              <p>맞으면 트럭이 더 멋져요.</p>
             </div>
           </div>
           <div class="tutorial-action">
@@ -860,9 +1032,9 @@
             <div class="brand-badge"><span class="badge-dot" aria-hidden="true"></span>매스몬 택배</div>
             <div class="mini-badge" id="problemCounter">1/10</div>
           </div>
-          <div class="progress-line" aria-label="배송 거리">
+          <div class="progress-line" aria-label="트럭 변화">
             <div class="progress-fill" id="runProgress"></div>
-            <div class="progress-text" id="runProgressText">0km</div>
+            <div class="progress-text" id="runProgressText">평범 트럭</div>
           </div>
           <div class="hud-right">
             <div class="unit-badge"><span class="badge-dot" aria-hidden="true"></span>5단원 무게</div>
@@ -886,41 +1058,59 @@
 
           <section class="complete-panel" id="completePanel" aria-live="polite">
             <p class="complete-text" id="completeExpression"></p>
-            <button class="primary-button" id="deliveryButton" type="button">배송 보기</button>
+            <button class="primary-button" id="truckButton" type="button">트럭 보기</button>
           </section>
         </div>
       </section>
 
       <section class="screen reward" id="screen-reward" aria-labelledby="rewardTitle">
+        <img class="raster-bg" src="reward-truck-upgrade-generated.webp" alt="">
         <div class="top-row">
-          <div class="brand-badge"><span class="badge-dot" aria-hidden="true"></span>배송 길</div>
-          <div class="unit-badge"><span class="badge-dot" aria-hidden="true"></span>한 번만 움직여요</div>
+          <div class="brand-badge"><span class="badge-dot" aria-hidden="true"></span>트럭 변신</div>
+          <div class="unit-badge"><span class="badge-dot" aria-hidden="true"></span>한 번만 바뀌어요</div>
         </div>
         <div class="reward-card">
-          <h2 class="route-label" id="rewardTitle">길이 열렸어요</h2>
-          <div class="route-meter" aria-label="배송 거리">
-            <div class="route-meter-fill" id="rewardMeter"></div>
-            <div class="route-meter-text" id="rewardMeterText">0km</div>
+          <h2 class="upgrade-label" id="rewardTitle">부품 상자</h2>
+          <div class="truck-preview" id="rewardTruckPreview" data-stage="plain" aria-label="현재 트럭">
+            <div class="truck-aura" aria-hidden="true"></div>
+            <div class="truck-visual" aria-hidden="true">
+              <div class="truck-wing"></div>
+              <div class="truck-body"></div>
+              <div class="truck-cab"></div>
+              <div class="truck-window"></div>
+              <div class="truck-stripe"></div>
+              <div class="truck-light"></div>
+              <div class="truck-wheel is-front"></div>
+              <div class="truck-wheel is-back"></div>
+            </div>
           </div>
-          <p class="reward-change" id="rewardChange">+0km</p>
+          <div class="stage-track" id="rewardStageTrack" aria-hidden="true">
+            <span class="stage-dot"></span>
+            <span class="stage-dot"></span>
+            <span class="stage-dot"></span>
+            <span class="stage-dot"></span>
+          </div>
+          <p class="reward-stage" id="rewardStageText">평범 트럭</p>
+          <p class="reward-change" id="rewardChange">트럭이 멋져졌어요.</p>
           <button class="primary-button" id="rewardNextButton" type="button">다음</button>
         </div>
       </section>
 
-      <section class="screen result" id="screen-result" aria-labelledby="resultTitle">
-        <img class="raster-bg" id="resultBg" src="result-home-generated.webp" alt="">
+      <section class="screen result" id="screen-result" data-result-tier="plain" aria-labelledby="resultTitle">
+        <img class="raster-bg" id="resultBg" src="result-truck-plain-generated.webp" alt="">
         <div class="top-row">
-          <div class="brand-badge"><span class="badge-dot" aria-hidden="true"></span>오늘의 도착지</div>
+          <div class="brand-badge"><span class="badge-dot" aria-hidden="true"></span>오늘의 트럭</div>
           <div class="unit-badge"><span class="badge-dot" aria-hidden="true"></span>5단원 무게</div>
         </div>
-        <div class="result-card">
-          <h2 class="result-place" id="resultTitle">가까운 집</h2>
-          <p class="result-summary" id="resultSummary"></p>
-          <p class="result-next" id="resultNext"></p>
-          <div class="result-actions">
-            <button class="primary-button" id="retryButton" type="button">다시</button>
-          </div>
+        <div class="result-layer">
+          <img class="result-title-art" id="resultTitleArt" src="result-title-plain-generated.webp" alt="" aria-hidden="true">
+          <button class="result-retry-hitbox" id="retryButton" type="button" aria-label="다시">
+            <img class="result-retry-art" src="result-retry-button-generated.webp" alt="" aria-hidden="true">
+          </button>
         </div>
+        <h2 class="visually-hidden" id="resultTitle">평범 트럭</h2>
+        <p class="visually-hidden" id="resultSummary"></p>
+        <p class="visually-hidden" id="resultNext"></p>
       </section>
     </div>
   </main>
@@ -928,9 +1118,9 @@
   <script>
     const Lesson5PackageWeightModel = (() => {
       const TOTAL_PROBLEMS = 10;
-      const MIN_REWARD_DISTANCE = 4;
-      const MAX_DISTANCE = 100;
-      const BASE_CORRECT_DISTANCE = 6;
+      const MIN_TRUCK_POWER = 0;
+      const MAX_TRUCK_POWER = 100;
+      const BASE_CORRECT_POWER = 5;
       const TYPES_PER_RUN = [
         "addCarry",
         "addCarry",
@@ -943,23 +1133,20 @@
         "limit",
         "limit"
       ];
-      const DESTINATIONS = [
-        { id: "home", name: "가까운 집", minDistance: 0, minCorrect: 0, image: "result-home-generated.webp" },
-        { id: "school", name: "학교 앞", minDistance: 20, minCorrect: 3, image: "result-school-generated.webp" },
-        { id: "market", name: "시장 앞", minDistance: 45, minCorrect: 5, image: "result-market-generated.webp" },
-        { id: "mountain", name: "산마을", minDistance: 70, minCorrect: 7, image: "result-mountain-generated.webp" },
-        { id: "harbor", name: "바닷가 마을", minDistance: 90, minCorrect: 9, image: "result-harbor-generated.webp" },
-        { id: "rainbow", name: "무지개 우체국", minDistance: 100, minCorrect: 10, needsSecret: true, image: "result-rainbow-generated.webp" }
+      const TRUCK_RESULTS = [
+        { id: "plain", name: "평범 트럭", minPower: 0, minCorrect: 0, image: "result-truck-plain-generated.webp", titleImage: "result-title-plain-generated.webp" },
+        { id: "slight", name: "살짝 멋진 트럭", minPower: 30, minCorrect: 3, image: "result-truck-slight-generated.webp", titleImage: "result-title-slight-generated.webp" },
+        { id: "cool", name: "번쩍 멋진 트럭", minPower: 70, minCorrect: 7, image: "result-truck-cool-generated.webp", titleImage: "result-title-cool-generated.webp" },
+        { id: "super", name: "슈퍼 초울트라 트럭", minPower: 100, minCorrect: 10, needsSuperPart: true, image: "result-truck-super-generated.webp", titleImage: "result-title-super-generated.webp" }
       ];
-      const ROUTE_CHANGES = [
-        { id: "steady", text: "반듯한 길", weight: 5200, min: 7, max: 10, family: "increase" },
-        { id: "fast", text: "빠른 길", weight: 1700, min: 14, max: 20, family: "biggerIncrease" },
-        { id: "detour", text: "돌아가는 길", weight: 1500, min: -8, max: -4, family: "decrease" },
-        { id: "pause", text: "잠깐 멈춤", weight: 900, min: 0, max: 0, family: "zeroPause" },
-        { id: "express", text: "곧장 길", weight: 600, min: 28, max: 28, family: "instantSpecial", instant: true },
-        { id: "secret", text: "비밀 길", weight: 100, min: 40, max: 40, family: "instantSpecial", secret: true }
+      const UPGRADE_EVENTS = [
+        { id: "smallBox", text: "작은 부품 상자", weight: 5200, min: 5, max: 8, family: "smallUpgrade" },
+        { id: "sparkBox", text: "번쩍 부품 상자", weight: 1700, min: 13, max: 18, family: "bigUpgrade" },
+        { id: "styleBox", text: "꾸미기 상자", weight: 1700, min: 9, max: 12, family: "styleUpgrade" },
+        { id: "wobbleBox", text: "삐끗 상자", weight: 1200, min: 1, max: 3, family: "smallOnly" },
+        { id: "superBox", text: "슈퍼 부품 상자", weight: 200, min: 28, max: 28, family: "superUpgrade", superPart: true }
       ];
-      const WRONG_ROUTE_CHANGE = { id: "retie", text: "끈 다시 묶기", min: -10, max: -6, family: "wrongPenalty" };
+      const WRONG_UPGRADE_EVENT = { id: "retie", text: "상자 다시 묶기", min: 1, max: 2, family: "repair" };
 
       function createRng(seed = 12345) {
         let value = seed >>> 0;
@@ -1006,6 +1193,10 @@
 
       function formatWeight(weight) {
         return `${weight.kg}kg ${weight.g}g`;
+      }
+
+      function displayWeightText(text) {
+        return String(text).replace(/(\d+kg) (\d+g)/g, "$1\u00a0$2");
       }
 
       function uniqueChoices(values, rng) {
@@ -1095,7 +1286,7 @@
           fitsLimit: null,
           representativeMistake: noBorrow,
           steps: [
-            makeStep("borrowKg", "1kg을 빌린 윗무게를 골라요.", "빌린 무게", formatWeight(borrowedTop), choices1, `${formatWeight(borrowedTop)}로 바뀌었어요.`),
+            makeStep("borrowKg", "위 무게를 1kg 줄이고 1000g 늘려요.", "바뀐 위 무게", formatWeight(borrowedTop), choices1, `${formatWeight(borrowedTop)}로 바뀌었어요.`),
             makeStep("subtractFinal", "남은 택배 무게를 골라요.", "완성 무게", formatWeight(final), choices2, `${formatWeight(final)}이 남았어요.`)
           ]
         };
@@ -1159,63 +1350,63 @@
         return step.correct === choice;
       }
 
-      function pickRouteChange(rng, mistakeTouched) {
+      function pickUpgradeEvent(rng, mistakeTouched) {
         if (mistakeTouched) {
           return {
-            ...WRONG_ROUTE_CHANGE,
-            amount: randomInt(rng, WRONG_ROUTE_CHANGE.min, WRONG_ROUTE_CHANGE.max)
+            ...WRONG_UPGRADE_EVENT,
+            amount: randomInt(rng, WRONG_UPGRADE_EVENT.min, WRONG_UPGRADE_EVENT.max)
           };
         }
         let roll = Math.floor(rng() * 10000);
-        for (const route of ROUTE_CHANGES) {
-          if (roll < route.weight) {
-            return { ...route, amount: randomInt(rng, route.min, route.max) };
+        for (const event of UPGRADE_EVENTS) {
+          if (roll < event.weight) {
+            return { ...event, amount: randomInt(rng, event.min, event.max) };
           }
-          roll -= route.weight;
+          roll -= event.weight;
         }
-        const fallback = ROUTE_CHANGES[0];
+        const fallback = UPGRADE_EVENTS[0];
         return { ...fallback, amount: randomInt(rng, fallback.min, fallback.max) };
       }
 
-      function applyRoute(state, change, firstTry) {
-        const before = state.distance;
-        const skillDistance = firstTry ? BASE_CORRECT_DISTANCE : 0;
-        const distance = clamp(before + skillDistance + change.amount, MIN_REWARD_DISTANCE, MAX_DISTANCE);
+      function applyUpgrade(state, event, firstTry) {
+        const before = state.truckPower;
+        const skillPower = firstTry ? BASE_CORRECT_POWER : 0;
+        const truckPower = clamp(before + skillPower + event.amount, MIN_TRUCK_POWER, MAX_TRUCK_POWER);
         return {
-          distance,
+          truckPower,
           correctFirstTry: state.correctFirstTry + (firstTry ? 1 : 0),
-          secretSeen: state.secretSeen || Boolean(change.secret),
+          superPartSeen: state.superPartSeen || Boolean(event.superPart),
           before,
-          skillDistance,
-          change
+          skillPower,
+          event
         };
       }
 
-      function getDestination(distance, correctFirstTry, secretSeen) {
-        for (let index = DESTINATIONS.length - 1; index >= 0; index -= 1) {
-          const destination = DESTINATIONS[index];
-          if (destination.needsSecret && !secretSeen) continue;
-          if (distance >= destination.minDistance && correctFirstTry >= destination.minCorrect) {
-            return destination;
+      function getTruckResult(truckPower, correctFirstTry, superPartSeen) {
+        for (let index = TRUCK_RESULTS.length - 1; index >= 0; index -= 1) {
+          const result = TRUCK_RESULTS[index];
+          if (result.needsSuperPart && !superPartSeen) continue;
+          if (truckPower >= result.minPower && correctFirstTry >= result.minCorrect) {
+            return result;
           }
         }
-        return DESTINATIONS[0];
+        return TRUCK_RESULTS[0];
       }
 
-      function getNextDestination(destination) {
-        const index = DESTINATIONS.findIndex((item) => item.id === destination.id);
-        return DESTINATIONS[Math.min(index + 1, DESTINATIONS.length - 1)];
+      function getNextTruckResult(result) {
+        const index = TRUCK_RESULTS.findIndex((item) => item.id === result.id);
+        return TRUCK_RESULTS[Math.min(index + 1, TRUCK_RESULTS.length - 1)];
       }
 
       return {
         TOTAL_PROBLEMS,
-        MIN_REWARD_DISTANCE,
-        MAX_DISTANCE,
-        BASE_CORRECT_DISTANCE,
+        MIN_TRUCK_POWER,
+        MAX_TRUCK_POWER,
+        BASE_CORRECT_POWER,
         TYPES_PER_RUN,
-        DESTINATIONS,
-        ROUTE_CHANGES,
-        WRONG_ROUTE_CHANGE,
+        TRUCK_RESULTS,
+        UPGRADE_EVENTS,
+        WRONG_UPGRADE_EVENT,
         createRng,
         randomInt,
         shuffle,
@@ -1224,12 +1415,13 @@
         fromTotalGrams,
         formatGrams,
         formatWeight,
+        displayWeightText,
         generateRun,
         validateChoice,
-        pickRouteChange,
-        applyRoute,
-        getDestination,
-        getNextDestination
+        pickUpgradeEvent,
+        applyUpgrade,
+        getTruckResult,
+        getNextTruckResult
       };
     })();
 
@@ -1257,13 +1449,15 @@
       choicesPanel: document.getElementById("choicesPanel"),
       completePanel: document.getElementById("completePanel"),
       completeExpression: document.getElementById("completeExpression"),
-      deliveryButton: document.getElementById("deliveryButton"),
+      truckButton: document.getElementById("truckButton"),
       rewardTitle: document.getElementById("rewardTitle"),
-      rewardMeter: document.getElementById("rewardMeter"),
-      rewardMeterText: document.getElementById("rewardMeterText"),
+      rewardTruckPreview: document.getElementById("rewardTruckPreview"),
+      rewardStageTrack: document.getElementById("rewardStageTrack"),
+      rewardStageText: document.getElementById("rewardStageText"),
       rewardChange: document.getElementById("rewardChange"),
       rewardNextButton: document.getElementById("rewardNextButton"),
       resultBg: document.getElementById("resultBg"),
+      resultTitleArt: document.getElementById("resultTitleArt"),
       resultTitle: document.getElementById("resultTitle"),
       resultSummary: document.getElementById("resultSummary"),
       resultNext: document.getElementById("resultNext"),
@@ -1296,10 +1490,10 @@
         problemIndex: 0,
         stepIndex: 0,
         mistakeTouched: false,
-        distance: 0,
+        truckPower: 0,
         correctFirstTry: 0,
-        secretSeen: false,
-        latestRoute: null,
+        superPartSeen: false,
+        latestUpgrade: null,
         rewardAppliedProblemIndex: -1,
         rewardAdvancedProblemIndex: -1
       };
@@ -1351,9 +1545,31 @@
       return event instanceof MouseEvent && event.detail > 0;
     }
 
-    function formatRouteMovement(movement) {
-      if (movement === 0) return "그대로예요";
-      return `${movement >= 0 ? "+" : ""}${movement}km`;
+    function getCurrentTruckResult() {
+      return Lesson5PackageWeightModel.getTruckResult(
+        state.truckPower,
+        state.correctFirstTry,
+        state.superPartSeen
+      );
+    }
+
+    function formatUpgradeMessage(movement) {
+      if (movement <= 2) return "조금 멋져졌어요.";
+      if (movement >= 28) return "크게 멋져졌어요.";
+      return "트럭이 멋져졌어요.";
+    }
+
+    function getTruckStageIndex(result) {
+      return Lesson5PackageWeightModel.TRUCK_RESULTS.findIndex((item) => item.id === result.id);
+    }
+
+    function renderTruckStage(result) {
+      ui.rewardTruckPreview.dataset.stage = result.id;
+      ui.rewardStageText.textContent = result.name;
+      const activeIndex = getTruckStageIndex(result);
+      ui.rewardStageTrack.querySelectorAll(".stage-dot").forEach((dot, index) => {
+        dot.classList.toggle("is-lit", index <= activeIndex);
+      });
     }
 
     function currentProblem() {
@@ -1365,9 +1581,14 @@
     }
 
     function renderProgress() {
-      const percent = Lesson5PackageWeightModel.clamp(state.distance, 0, 100);
+      const currentResult = getCurrentTruckResult();
+      const percent = Lesson5PackageWeightModel.clamp(state.truckPower, 0, 100);
       ui.runProgress.style.width = `${percent}%`;
-      ui.runProgressText.textContent = `${state.distance}km`;
+      ui.runProgressText.textContent = currentResult.name;
+    }
+
+    function setDisplayText(element, text) {
+      element.textContent = Lesson5PackageWeightModel.displayWeightText(text);
     }
 
     function renderProblem() {
@@ -1376,9 +1597,9 @@
       state.mistakeTouched = false;
       ui.problemCounter.textContent = `${state.problemIndex + 1}/10`;
       ui.problemKind.textContent = problem.kind;
-      ui.problemTitle.textContent = problem.prompt;
+      setDisplayText(ui.problemTitle, problem.prompt);
       ui.completePanel.classList.remove("is-visible");
-      setButtonDisabled(ui.deliveryButton, true);
+      setButtonDisabled(ui.truckButton, true);
       renderProgress();
       renderStep();
       showScreen("play");
@@ -1393,7 +1614,7 @@
         chip.className = "step-chip";
         if (index < state.stepIndex) chip.classList.add("is-done");
         if (index === state.stepIndex) chip.classList.add("is-current");
-        chip.textContent = index < state.stepIndex ? `${index + 1} ${problem.steps[index].correct}` : `${index + 1} ${index === state.stepIndex ? item.slot : "?"}`;
+        setDisplayText(chip, index < state.stepIndex ? `${index + 1} ${problem.steps[index].correct}` : `${index + 1} ${index === state.stepIndex ? item.slot : "?"}`);
         ui.stepChips.append(chip);
       });
       ui.stepInstruction.textContent = step.prompt;
@@ -1406,7 +1627,7 @@
         const button = document.createElement("button");
         button.className = "choice-button";
         button.type = "button";
-        button.textContent = choice;
+        setDisplayText(button, choice);
         button.dataset.choice = choice;
         button.dataset.correct = String(Lesson5PackageWeightModel.validateChoice(step, choice));
         button.addEventListener("click", (event) => handleChoice(button, choice, event));
@@ -1440,9 +1661,9 @@
 
       setChoicesDisabled(true);
       button.classList.add("is-correct");
-      ui.answerSlot.textContent = choice;
+      setDisplayText(ui.answerSlot, choice);
       ui.answerSlot.classList.add("is-filled");
-      ui.feedbackLine.textContent = step.confirm;
+      setDisplayText(ui.feedbackLine, step.confirm);
       ui.feedbackLine.className = "feedback-line is-good";
 
       const isLastStep = state.stepIndex === currentProblem().steps.length - 1;
@@ -1458,39 +1679,39 @@
 
     function showCompletePanel() {
       const problem = currentProblem();
-      ui.completeExpression.textContent = problem.expression;
+      setDisplayText(ui.completeExpression, problem.expression);
       ui.completePanel.classList.add("is-visible");
-      setButtonDisabled(ui.deliveryButton, false);
-      ui.deliveryButton.focus({ preventScroll: true });
+      setButtonDisabled(ui.truckButton, false);
+      ui.truckButton.focus({ preventScroll: true });
     }
 
     function showReward() {
-      const canDeliver = screens.play.classList.contains("is-active")
+      const canShowTruck = screens.play.classList.contains("is-active")
         && ui.completePanel.classList.contains("is-visible")
         && state.rewardAppliedProblemIndex !== state.problemIndex;
-      if (!canDeliver) return;
+      if (!canShowTruck) return;
 
       state.rewardAppliedProblemIndex = state.problemIndex;
-      setButtonDisabled(ui.deliveryButton, true);
+      setButtonDisabled(ui.truckButton, true);
 
       const model = Lesson5PackageWeightModel;
       const firstTry = !state.mistakeTouched;
-      const routeChange = model.pickRouteChange(state.rng, state.mistakeTouched);
-      const routeResult = model.applyRoute({
-        distance: state.distance,
+      const upgradeEvent = model.pickUpgradeEvent(state.rng, state.mistakeTouched);
+      const upgradeResult = model.applyUpgrade({
+        truckPower: state.truckPower,
         correctFirstTry: state.correctFirstTry,
-        secretSeen: state.secretSeen
-      }, routeChange, firstTry);
-      state.distance = routeResult.distance;
-      state.correctFirstTry = routeResult.correctFirstTry;
-      state.secretSeen = routeResult.secretSeen;
-      state.latestRoute = routeResult;
+        superPartSeen: state.superPartSeen
+      }, upgradeEvent, firstTry);
+      state.truckPower = upgradeResult.truckPower;
+      state.correctFirstTry = upgradeResult.correctFirstTry;
+      state.superPartSeen = upgradeResult.superPartSeen;
+      state.latestUpgrade = upgradeResult;
 
-      const actualMovement = routeResult.distance - routeResult.before;
-      ui.rewardTitle.textContent = routeChange.text;
-      ui.rewardMeter.style.width = `${state.distance}%`;
-      ui.rewardMeterText.textContent = `${state.distance}km`;
-      ui.rewardChange.textContent = formatRouteMovement(actualMovement);
+      const actualMovement = upgradeResult.truckPower - upgradeResult.before;
+      const currentResult = getCurrentTruckResult();
+      ui.rewardTitle.textContent = upgradeEvent.text;
+      renderTruckStage(currentResult);
+      ui.rewardChange.textContent = formatUpgradeMessage(actualMovement);
       ui.rewardNextButton.textContent = state.problemIndex === state.problems.length - 1 ? "보기" : "다음";
       setButtonDisabled(ui.rewardNextButton, false);
       showScreen("reward");
@@ -1498,7 +1719,7 @@
 
     function advanceAfterReward() {
       const canAdvance = screens.reward.classList.contains("is-active")
-        && state.latestRoute
+        && state.latestUpgrade
         && state.rewardAppliedProblemIndex === state.problemIndex
         && state.rewardAdvancedProblemIndex !== state.problemIndex;
       if (!canAdvance) return;
@@ -1518,14 +1739,16 @@
 
     function showResult() {
       const model = Lesson5PackageWeightModel;
-      const destination = model.getDestination(state.distance, state.correctFirstTry, state.secretSeen);
-      const next = model.getNextDestination(destination);
-      ui.resultBg.src = destination.image;
-      ui.resultTitle.textContent = destination.name;
-      ui.resultSummary.textContent = `바로 맞힌 문제 ${state.correctFirstTry}개, 배송 거리 ${state.distance}km`;
-      ui.resultNext.textContent = destination.id === next.id
-        ? "끝까지 갔어요. 한 번 더 가 볼까요?"
-        : `이번엔 ${destination.name}. 다음엔 ${next.name}까지 가요.`;
+      const result = model.getTruckResult(state.truckPower, state.correctFirstTry, state.superPartSeen);
+      const next = model.getNextTruckResult(result);
+      screens.result.dataset.resultTier = result.id;
+      ui.resultBg.src = result.image;
+      ui.resultTitleArt.src = result.titleImage;
+      ui.resultTitle.textContent = result.name;
+      ui.resultSummary.textContent = `바로 맞힌 문제 ${state.correctFirstTry}개`;
+      ui.resultNext.textContent = result.id === next.id
+        ? "최고 트럭이에요. 다시 만들까요?"
+        : `다음엔 ${next.name}`;
       showScreen("result");
     }
 
@@ -1536,7 +1759,7 @@
 
     ui.startButton.addEventListener("click", () => showScreen("tutorial"));
     ui.tutorialStartButton.addEventListener("click", startGame);
-    ui.deliveryButton.addEventListener("click", showReward);
+    ui.truckButton.addEventListener("click", showReward);
     ui.rewardNextButton.addEventListener("click", advanceAfterReward);
     ui.retryButton.addEventListener("click", startGame);
     ui.soundToggle.addEventListener("click", () => {

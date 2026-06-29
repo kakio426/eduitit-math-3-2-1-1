@@ -37,21 +37,21 @@ function loadLessonModel() {
 }
 
 function simulateOne(model, rng, correctCount) {
-  let state = { distance: 0, correctFirstTry: 0, secretSeen: false };
+  let state = { truckPower: 0, correctFirstTry: 0, superPartSeen: false };
   const families = [];
   for (let index = 0; index < model.TOTAL_PROBLEMS; index += 1) {
     const firstTry = index < correctCount;
-    const change = model.pickRouteChange(rng, !firstTry);
-    const applied = model.applyRoute(state, change, firstTry);
+    const event = model.pickUpgradeEvent(rng, !firstTry);
+    const applied = model.applyUpgrade(state, event, firstTry);
     state = {
-      distance: applied.distance,
+      truckPower: applied.truckPower,
       correctFirstTry: applied.correctFirstTry,
-      secretSeen: applied.secretSeen
+      superPartSeen: applied.superPartSeen
     };
-    families.push(change.family);
+    families.push(event.family);
   }
-  const destination = model.getDestination(state.distance, state.correctFirstTry, state.secretSeen);
-  return { ...state, destination, families };
+  const truckResult = model.getTruckResult(state.truckPower, state.correctFirstTry, state.superPartSeen);
+  return { ...state, truckResult, families };
 }
 
 function main() {
@@ -62,28 +62,28 @@ function main() {
 
   for (const correctCount of PROFILES) {
     const rng = model.createRng((options.seed + correctCount * 1009) >>> 0);
-    const destinationCounts = new Map(model.DESTINATIONS.map((item) => [item.name, 0]));
-    let totalDistance = 0;
-    let minDistance = Infinity;
-    let maxDistance = -Infinity;
+    const truckResultCounts = new Map(model.TRUCK_RESULTS.map((item) => [item.name, 0]));
+    let totalTruckPower = 0;
+    let minTruckPower = Infinity;
+    let maxTruckPower = -Infinity;
     for (let run = 0; run < options.runs; run += 1) {
       const result = simulateOne(model, rng, correctCount);
-      destinationCounts.set(result.destination.name, destinationCounts.get(result.destination.name) + 1);
-      totalDistance += result.distance;
-      minDistance = Math.min(minDistance, result.distance);
-      maxDistance = Math.max(maxDistance, result.distance);
+      truckResultCounts.set(result.truckResult.name, truckResultCounts.get(result.truckResult.name) + 1);
+      totalTruckPower += result.truckPower;
+      minTruckPower = Math.min(minTruckPower, result.truckPower);
+      maxTruckPower = Math.max(maxTruckPower, result.truckPower);
       result.families.forEach((family) => familySeen.add(family));
     }
     summaries.push({
       correctCount,
       runs: options.runs,
-      averageDistance: Number((totalDistance / options.runs).toFixed(2)),
-      distanceRange: `${minDistance}-${maxDistance}`,
-      destinationCounts: Object.fromEntries(destinationCounts)
+      averageTruckPower: Number((totalTruckPower / options.runs).toFixed(2)),
+      truckPowerRange: `${minTruckPower}-${maxTruckPower}`,
+      truckResultCounts: Object.fromEntries(truckResultCounts)
     });
   }
 
-  const requiredFamilies = ["increase", "biggerIncrease", "decrease", "zeroPause", "instantSpecial", "wrongPenalty"];
+  const requiredFamilies = ["smallUpgrade", "bigUpgrade", "styleUpgrade", "smallOnly", "superUpgrade", "repair"];
   const missing = requiredFamilies.filter((family) => !familySeen.has(family));
   if (missing.length) {
     throw new Error(`Missing reward families: ${missing.join(", ")}`);

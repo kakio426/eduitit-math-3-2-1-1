@@ -287,69 +287,76 @@ const PLAY_TO_COMPLETE = String.raw`
   await waitFor(() => [...document.querySelectorAll("#choicesPanel button")].some((item) => item.dataset.correct === "true" && !item.disabled), "step 2 choices");
   clickCorrect();
   await waitFor(() => document.querySelector("#completePanel").classList.contains("is-visible"), "complete panel");
-  return {
-    progressBeforeReward: document.querySelector("#runProgressText").textContent,
-    problemCounter: document.querySelector("#problemCounter").textContent,
-    deliveryDisabled: document.querySelector("#deliveryButton").disabled
-  };
-})()
-`;
+	  return {
+	    progressBeforeReward: document.querySelector("#runProgressText").textContent,
+	    problemCounter: document.querySelector("#problemCounter").textContent,
+	    truckDisabled: document.querySelector("#truckButton").disabled
+	  };
+	})()
+	`;
 
-function expectedSingleRouteExpression(seed) {
-  return `(() => {
-    const model = window.Lesson5PackageWeightModel;
-    const rng = model.createRng((${seed} + 0x9e3779b9) >>> 0);
-    const routeChange = model.pickRouteChange(rng, false);
-    const routeResult = model.applyRoute({ distance: 0, correctFirstTry: 0, secretSeen: false }, routeChange, true);
-    const actualMovement = routeResult.distance - routeResult.before;
-    return {
-      routeId: routeChange.id,
-      family: routeChange.family,
-      amount: routeChange.amount,
-      expectedDistance: routeResult.distance,
-      expectedCorrectFirstTry: routeResult.correctFirstTry,
-      expectedActualMovement: actualMovement,
-      expectedRawMovement: routeResult.skillDistance + routeChange.amount,
-      expectedChangeText: actualMovement === 0 ? "그대로예요" : (actualMovement >= 0 ? "+" : "") + actualMovement + "km"
-    };
-  })()`;
-}
+	function expectedSingleUpgradeExpression(seed) {
+	  return `(() => {
+	    const model = window.Lesson5PackageWeightModel;
+	    const rng = model.createRng((${seed} + 0x9e3779b9) >>> 0);
+	    const event = model.pickUpgradeEvent(rng, false);
+	    const upgradeResult = model.applyUpgrade({ truckPower: 0, correctFirstTry: 0, superPartSeen: false }, event, true);
+	    const actualMovement = upgradeResult.truckPower - upgradeResult.before;
+	    const truckResult = model.getTruckResult(upgradeResult.truckPower, upgradeResult.correctFirstTry, upgradeResult.superPartSeen);
+	    const expectedChangeText = actualMovement <= 2
+	      ? "조금 멋져졌어요."
+	      : actualMovement >= 28
+	        ? "크게 멋져졌어요."
+	        : "트럭이 멋져졌어요.";
+	    return {
+	      eventId: event.id,
+	      family: event.family,
+	      amount: event.amount,
+	      expectedTruckPower: upgradeResult.truckPower,
+	      expectedCorrectFirstTry: upgradeResult.correctFirstTry,
+	      expectedStageText: truckResult.name,
+	      expectedActualMovement: actualMovement,
+	      expectedRawMovement: upgradeResult.skillPower + event.amount,
+	      expectedChangeText
+	    };
+	  })()`;
+	}
 
-async function runDeliveryTripleProbe(page, pageUrl, seed) {
-  await loadLessonPage(page, pageUrl);
-  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
-  const expected = await evalInPage(page, expectedSingleRouteExpression(seed));
-  const observed = await evalInPage(page, String.raw`
-    (() => {
-      const button = document.querySelector("#deliveryButton");
-      button.click();
-      button.click();
-      button.click();
-      return {
-        rewardActive: document.querySelector("#screen-reward").classList.contains("is-active"),
-        deliveryDisabledAfterClicks: button.disabled,
-        meterText: document.querySelector("#rewardMeterText").textContent,
-        changeText: document.querySelector("#rewardChange").textContent,
-        title: document.querySelector("#rewardTitle").textContent
-      };
-    })()
-  `);
-  const pass = observed.rewardActive
-    && observed.meterText === `${expected.expectedDistance}km`
-    && observed.changeText === expected.expectedChangeText;
-  return { name: "delivery_triple_click", pass, setup, expected, observed };
-}
+	async function runTruckButtonTripleProbe(page, pageUrl, seed) {
+	  await loadLessonPage(page, pageUrl);
+	  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
+	  const expected = await evalInPage(page, expectedSingleUpgradeExpression(seed));
+	  const observed = await evalInPage(page, String.raw`
+	    (() => {
+	      const button = document.querySelector("#truckButton");
+	      button.click();
+	      button.click();
+	      button.click();
+	      return {
+	        rewardActive: document.querySelector("#screen-reward").classList.contains("is-active"),
+	        truckDisabledAfterClicks: button.disabled,
+	        stageText: document.querySelector("#rewardStageText").textContent,
+	        changeText: document.querySelector("#rewardChange").textContent,
+	        title: document.querySelector("#rewardTitle").textContent
+	      };
+	    })()
+	  `);
+	  const pass = observed.rewardActive
+	    && observed.stageText === expected.expectedStageText
+	    && observed.changeText === expected.expectedChangeText;
+	  return { name: "truck_button_triple_click", pass, setup, expected, observed };
+	}
 
 async function runRewardNextDoubleProbe(page, pageUrl) {
   await loadLessonPage(page, pageUrl);
-  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
-  const observed = await evalInPage(page, String.raw`
-    (() => {
-      const deliveryButton = document.querySelector("#deliveryButton");
-      deliveryButton.click();
-      const nextButton = document.querySelector("#rewardNextButton");
-      nextButton.click();
-      nextButton.click();
+	  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
+	  const observed = await evalInPage(page, String.raw`
+	    (() => {
+	      const truckButton = document.querySelector("#truckButton");
+	      truckButton.click();
+	      const nextButton = document.querySelector("#rewardNextButton");
+	      nextButton.click();
+	      nextButton.click();
       return {
         rewardActive: document.querySelector("#screen-reward").classList.contains("is-active"),
         playActive: document.querySelector("#screen-play").classList.contains("is-active"),
@@ -365,13 +372,13 @@ async function runRewardNextDoubleProbe(page, pageUrl) {
 }
 
 async function runRewardNextPhysicalDoubleClickProbe(page, pageUrl) {
-  await loadLessonPage(page, pageUrl);
-  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
-  const beforeClick = await evalInPage(page, String.raw`
-    (() => {
-      document.querySelector("#deliveryButton").click();
-      const rect = document.querySelector("#rewardNextButton").getBoundingClientRect();
-      return {
+	  await loadLessonPage(page, pageUrl);
+	  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
+	  const beforeClick = await evalInPage(page, String.raw`
+	    (() => {
+	      document.querySelector("#truckButton").click();
+	      const rect = document.querySelector("#rewardNextButton").getBoundingClientRect();
+	      return {
         rewardActive: document.querySelector("#screen-reward").classList.contains("is-active"),
         buttonText: document.querySelector("#rewardNextButton").textContent,
         x: rect.left + rect.width / 2,
@@ -448,38 +455,38 @@ async function runRewardNextPhysicalDoubleClickProbe(page, pageUrl) {
   };
 }
 
-async function runDeliveryStaleEventProbe(page, pageUrl, seed) {
-  await loadLessonPage(page, pageUrl);
-  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
-  const expected = await evalInPage(page, expectedSingleRouteExpression(seed));
-  const observed = await evalInPage(page, String.raw`
-    (() => {
-      const button = document.querySelector("#deliveryButton");
-      button.click();
-      button.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
-      button.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
-      button.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true, cancelable: true }));
-      return {
-        rewardActive: document.querySelector("#screen-reward").classList.contains("is-active"),
-        deliveryDisabledAfterEvents: button.disabled,
-        meterText: document.querySelector("#rewardMeterText").textContent,
-        changeText: document.querySelector("#rewardChange").textContent
-      };
-    })()
-  `);
-  const pass = observed.rewardActive
-    && observed.meterText === `${expected.expectedDistance}km`
-    && observed.changeText === expected.expectedChangeText;
-  return { name: "delivery_stale_pointer_keyboard_events", pass, setup, expected, observed };
-}
+	async function runTruckButtonStaleEventProbe(page, pageUrl, seed) {
+	  await loadLessonPage(page, pageUrl);
+	  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
+	  const expected = await evalInPage(page, expectedSingleUpgradeExpression(seed));
+	  const observed = await evalInPage(page, String.raw`
+	    (() => {
+	      const button = document.querySelector("#truckButton");
+	      button.click();
+	      button.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+	      button.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
+	      button.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", code: "Enter", bubbles: true, cancelable: true }));
+	      return {
+	        rewardActive: document.querySelector("#screen-reward").classList.contains("is-active"),
+	        truckDisabledAfterEvents: button.disabled,
+	        stageText: document.querySelector("#rewardStageText").textContent,
+	        changeText: document.querySelector("#rewardChange").textContent
+	      };
+	    })()
+	  `);
+	  const pass = observed.rewardActive
+	    && observed.stageText === expected.expectedStageText
+	    && observed.changeText === expected.expectedChangeText;
+	  return { name: "truck_button_stale_pointer_keyboard_events", pass, setup, expected, observed };
+	}
 
 async function runRewardNextStaleEventProbe(page, pageUrl) {
   await loadLessonPage(page, pageUrl);
-  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
-  const observed = await evalInPage(page, String.raw`
-    (() => {
-      document.querySelector("#deliveryButton").click();
-      const nextButton = document.querySelector("#rewardNextButton");
+	  const setup = await evalInPage(page, PLAY_TO_COMPLETE);
+	  const observed = await evalInPage(page, String.raw`
+	    (() => {
+	      document.querySelector("#truckButton").click();
+	      const nextButton = document.querySelector("#rewardNextButton");
       nextButton.click();
       nextButton.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
       nextButton.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true }));
@@ -538,10 +545,10 @@ async function runSeedReplayProbe(page, seedPageUrl, randomPageUrl) {
             await waitFor(() => document.querySelector("#screen-play").classList.contains("is-active") || document.querySelector("#screen-result").classList.contains("is-active"), "reward advance");
             continue;
           }
-          if (document.querySelector("#completePanel").classList.contains("is-visible")) {
-            document.querySelector("#deliveryButton").click();
-            await waitFor(() => document.querySelector("#screen-reward").classList.contains("is-active"), "reward screen");
-            continue;
+	          if (document.querySelector("#completePanel").classList.contains("is-visible")) {
+	            document.querySelector("#truckButton").click();
+	            await waitFor(() => document.querySelector("#screen-reward").classList.contains("is-active"), "reward screen");
+	            continue;
           }
           clickCorrect();
           await waitFor(() => [...document.querySelectorAll("#choicesPanel button")].some((item) => item.dataset.correct === "true" && !item.disabled)
@@ -573,6 +580,55 @@ async function runSeedReplayProbe(page, seedPageUrl, randomPageUrl) {
   };
 }
 
+async function runResultRasterContractProbe(page, pageUrl) {
+  await loadLessonPage(page, pageUrl);
+  const observed = await evalInPage(page, String.raw`
+    (() => {
+      const retryButton = document.querySelector("#retryButton");
+      const title = document.querySelector("#resultTitle");
+      const summary = document.querySelector("#resultSummary");
+      const next = document.querySelector("#resultNext");
+      const isVisuallyHidden = (element) => {
+        if (!element) return false;
+        const style = getComputedStyle(element);
+        return style.position === "absolute"
+          && element.clientWidth <= 1
+          && element.clientHeight <= 1
+          && style.overflow === "hidden";
+      };
+      return {
+        hasResultCard: Boolean(document.querySelector(".result-card")),
+        hasCssResultHeading: Boolean(document.querySelector(".result-truck-name")),
+        hasResultTitleArt: document.querySelector("#resultTitleArt")?.tagName === "IMG",
+        hasRetryArt: document.querySelector(".result-retry-art")?.tagName === "IMG",
+        retryVisibleText: retryButton?.textContent.trim() || "",
+        retryAriaLabel: retryButton?.getAttribute("aria-label") || "",
+        titleHidden: isVisuallyHidden(title),
+        summaryHidden: isVisuallyHidden(summary),
+        nextHidden: isVisuallyHidden(next)
+      };
+    })()
+  `);
+  const pass = !observed.hasResultCard
+    && !observed.hasCssResultHeading
+    && observed.hasResultTitleArt
+    && observed.hasRetryArt
+    && observed.retryVisibleText === ""
+    && observed.retryAriaLabel === "다시"
+    && observed.titleHidden
+    && observed.summaryHidden
+    && observed.nextHidden;
+  return {
+    name: "result_raster_contract_no_css_card",
+    pass,
+    expected: {
+      visibleResultText: "generated image assets only",
+      retryButton: "transparent accessible hitbox over generated button art"
+    },
+    observed
+  };
+}
+
 async function main() {
   const options = parseArgs(process.argv.slice(2));
   const serverPort = await getFreePort();
@@ -595,14 +651,15 @@ async function main() {
     await page.send("Runtime.enable");
     await waitForLoad(page);
 
-    const probes = [
-      await runDeliveryTripleProbe(page, seedPageUrl, options.seed),
-      await runRewardNextDoubleProbe(page, seedPageUrl),
-      await runRewardNextPhysicalDoubleClickProbe(page, seedPageUrl),
-      await runDeliveryStaleEventProbe(page, seedPageUrl, options.seed),
-      await runRewardNextStaleEventProbe(page, seedPageUrl),
-      await runSeedReplayProbe(page, seedPageUrl, randomPageUrl)
-    ];
+	    const probes = [
+	      await runTruckButtonTripleProbe(page, seedPageUrl, options.seed),
+	      await runRewardNextDoubleProbe(page, seedPageUrl),
+	      await runRewardNextPhysicalDoubleClickProbe(page, seedPageUrl),
+	      await runTruckButtonStaleEventProbe(page, seedPageUrl, options.seed),
+	      await runRewardNextStaleEventProbe(page, seedPageUrl),
+	      await runSeedReplayProbe(page, seedPageUrl, randomPageUrl),
+	      await runResultRasterContractProbe(page, seedPageUrl)
+	    ];
     const pass = probes.every((probe) => probe.pass);
     const payload = {
       status: pass ? "PASS" : "FAIL",

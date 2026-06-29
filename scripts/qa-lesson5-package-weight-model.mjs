@@ -141,14 +141,19 @@ function runMalformedProbe(model) {
   validateProblem(mutated, "malformed", model);
 }
 
-function validateRouteFamilies(model) {
-  const families = new Set(model.ROUTE_CHANGES.map((change) => change.family));
-  families.add(model.WRONG_ROUTE_CHANGE.family);
-  for (const family of ["increase", "biggerIncrease", "decrease", "zeroPause", "instantSpecial", "wrongPenalty"]) {
-    assert(families.has(family), `missing route family ${family}`);
+function validateUpgradeFamilies(model) {
+  const families = new Set(model.UPGRADE_EVENTS.map((event) => event.family));
+  families.add(model.WRONG_UPGRADE_EVENT.family);
+  for (const family of ["smallUpgrade", "bigUpgrade", "styleUpgrade", "smallOnly", "superUpgrade", "repair"]) {
+    assert(families.has(family), `missing upgrade family ${family}`);
   }
-  const wrong = model.applyRoute({ distance: 50, correctFirstTry: 5, secretSeen: false }, { ...model.WRONG_ROUTE_CHANGE, amount: -8 }, false);
-  assert(wrong.distance === 42, "wrong route penalty must reduce distance");
+  const repaired = model.applyUpgrade(
+    { truckPower: 50, correctFirstTry: 5, superPartSeen: false },
+    { ...model.WRONG_UPGRADE_EVENT, amount: 2 },
+    false
+  );
+  assert(repaired.truckPower === 52, "repair event must still add a small truck upgrade");
+  assert(repaired.correctFirstTry === 5, "repair event must not add first-try credit");
 }
 
 function main() {
@@ -159,7 +164,7 @@ function main() {
     throw new Error("Malformed carry probe unexpectedly passed");
   }
 
-  validateRouteFamilies(model);
+  validateUpgradeFamilies(model);
 
   const typeCounts = new Map();
   const coverageCounts = new Map();
@@ -188,7 +193,7 @@ function main() {
     problemsChecked: options.runs * model.TOTAL_PROBLEMS,
     typeCounts: toObject(typeCounts),
     coverageCounts: toObject(coverageCounts),
-    routeFamilies: [...new Set([...model.ROUTE_CHANGES.map((change) => change.family), model.WRONG_ROUTE_CHANGE.family])].sort(),
+    upgradeFamilies: [...new Set([...model.UPGRADE_EVENTS.map((event) => event.family), model.WRONG_UPGRADE_EVENT.family])].sort(),
     samples: sample
   }, null, 2));
 }
