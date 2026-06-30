@@ -8,7 +8,7 @@
 - 콤보: 연속 정답이면 기본 정답 점수가 커짐
 - 상자 등급: 일반, 반짝, 황금 상자에 따라 보상 기대감이 달라짐
 - 결과 칭찬: 정답 수와 점수에 맞춘 한 줄 칭찬 표시
-- 소리: 낮은 볼륨의 BGM과 상황별 효과음, BGM 끄기 버튼 제공
+- 소리: 낮은 볼륨의 기존 BGM과 Kenney CC0 샘플 기반 상황별 효과음 제공. 사용 팩은 Interface Sounds, Impact Sounds, RPG Audio, Digital Audio, Music Jingles이며, 소리 버튼으로 함께 켜고 끔
 - 방식: 문제를 맞히고 상자를 열어 점수를 크게 바꾸는 짧은 반복 게임
 - 실행: `index.html`을 브라우저에서 열기
 
@@ -32,5 +32,6 @@
 - `result-generated-v2.webp`: 최종 결과 RasterStage 배경 이미지(배포용 경량 포맷, PNG 원본은 작업실 보관)
 - `mathmon-*.png`: 최종 점수로 얻는 매스몬 이미지
 - `eduitit-logo-mark.png`: 첫 화면 브랜딩 로고
+- `assets/audio/*.wav`: Kenney CC0 기반 정답, 오답, 상자, 보상, 결과 효과음
 - `screenshots/`: 화면별 스크린샷과 다운로드 카드 예시
 - `REPORT.md`: 게임 설명, 화면 흐름, 매스몬 설명

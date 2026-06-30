@@ -131,12 +131,13 @@
 
 ## 소리
 
-`AudioContext`로 낮은 배경음과 짧은 효과음을 만듭니다. 외부 오디오 파일은 쓰지 않습니다.
+`AudioContext`는 낮은 배경음에만 쓰고, 효과음은 Kenney CC0 샘플 WAV를 `assets/audio/`에서 재생합니다.
 
 - 시작, 정답, 오답, `0 한 개 붙이기`, `0 두 개 붙이기`는 서로 다른 짧은 cue를 씁니다.
 - 바람 보상은 `살랑 바람`, `앞바람`, `잠깐 멈춤`, `쌩쌩 바람`, `무지개 길`, `길이 흔들렸어요` 각각 `reward-*` cue를 씁니다.
 - 결과 공개는 `점프 길을 살펴봐요.` → `도착한 곳을 찾았어요.` → `섬이 보여요.` 단계 cue와 마지막 완료 cue를 분리했습니다.
 - 소리 버튼은 Stage 안 오른쪽 위에 고정된 원형 SVG 버튼이며 `aria-label`로 켜짐/꺼짐을 알려 줍니다.
+- 참조한 Kenney 샘플의 출처와 역할은 `_shared/audio/kenney/`에 남겼고, 이 차시에는 실제 참조 파일만 복사했습니다. 사용 팩은 Interface Sounds, Impact Sounds, RPG Audio, Sci-fi Sounds, Digital Audio, Music Jingles입니다.
 
 ## 생성 이미지와 매스몬
 
@@ -224,6 +225,7 @@
 - 단계 정답 확인 QA: `node scripts/qa-lesson3-step-feedback.mjs`(1280×800), `LESSON3_QA_NAME=tablet-landscape LESSON3_QA_WIDTH=1024 LESSON3_QA_HEIGHT=768 LESSON3_QA_PORT=9252 node scripts/qa-lesson3-step-feedback.mjs`
 - 문제 모델 QA: `node scripts/qa-lesson3-math-model.mjs`
 - 결과 통이미지 QA: `node scripts/qa-lesson3-result-fullscene.mjs`
+- 오디오 자산 검사: `node scripts/check-audio-assets.mjs`
 - 대표 스크린샷 최신화: `node scripts/capture-lesson3-screenshots.mjs`
 - 보상 시뮬레이션: `node scripts/simulate-lesson3-islands.mjs --seed 12345 --runs 50000 --expect-rainbow-min 0.10`
 - Stage 검사: `node scripts/check-stage-ratio.mjs`

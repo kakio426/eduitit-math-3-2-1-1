@@ -1995,6 +1995,8 @@
       resultRevealRunId: 0,
       soundsOn: true,
       audio: null,
+      sfxCache: new Map(),
+      sfxLog: [],
       bgmGain: null,
       bgmTimer: null,
       bgmRunning: false
@@ -2760,45 +2762,95 @@
       state.bgmGain = null;
     }
 
-    const SOUND_CUE_PLANS = {
-      start: { type: "triangle", notes: [260, 330, 392], gain: 0.055, spacing: 0.07, duration: 0.15 },
-      correct: { type: "triangle", notes: [523, 659], gain: 0.07, spacing: 0.07, duration: 0.14 },
-      wrong: { type: "sawtooth", notes: [220, 174], gain: 0.04, spacing: 0.07, duration: 0.13 },
-      try: { type: "sawtooth", notes: [220, 174], gain: 0.04, spacing: 0.07, duration: 0.13 },
-      tenfold: { type: "triangle", notes: [330, 440, 550], gain: 0.058, spacing: 0.06, duration: 0.14 },
-      hundredfold: { type: "square", notes: [392, 587, 784], gain: 0.047, spacing: 0.06, duration: 0.14 },
-      "reward-tailwind": { type: "triangle", notes: [392, 494, 587], gain: 0.052, spacing: 0.06, duration: 0.14 },
-      "reward-headwind": { type: "sawtooth", notes: [294, 247, 220], gain: 0.038, spacing: 0.055, duration: 0.12 },
-      "reward-pause": { type: "sine", notes: [262], gain: 0.035, spacing: 0.06, duration: 0.18 },
-      "reward-gust": { type: "triangle", notes: [440, 660, 880], gain: 0.055, spacing: 0.045, duration: 0.12 },
-      "reward-rainbow": { type: "sine", notes: [523, 659, 784, 1047], gain: 0.052, spacing: 0.055, duration: 0.13 },
-      "reward-shaky": { type: "sawtooth", notes: [196, 165, 147], gain: 0.035, spacing: 0.055, duration: 0.12 },
-      "reveal-jump-path-scan": { type: "sine", notes: [247, 330], gain: 0.038, spacing: 0.08, duration: 0.14 },
-      "reveal-landing-marker": { type: "triangle", notes: [330, 392], gain: 0.042, spacing: 0.07, duration: 0.13 },
-      "reveal-island-reveal": { type: "triangle", notes: [392, 523, 659], gain: 0.048, spacing: 0.06, duration: 0.14 },
-      next: { type: "triangle", notes: [330], gain: 0.045, spacing: 0.06, duration: 0.12 },
-      finish: { type: "triangle", notes: [392, 523, 659, 880], gain: 0.06, spacing: 0.065, duration: 0.15 }
+    const SFX_CUES = {
+      uiStart: "assets/audio/ui-start.wav",
+      uiNext: "assets/audio/ui-next.wav",
+      answerCorrect: "assets/audio/answer-correct.wav",
+      answerWrongSoft: "assets/audio/answer-wrong-soft.wav",
+      stepPlace: "assets/audio/step-place.wav",
+      stepCarry: "assets/audio/step-carry.wav",
+      windTailwind: "assets/audio/wind-tailwind.wav",
+      windHeadwind: "assets/audio/wind-headwind.wav",
+      windPause: "assets/audio/wind-pause.wav",
+      windGust: "assets/audio/wind-gust.wav",
+      windRainbow: "assets/audio/wind-rainbow.wav",
+      windShaky: "assets/audio/wind-shaky.wav",
+      measureScan: "assets/audio/measure-scan.wav",
+      mapHop: "assets/audio/map-hop.wav",
+      islandReveal: "assets/audio/island-reveal.wav",
+      resultLow: "assets/audio/result-low.wav",
+      resultMid: "assets/audio/result-mid.wav",
+      resultHigh: "assets/audio/result-high.wav",
+      resultRare: "assets/audio/result-rare.wav"
     };
 
-    function playSound(kind) {
-      if (!state.soundsOn || !resumeAudio()) {
-        return;
+    const SOUND_KIND_TO_CUE = {
+      start: "uiStart",
+      correct: "answerCorrect",
+      wrong: "answerWrongSoft",
+      try: "answerWrongSoft",
+      tenfold: "stepPlace",
+      hundredfold: "stepCarry",
+      "reward-tailwind": "windTailwind",
+      "reward-headwind": "windHeadwind",
+      "reward-pause": "windPause",
+      "reward-gust": "windGust",
+      "reward-rainbow": "windRainbow",
+      "reward-shaky": "windShaky",
+      "reveal-jump-path-scan": "measureScan",
+      "reveal-landing-marker": "mapHop",
+      "reveal-island-reveal": "islandReveal",
+      next: "uiNext"
+    };
+
+    const SFX_VOLUME = {
+      answerWrongSoft: 0.46,
+      windHeadwind: 0.48,
+      windShaky: 0.5,
+      resultRare: 0.62
+    };
+
+    function getSample(cue) {
+      const src = SFX_CUES[cue];
+      if (!src) return null;
+      if (!state.sfxCache.has(cue)) {
+        const sample = new Audio(src);
+        sample.preload = "auto";
+        state.sfxCache.set(cue, sample);
       }
-      const plan = SOUND_CUE_PLANS[kind] || SOUND_CUE_PLANS.next;
-      plan.notes.forEach((frequency, index) => {
-        const oscillator = state.audio.createOscillator();
-        const gain = state.audio.createGain();
-        const startAt = state.audio.currentTime + index * plan.spacing;
-        oscillator.type = plan.type;
-        oscillator.frequency.value = frequency;
-        gain.gain.setValueAtTime(0.0001, startAt);
-        gain.gain.exponentialRampToValueAtTime(plan.gain, startAt + 0.018);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startAt + plan.duration);
-        oscillator.connect(gain).connect(state.audio.destination);
-        oscillator.start(startAt);
-        oscillator.stop(startAt + plan.duration + 0.02);
-      });
+      return state.sfxCache.get(cue);
     }
+
+    function getResultCue() {
+      const island = el.resultScreen.dataset.resultIsland;
+      if (island === "rainbow") return "resultRare";
+      if (island === "starlight") return "resultHigh";
+      if (island === "forest" || island === "cloud") return "resultMid";
+      return "resultLow";
+    }
+
+    function playSample(cue) {
+      if (!state.soundsOn) return;
+      const sample = getSample(cue);
+      if (!sample) return;
+      const voice = sample.cloneNode(true);
+      voice.volume = SFX_VOLUME[cue] ?? 0.56;
+      state.sfxLog.push(cue);
+      if (state.sfxLog.length > 80) state.sfxLog.shift();
+      voice.play().catch(() => {});
+    }
+
+    function playSound(kind) {
+      playSample(kind === "finish" ? getResultCue() : (SOUND_KIND_TO_CUE[kind] || "uiNext"));
+    }
+
+    window.__mathmonAudioQa = {
+      cues: SFX_CUES,
+      getLog: () => [...state.sfxLog],
+      clearLog: () => {
+        state.sfxLog = [];
+      }
+    };
 
     el.startButton.addEventListener("click", () => {
       startBgm();

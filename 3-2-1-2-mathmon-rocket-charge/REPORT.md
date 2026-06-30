@@ -73,7 +73,7 @@
 
 한 문제의 세 자리 계산이 끝나면 화면 중앙에 연료 이벤트 모달이 뜹니다. 모달은 긴 설명문 대신 `reward-events-sprite-generated.png`의 6개 이미지 칸을 사용합니다. 연료 주입, 대량 주입, 연료 감소, 연료 0, 즉시 발사, 무지개 연료를 이미지로 구분하고, 화면에는 `연료 +6`, `연료 -12`, `연료 0`, `발사!`, `무지개!`처럼 짧은 값만 HTML로 얹습니다. 문제 안에서 한 번이라도 틀리면 연료 감소 이미지가 나오고 연료가 줄어듭니다. 보상은 로켓 안 액체 연료 하나로만 적용됩니다. 문제 화면의 행성 트랙은 `마지막에 측정` 또는 `곧 측정` 상태로만 두고, 실제 도착 가능 행성은 마지막 측정 연출에서 공개합니다.
 
-소리는 WebAudio로 생성합니다. 시작 뒤에는 낮은 우주 배경음이 깔리고, 연료 이벤트 모달이 뜰 때는 일반 주입, 대량 주입, 연료 감소, 연료 0, 즉시 발사, 무지개 연료가 서로 다른 효과음으로 구분됩니다. 상단의 소리 버튼으로 BGM과 효과음을 함께 켜고 끌 수 있습니다.
+소리는 낮은 우주 BGM만 기존 WebAudio 루프로 유지하고, 효과음은 Kenney CC0 샘플 WAV로 재생합니다. 시작, 정답, 오답, 자리값 확인, 연료 이벤트, 측정, 결과 공개가 서로 다른 소리로 구분됩니다. 상단의 소리 버튼으로 BGM과 효과음을 함께 켜고 끌 수 있습니다.
 
 ![연료 이벤트 모달](screenshots/04-reward.png)
 
@@ -116,8 +116,11 @@
 - `result-retry-generated.webp`
 - `eduitit-logo-mark.png`
 - `assets/mathmon/base-pack/*.webp`
+- `assets/audio/*.wav`
 - `screenshots/*.png`
 - `README.md`
 - `REPORT.md`
 
 브라우저에서 `index.html`을 열면 바로 실행됩니다.
+
+효과음은 `_shared/audio/kenney/`에 출처와 카탈로그를 남긴 Kenney CC0 샘플 중 이 차시에서 참조하는 파일만 `assets/audio/`에 복사했습니다. 사용 팩은 Interface Sounds, Sci-fi Sounds, Digital Audio, Music Jingles입니다. 자산 일치와 길이 검사는 루트에서 `node scripts/check-audio-assets.mjs`로 확인합니다.

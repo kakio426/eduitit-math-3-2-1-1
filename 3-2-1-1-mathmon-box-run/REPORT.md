@@ -16,7 +16,7 @@
 - 정답 보상: 일반, 반짝, 황금 상자 중 하나 열기
 - 오답 처리: 1회 오답은 재도전, 2회 오답은 깨진 상자 자동 열기
 - 결과 칭찬: 정답 수와 점수에 따라 한 줄 칭찬 표시
-- 소리 피드백: 낮은 볼륨의 BGM과 정답, 오답, 상자, 결과 효과음 제공. BGM은 버튼으로 끌 수 있음
+- 소리 피드백: 낮은 볼륨의 기존 BGM과 Kenney CC0 샘플 기반 정답, 오답, 상자, 보상, 결과 효과음 제공. 소리 버튼으로 함께 켜고 끔
 - 최종 보상: 점수와 정답 수 조건을 함께 통과한 매스몬 획득
 
 문제는 각 자리 숫자와 곱하는 수를 조합할 때 자리별 곱이 9를 넘지 않도록 만들어 받아올림이 생기지 않게 구성했습니다. 후보 문제는 총 186개이며, 한 판이 시작될 때 섞은 뒤 10개만 뽑아 반복 플레이마다 다른 문제 흐름이 나오게 했습니다.
@@ -127,9 +127,12 @@
 - `cover-generated.webp`
 - `result-generated-v2.webp`
 - `eduitit-logo-mark.png`
+- `assets/audio/*.wav`
 - `mathmon-0-almon.png` ~ `mathmon-9-kingdragonmon.png`
 - `screenshots/*.png`
 - `README.md`
 - `REPORT.md`
 
 브라우저에서 `index.html`을 열면 바로 실행됩니다.
+
+효과음은 `_shared/audio/kenney/`에 출처와 카탈로그를 남긴 Kenney CC0 샘플 중 이 차시에서 참조하는 파일만 `assets/audio/`에 복사했습니다. 사용 팩은 Interface Sounds, Impact Sounds, RPG Audio, Digital Audio, Music Jingles입니다. 자산 일치와 길이 검사는 루트에서 `node scripts/check-audio-assets.mjs`로 확인합니다.

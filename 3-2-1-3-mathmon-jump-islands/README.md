@@ -40,7 +40,7 @@
 
 ## 소리
 
-시작 뒤 낮은 배경음이 켜지고, 정답·오답·보상·다음·결과 공개에 짧은 WebAudio 효과가 납니다. 소리 버튼은 Stage 안 오른쪽 위 원형 SVG 버튼이며, 화면에는 글자를 보이지 않습니다.
+시작 뒤 기존 낮은 배경음이 켜지고, 정답·오답·보상·다음·결과 공개에는 Kenney CC0 샘플 기반 짧은 효과음이 납니다. 사용 팩은 Interface Sounds, Impact Sounds, RPG Audio, Sci-fi Sounds, Digital Audio, Music Jingles입니다. 소리 버튼은 Stage 안 오른쪽 위 원형 SVG 버튼이며, 화면에는 글자를 보이지 않습니다.
 
 ## 자산
 
@@ -50,9 +50,10 @@
 - 바람: `reward-tailwind-generated.webp`, `reward-headwind-generated.webp`, `reward-pause-generated.webp`, `reward-gust-generated.webp`, `reward-rainbow-generated.webp`, `reward-shaky-generated.webp`
 - 결과: `result-final-start-generated.webp`, `result-final-sand-generated.webp`, `result-final-forest-generated.webp`, `result-final-cloud-generated.webp`, `result-final-starlight-generated.webp`, `result-final-rainbow-generated.webp`
 - 매스몬: `_shared/mathmon/zero-factory-animal-pack/`의 `mathmon-zfa-04-nyangnyangmon.webp`
+- 소리: `assets/audio/*.wav` Kenney CC0 기반 버튼, 정답, 오답, 0 붙이기, 바람, 지도, 결과 효과음
 
 문제와 보상 모달의 생성 이미지에는 문제, 선택지, 점수, 버튼, 섬 이름을 넣지 않았습니다. 결과 화면은 `result-final-*` 6장 완성형 래스터가 도착 라벨, 큰 결과 문구, 이미지 속 `다시하기` 버튼, 점수용 빈 네모 상자를 함께 담습니다. HTML/CSS가 보이게 만드는 것은 `6/10` 같은 정답 수 숫자 1개뿐이고, 다시하기는 같은 위치의 투명 HTML hitbox로 클릭 영역만 제공합니다. 점수 숫자는 각 결과 이미지의 빈 네모 상자에 맞춘 `data-result-island` RasterStage 슬롯으로 배치하고, QA 스크립트가 스크린샷 픽셀에서 숫자 중심과 빈칸 중심을 비교합니다. 점수 상자에는 라벨을 넣지 않았고, 시작 결과 이미지에도 보이는 `출발섬` 텍스트를 넣지 않았습니다.
 
 ## QA
 
-새 보상 모달 이미지 6종, 새 결과 완성 이미지 6종, 첫 화면부터 결과 화면까지의 흐름, 상단 지도 매스몬 미니 효과를 다시 확인했습니다. 결과 화면은 `fullscene-score-slot` 모드로 점수 숫자와 투명 다시하기 hitbox만 DOM에 남겼습니다. `1280x800`, `1024x768`에서 텍스트 넘침과 요소 겹침 0건, 지도 밖 이탈 0건, 학생 화면 `현재` 글자 미노출을 확인했습니다. `node scripts/qa-lesson3-result-fullscene.mjs`는 6개 결과 이미지의 점수 숫자 픽셀 중심이 빈 점수칸 중심에서 허용치 안에 있는지도 검사합니다. 대표 스크린샷은 `screenshots/`에 있습니다.
+새 보상 모달 이미지 6종, 새 결과 완성 이미지 6종, 첫 화면부터 결과 화면까지의 흐름, 상단 지도 매스몬 미니 효과를 다시 확인했습니다. 결과 화면은 `fullscene-score-slot` 모드로 점수 숫자와 투명 다시하기 hitbox만 DOM에 남겼습니다. `1280x800`, `1024x768`에서 텍스트 넘침과 요소 겹침 0건, 지도 밖 이탈 0건, 학생 화면 `현재` 글자 미노출을 확인했습니다. `node scripts/qa-lesson3-result-fullscene.mjs`는 6개 결과 이미지의 점수 숫자 픽셀 중심이 빈 점수칸 중심에서 허용치 안에 있는지도 검사합니다. 오디오 자산은 루트에서 `node scripts/check-audio-assets.mjs`로 참조 파일, 배포 폴더, 길이를 확인합니다. 대표 스크린샷은 `screenshots/`에 있습니다.
