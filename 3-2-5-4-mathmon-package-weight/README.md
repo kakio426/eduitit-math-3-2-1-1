@@ -19,12 +19,13 @@
 
 ## 생성 이미지 자산
 
-`index.html`은 `data-cover-standard="generated-title-overlay"`를 선언합니다. 첫 화면은 글자 없는 배경, 생성형 제목 아트, HTML 목표 문장과 실제 `시작` 버튼으로 나뉩니다.
+`index.html`은 `data-cover-standard="generated-title-overlay"`와 `data-cover-start-standard="generated-button-art"`를 선언합니다. 첫 화면은 글자 없는 배경, 생성형 제목 아트, HTML 목표 문장, 별도 생성형 `시작` 버튼 아트와 실제 HTML 버튼으로 나뉩니다.
 
 | 파일명 | 용도 | 런타임 |
 | --- | --- | --- |
 | `cover-source.png` / `cover-generated.webp` | 글자 없는 택배 작업장 첫 화면 배경 | `cover-generated.webp` |
 | `title-logo-chromakey.png` / `title-logo-generated.png` / `title-logo-generated.webp` | 생성형 제목 아트 | `title-logo-generated.webp` |
+| `start-button-source.png` / `start-button-generated.png` / `start-button-generated.webp` | 1차시 버튼 물성을 참고한 독립 생성형 `시작` 버튼 아트 | `start-button-generated.webp` |
 | `reward-truck-upgrade-source.png` / `reward-truck-upgrade-generated.webp` | 트럭 업그레이드 작업장 보상 배경 | `reward-truck-upgrade-generated.webp` |
 | `result-truck-plain-source.png` / `result-truck-plain-generated.webp` | 평범 트럭 결과 장면 | `result-truck-plain-generated.webp` |
 | `result-truck-slight-source.png` / `result-truck-slight-generated.webp` | 살짝 멋진 트럭 결과 장면 | `result-truck-slight-generated.webp` |
@@ -37,7 +38,7 @@
 
 ## HTML 오버레이 범위
 
-- 첫 화면: 브랜드/단원 배지, 배움주제 배지, 목표 문장, `시작` 버튼
+- 첫 화면: 브랜드/단원 배지, 배움주제 배지, 목표 문장, 생성형 `시작` 버튼 아트 위의 실제 HTML 버튼
 - 문제 화면: 문제식, 단계 칩, 한 줄 지시, 답 칸, 선택지, 확인 문구, `트럭 보기` 버튼
 - 보상 화면 이미지: 글자 없는 트럭 업그레이드 작업장 배경
 - 보상 화면 HTML: 부품 상자 이름, CSS 트럭 미리보기, 현재 트럭 단계, 변화 문구, 다음 버튼

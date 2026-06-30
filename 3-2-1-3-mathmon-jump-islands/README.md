@@ -11,7 +11,7 @@
 
 ## 화면 흐름
 
-1. 첫 화면: 제목 아트, 한 줄 목표, `시작` 버튼을 HTML 오버레이로 보여 줍니다.
+1. 첫 화면: 제목 아트, 한 줄 목표, 별도 생성형 `시작` 버튼 아트와 실제 HTML 버튼을 오버레이로 보여 줍니다.
 2. 설명: 0 가리기, 먼저 곱하기, 0 붙이기, 바람에 따라 점프 길이 달라지는 흐름을 짧게 안내합니다.
 3. 문제: 상단 생성 이미지 지도에 여섯 섬과 현재 위치 매스몬을 보여 주고, 현재 단계만 크게 풉니다.
 4. 바람: 한 문제 뒤 한 가지 바람만 보여 줍니다. 보상 모달을 확인한 뒤 지도 매스몬이 작게 반응합니다.
@@ -44,7 +44,7 @@
 
 ## 자산
 
-- 첫 화면: `cover-generated.webp`, `title-poster-generated.webp`
+- 첫 화면: `cover-generated.webp`, `title-poster-generated.webp`, 1차시 버튼 물성을 참고한 독립 생성형 자산 `start-button-generated.webp`
 - 설명: `tutorial-generated.webp`
 - 문제 지도: `play-map-strip-source.png`, `play-map-strip-generated.webp`, `mathmon-zfa-04-nyangnyangmon.webp` 현재 위치 마커
 - 바람: `reward-tailwind-generated.webp`, `reward-headwind-generated.webp`, `reward-pause-generated.webp`, `reward-gust-generated.webp`, `reward-rainbow-generated.webp`, `reward-shaky-generated.webp`

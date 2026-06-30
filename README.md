@@ -87,7 +87,9 @@ ai mart/
 
 1. `_templates/lesson-package`를 새 차시 폴더로 복사합니다.
 2. `manifest.json`에 새 차시 정보를 추가합니다.
-3. 첫 화면, 문제 화면, 보상 화면, 결과 화면 구조를 기존 차시와 맞춥니다.
-4. `index.html`, `README.md`, `REPORT.md`를 차시 목표에 맞게 작성합니다.
-5. 태블릿 가로와 컴퓨터 화면에서 스크린샷을 확인합니다.
-6. GitHub Pages 공개 URL을 확인합니다.
+3. `SERIES_CONTRACT.md`와 `LESSON_COMMONS.md`를 확인해 첫 화면, 문제 화면, 보상 화면, 결과 화면 구조를 맞춥니다.
+4. 새 커버는 `generated-title-overlay`와 생성형 시작 버튼 자산(`data-cover-start-standard="generated-button-art"`)을 목표 표준으로 삼습니다. 기존 `.primary-button` 시작은 개별 이관 전까지 compatibility 상태로만 둡니다.
+5. 결과 화면은 generated-result와 `fullscene-score-slot` 규칙을 그대로 따르고, 고정 라벨·칭찬·버튼 장식을 보이는 CSS 카드로 대신 만들지 않습니다.
+6. `index.html`, `README.md`, `REPORT.md`를 차시 목표에 맞게 작성합니다.
+7. 태블릿 가로와 컴퓨터 화면에서 스크린샷을 확인합니다.
+8. GitHub Pages 공개 URL을 확인합니다.

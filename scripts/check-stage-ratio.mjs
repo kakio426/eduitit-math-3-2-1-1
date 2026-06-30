@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SIZE_OK: Single-file CLI harness for cross-lesson Stage/RasterStage contracts; one command reports all package blockers without a build step.
 import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -66,6 +67,12 @@ function getStandaloneBlock(text, selector) {
   return "";
 }
 
+function getCssPxValue(block, property) {
+  const escapedProperty = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const match = new RegExp(`${escapedProperty}:\\s*(\\d+)px;`).exec(block);
+  return match ? Number(match[1]) : null;
+}
+
 const lessons = await findLessons(root);
 const failures = [], fullSceneQaScripts = await readFullSceneQaScripts();
 const hasFullSceneScorePixelCenterQa = fullSceneQaScripts.includes("measureScoreCenter") && fullSceneQaScripts.includes("score is not horizontally centered") && fullSceneQaScripts.includes("score is not vertically centered");
@@ -92,10 +99,12 @@ for (const lesson of lessons) {
   const soundBlock = getStandaloneBlock(html, ".sound-toggle");
   const rasterBgBlock = getStandaloneBlock(html, ".raster-bg");
   const coverStartButtonBlock = getBlock(html, ".cover #startButton");
+  const coverStartGeneratedButtonBlock = getStandaloneBlock(html, ".cover-start-button");
   const resultCountOverlayBlock = getStandaloneBlock(html, ".result-count-overlay");
   const resultRestartHitboxBlock = getStandaloneBlock(html, ".result-restart-hitbox");
   const hasStageMeta = /<main\s+class="game"[^>]*data-stage-ratio="16:10"[^>]*data-stage-size="1280x800"/.test(html);
   const hasStandardCover = /<main\s+class="game"[^>]*data-cover-standard="generated-title-overlay"/.test(html);
+  const hasGeneratedCoverStartStandard = /<main\s+class="game"[^>]*data-cover-start-standard="generated-button-art"/.test(html);
   const hasLegacyCover = /<main\s+class="game"[^>]*data-cover-standard="legacy-raster-poster"/.test(html);
   const hasGeneratedResultStandard = /<main\s+class="game"[^>]*data-result-visual-standard="generated-assets"/.test(html);
   const hasFullSceneScoreSlot = /<main\s+class="game"[^>]*data-result-render-mode="fullscene-score-slot"/.test(html);
@@ -113,9 +122,18 @@ for (const lesson of lessons) {
   const hasCoverScene = /<div\s+class="cover-scene"[\s>]/.test(html);
   const hasHeroCopy = /<div\s+class="hero-copy"[\s>]/.test(html);
   const hasVisibleCoverStart = /<button(?=[^>]*class="[^"]*primary-button[^"]*")(?=[^>]*id="startButton")[^>]*>\s*시작\s*<\/button>/.test(html);
+  const hasGeneratedCoverStart = /<button(?=[^>]*class="[^"]*\bcover-start-button\b[^"]*")(?=[^>]*id="startButton")(?=[^>]*aria-label="시작")[^>]*>\s*<img(?=[^>]*class="[^"]*\bstart-button-art\b[^"]*")(?=[^>]*src="start-button-generated\.webp")(?=[^>]*alt="")(?=[^>]*aria-hidden="true")[^>]*>\s*<\/button>/.test(html);
   const hasCoverStartSize = coverStartButtonBlock.includes("min-width: 190px;")
     && coverStartButtonBlock.includes("min-height: 72px;")
     && coverStartButtonBlock.includes("padding: 0 44px;");
+  const generatedCoverStartWidth = getCssPxValue(coverStartGeneratedButtonBlock, "width");
+  const generatedCoverStartHeight = getCssPxValue(coverStartGeneratedButtonBlock, "height");
+  const hasGeneratedCoverStartSize = generatedCoverStartWidth !== null
+    && generatedCoverStartHeight !== null
+    && generatedCoverStartWidth >= 400
+    && generatedCoverStartWidth <= 460
+    && generatedCoverStartHeight >= 140
+    && generatedCoverStartHeight <= 170;
   const hasForbiddenFullSceneResultClass = /\b(result-card|result-stats|result-stat|result-copy)\b/.test(html);
   const hasGeneratedResultTitleArt = /<img(?=[^>]*class="[^"]*\bresult-title-art\b[^"]*")(?=[^>]*src="[^"]*result-title-[^"]*generated\.webp")(?=[^>]*alt="")(?=[^>]*aria-hidden="true")[^>]*>/.test(html);
   const hasGeneratedResultRetryArt = /<img(?=[^>]*class="[^"]*\bresult-retry-art\b[^"]*")(?=[^>]*src="[^"]*result-[^"]*generated\.webp")(?=[^>]*alt="")(?=[^>]*aria-hidden="true")[^>]*>/.test(html);
@@ -152,6 +170,11 @@ for (const lesson of lessons) {
     await fileExists(path.join(lesson, `${titleArtBase}-source.png`)) ||
     await fileExists(path.join(lesson, `${titleArtBase}-chromakey.png`))
   ));
+  const hasGeneratedCoverStartAssets = !hasGeneratedCoverStartStandard || (
+    await fileExists(path.join(lesson, "start-button-source.png")) &&
+    await fileExists(path.join(lesson, "start-button-generated.png")) &&
+    await fileExists(path.join(lesson, "start-button-generated.webp"))
+  );
   const stageWidthRuleCount = (html.match(new RegExp(STAGE_WIDTH_RULE.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g")) || []).length;
   const checks = [
     [hasStageMeta, "main.game에 data-stage-ratio=\"16:10\" data-stage-size=\"1280x800\"가 필요합니다."],
@@ -163,8 +186,12 @@ for (const lesson of lessons) {
     [!hasStandardCover || hasHeroCopy, "generated-title-overlay 표준 차시는 제목·목표·시작 버튼을 .hero-copy 안에 둬야 합니다."],
     [!hasStandardCover || hasTitleArt, "generated-title-overlay 표준 차시의 첫 화면 제목은 .hero-title-art 독립 이미지여야 합니다."],
     [!hasTitleArt || hasStandardCover, ".hero-title-art를 쓰는 차시는 main.game에 data-cover-standard=\"generated-title-overlay\"를 선언해야 합니다."],
-    [!hasStandardCover || hasVisibleCoverStart, "generated-title-overlay 표준 차시의 시작 버튼은 투명 hitbox가 아니라 보이는 <button class=\"primary-button\" id=\"startButton\">시작</button>이어야 합니다."],
-    [!hasStandardCover || hasCoverStartSize, "generated-title-overlay 표준 차시의 시작 버튼은 공통 크기(min-width 190px, min-height 72px, padding 0 44px)를 써야 합니다."],
+    [!hasStandardCover || hasVisibleCoverStart || hasGeneratedCoverStart, "generated-title-overlay 표준 차시의 시작 버튼은 투명 hitbox가 아니라 보이는 시작 버튼이어야 합니다."],
+    [!hasStandardCover || hasVisibleCoverStart || hasGeneratedCoverStartStandard, "생성형 시작 버튼 아트를 쓰는 차시는 main.game에 data-cover-start-standard=\"generated-button-art\"를 선언해야 합니다."],
+    [!hasGeneratedCoverStartStandard || hasGeneratedCoverStart, "data-cover-start-standard=\"generated-button-art\" 차시는 <button class=\"cover-start-button\" id=\"startButton\" aria-label=\"시작\"><img class=\"start-button-art\" src=\"start-button-generated.webp\" alt=\"\" aria-hidden=\"true\"></button> 구조여야 합니다."],
+    [!hasGeneratedCoverStartStandard || hasGeneratedCoverStartAssets, "data-cover-start-standard=\"generated-button-art\" 차시는 start-button-source.png, start-button-generated.png, start-button-generated.webp 자산을 함께 보관해야 합니다."],
+    [!hasGeneratedCoverStartStandard || hasGeneratedCoverStartSize, "data-cover-start-standard=\"generated-button-art\" 차시의 시작 버튼은 1280×800 Stage 기준 width 400-460px, height 140-170px 범위여야 합니다."],
+    [!hasStandardCover || hasGeneratedCoverStart || hasCoverStartSize, "generated-title-overlay 표준 차시의 CSS 시작 버튼은 공통 크기(min-width 190px, min-height 72px, padding 0 44px)를 써야 합니다."],
     [!hasFullSceneResultSignal || hasGeneratedResultStandard, "result-final-*-generated.webp 또는 fullscene-score-slot 결과 차시는 main.game에 data-result-visual-standard=\"generated-assets\"를 선언해야 합니다."],
     [!hasSeparateGeneratedResultAssets || hasGeneratedResultTitleArt, "별도 생성형 결과 자산 방식은 보이는 결과 라벨을 <img class=\"result-title-art\" src=\"result-title-*-generated.webp\" alt=\"\" aria-hidden=\"true\">로 둬야 합니다."],
     [!hasSeparateGeneratedResultAssets || hasGeneratedResultRetryArt, "별도 생성형 결과 자산 방식은 보이는 다시 버튼 장식을 <img class=\"result-retry-art\" ...> 생성형 자산으로 둬야 합니다."],

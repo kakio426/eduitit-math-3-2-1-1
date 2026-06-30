@@ -25,8 +25,9 @@
 - 첫 화면은 제목, 한 줄 목표, 시작 버튼이 가장 먼저 보여야 합니다.
 - 첫 화면과 마지막 결과 화면은 이미지 생성 기반 RasterStage로 제작합니다. 결과 등급처럼 유한하게 바뀌는 라벨·칭찬·버튼 장식은 단계별 생성 이미지/타이틀 자산으로 처리하고, HTML 오버레이는 정답 수·점수처럼 실제 매 판 값이 달라지는 정보와 접근성용 hitbox만 맡깁니다.
 - 모든 차시는 `16:10` Stage, 기준 제작 크기 `1280×800`을 지킵니다. `index.html`의 `<main class="game">`에는 `data-stage-ratio="16:10"`과 `data-stage-size="1280x800"`을 두고, `.stage-shell`이 contain 폭과 비율을 담당하게 합니다.
-- 첫 화면 커버 표준은 `data-cover-standard="generated-title-overlay"`입니다. `cover-generated.webp`는 글자 없는 대표 장면 배경으로 `.raster-bg`에 `object-fit: cover`로 깔고, 게임명은 생성형 이미지 제목 자산(`title-*-generated.webp`)을 `.hero-title-art`로 얹으며, 한 줄 목표와 `시작` 버튼은 보이는 HTML 오버레이로 둡니다.
-- `cover-generated.webp` 한 장 안에 제목·목표·시작 버튼을 baked-in 하거나, 투명 `cover-start-hitbox`로 시작시키는 방식은 새 차시에 쓰지 않습니다. 기존 1차시처럼 아직 이전 방식인 화면만 `data-cover-standard="legacy-raster-poster"`로 명시하고, 복제 기준으로 삼지 않습니다.
+- 첫 화면 커버 표준은 `data-cover-standard="generated-title-overlay"`입니다. `cover-generated.webp`는 글자 없는 대표 장면 배경으로 `.raster-bg`에 `object-fit: cover`로 깔고, 게임명은 생성형 이미지 제목 자산(`title-*-generated.webp`)을 `.hero-title-art`로 얹으며, 한 줄 목표는 보이는 HTML 오버레이로 둡니다. 새 차시와 생성형 시작 버튼으로 이관한 차시는 `data-cover-start-standard="generated-button-art"`를 붙이고, 시작 버튼의 보이는 면을 CSS 텍스트가 아니라 생성형 버튼 자산(`start-button-generated.webp`)으로 둡니다.
+- 기존 `generated-title-overlay` 차시 중 `.primary-button`으로 시작하는 커버는 개별 이관 전까지 `compatibility-primary-button` 상태로 보존합니다. 이 호환 상태는 기존 차시 실행을 위한 예외이며 새 차시 복제 기준이 아닙니다.
+- `cover-generated.webp` 한 장 안에 제목·목표·시작 버튼을 baked-in 하거나, 커버 전체 투명 `cover-start-hitbox`로 시작시키는 방식은 새 차시에 쓰지 않습니다. 기존 1차시처럼 아직 이전 방식인 화면만 `data-cover-standard="legacy-raster-poster"`로 명시하고, 복제 기준으로 삼지 않습니다.
 - `소리` 같은 전역 조작 버튼은 Stage 밖 viewport에 fixed로 띄우지 않고, `.stage-shell` 안의 상단 오른쪽 보조 슬롯에 작게 둡니다. `.stage-shell`의 `--sound-button-size`, `--sound-gap`, `--sound-reserve`로 위치와 예비 공간을 고정하고, `.sound-toggle`에는 화면별 `transform`/active-screen별 위치 보정을 쓰지 않습니다. `top-row`/`hud`는 같은 `--sound-reserve`만큼 비워 버튼이 배지·문제·선택지를 가리지 않게 합니다.
 - 소리 버튼은 텍스트 pill이 아니라 `width/height: var(--sound-button-size)`인 원형 SVG 아이콘 버튼으로 만듭니다. 화면에 `소리` 글자를 직접 노출하지 말고, 켜짐/꺼짐은 SVG 파형과 `aria-label`로만 표현합니다.
 - 상단 배지·단원 pill·소리 버튼은 같은 기준선에 놓습니다. `.top-row`는 `top/left/right`와 `height: var(--sound-button-size)`, `gap: var(--sound-gap)`을 명시하고 `inset` 축약을 쓰지 않습니다. 문제 화면 `.hud`는 `align-items: start`와 `min-height: var(--sound-button-size)`를 둡니다.
@@ -43,6 +44,7 @@
 - 문구는 짧아야 합니다. 한 문장에는 행동 하나만 넣고, 학생이 소리 내어 읽었을 때 숨이 차거나 교사용 설명처럼 들리면 실패입니다.
 - 첫 화면 제목은 단순 큰 글자가 아니라 **타이포그래픽 포스터/타이틀 아트**로 다룹니다. 사용자가 `그림으로`, `GPT Image`, `제목 이미지`를 요구하면 기존 첫 화면 배경은 유지하고, 제목 부분만 독립 래스터 오버레이(`title-logo-generated.webp` 또는 `title-poster-generated.webp` 같은 배포 자산)로 생성해 얹습니다. 전체 커버 이미지를 갈아엎거나 HTML/CSS/SVG로 어설프게 흉내 내지 않습니다. 접근성용 실제 제목은 `visually-hidden`으로 남깁니다.
 - 첫 화면 제목 자산은 반드시 GPT Image/imagegen 같은 생성형 이미지 산출물이어야 합니다. 로컬 폰트, Pillow, canvas, SVG, CSS text-shadow로 만든 "그림처럼 보이는 텍스트"는 실패입니다. 생성 원본(`title-*-source.png` 또는 `title-*-chromakey.png`)과 배경 제거 PNG/WebP를 함께 보관합니다.
+- 새 차시와 시작 버튼을 이관하는 차시는 첫 화면 시작 버튼도 독립 생성형 버튼 자산으로 만듭니다. `start-button-source.png`, `start-button-generated.png`, `start-button-generated.webp`를 보관하고, 실제 클릭은 같은 크기의 `<button class="cover-start-button" id="startButton" aria-label="시작">`이 맡습니다. 기준 물성은 1차시 포스터형 버튼처럼 플레이 아이콘이 들어간 두툼한 노란 래스터 버튼입니다. 1280×800 Stage 기준 표시 크기는 `400-460px × 140-170px`, 위치는 목표 바로 아래 `14-24px` 간격을 기본으로 합니다.
 
 ## UI 텍스트 넘침·요소 겹침 금지 (강제)
 
@@ -173,8 +175,8 @@
 
 - 모든 새 차시의 첫 화면과 마지막 결과 화면은 이미지 생성으로 만든 대표 장면을 배경으로 사용합니다.
 - 모든 RasterStage와 주요 게임 화면은 `1280×800` 기준 `16:10` 안에서 설계합니다. 생성 이미지가 다른 비율이어도 Stage 안에서는 `object-fit: cover/contain`과 HTML 오버레이로 맞추고, Stage 자체 비율을 바꾸지 않습니다.
-- 첫 화면 배경 이미지는 글자 없는 대표 장면이어야 합니다. 게임명·한 줄 목표·시작 버튼을 한 이미지에 구워 넣지 않고, `cover-generated.webp` 배경 + `.hero-title-art` 제목 이미지 + HTML 목표/버튼 오버레이로 나눕니다.
-- 시작 버튼은 학생에게 보이는 실제 HTML 버튼입니다. 커버 전체에 투명 hitbox를 얹는 방식은 legacy 화면에만 남기고 새 차시에서는 금지합니다.
+- 첫 화면 배경 이미지는 글자 없는 대표 장면이어야 합니다. 게임명·한 줄 목표·시작 버튼을 한 이미지에 구워 넣지 않고, `cover-generated.webp` 배경 + `.hero-title-art` 제목 이미지 + HTML 목표 + 생성형 시작 버튼 아트로 나눕니다.
+- 현재 목표 표준은 실제 HTML 버튼 안에 생성형 버튼 아트를 넣는 구조입니다. 새 차시와 이관 완료 차시는 `data-cover-start-standard="generated-button-art"`로 선언합니다. 기존 `.primary-button` 시작 커버는 `compatibility-primary-button`으로 분류해 개별 이관 전까지 유지할 수 있지만, 보이는 CSS 텍스트 버튼과 커버 전체 투명 hitbox 방식은 새 차시에 쓰지 않습니다.
 - 첫 화면 제목은 배경 이미지 위에 별도의 타이틀 아트로 얹을 수 있습니다. 이때 **생성 대상은 전체 커버가 아니라 제목 로고만**입니다. 기존 `cover-generated.webp` 같은 대표 장면을 유지하고, GPT Image 등으로 만든 제목 로고를 초록 배경 제거 또는 투명 PNG/WebP로 분리해 `.hero-title-art`로 올립니다.
 - 학생에게 보이는 제목은 하나의 그림처럼 보여야 합니다. HTML/CSS로 급조한 밋밋한 큰 글자, 어설픈 SVG 로고, 전체 커버를 새로 합성해 장면 구도를 망가뜨리는 방식, AI가 철자를 틀린 한글 이미지는 모두 실패로 봅니다.
 - 제목 로고를 만드는 순간에는 `image_gen`/GPT Image 등 생성형 이미지 도구를 실제로 사용합니다. 로컬 폰트로 직접 래스터화하거나 CSS 효과를 캡처해 만든 파일은 `.hero-title-art`에 연결하지 않습니다.

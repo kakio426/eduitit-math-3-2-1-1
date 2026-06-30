@@ -313,10 +313,42 @@
       border: 1px solid var(--line);
     }
 
-    .cover #startButton {
-      min-width: 190px;
-      min-height: 72px;
-      padding: 0 44px;
+    .cover-start-button {
+      width: 420px;
+      height: 149px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      cursor: pointer;
+      display: inline-grid;
+      place-items: center;
+      transition: filter 160ms ease, transform 160ms ease;
+      filter: drop-shadow(0 14px 24px rgba(255, 174, 34, 0.22));
+    }
+
+    .cover-start-button:hover {
+      filter: brightness(1.04) drop-shadow(0 16px 26px rgba(255, 174, 34, 0.26));
+      transform: translateY(-1px);
+    }
+
+    .cover-start-button:active {
+      filter: brightness(0.99) drop-shadow(0 10px 18px rgba(255, 174, 34, 0.2));
+      transform: translateY(1px);
+    }
+
+    .cover-start-button:focus-visible {
+      outline: 4px solid rgba(96, 215, 255, 0.9);
+      outline-offset: 5px;
+    }
+
+    .start-button-art {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
     }
 
     .tutorial-grid {
@@ -483,12 +515,84 @@
       padding: 18px;
       border-radius: 8px;
       background: rgba(14, 12, 22, 0.46);
-      font-size: clamp(1.72rem, 3.2vw, 2.75rem);
-      line-height: 1.08;
+      overflow: hidden;
+    }
+
+    .problem-expression {
+      width: 100%;
+      display: grid;
+      justify-items: center;
+      gap: 10px;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .weight-equation {
+      width: fit-content;
+      min-width: min(100%, 300px);
+      max-width: 100%;
+      display: grid;
+      gap: 10px;
+    }
+
+    .weight-row {
+      display: grid;
+      grid-template-columns: clamp(28px, 3.4vw, 40px) max-content;
+      align-items: baseline;
+      justify-content: center;
+      column-gap: clamp(8px, 1vw, 12px);
+    }
+
+    .weight-row.is-first .weight-operator {
+      opacity: 0;
+    }
+
+    .weight-operator {
+      color: var(--amber);
+      font-size: clamp(2rem, 4.4vw, 3.35rem);
       font-weight: 1000;
-      overflow-wrap: normal;
-      word-break: keep-all;
-      text-wrap: balance;
+      line-height: 0.95;
+      text-align: center;
+    }
+
+    .weight-value {
+      justify-self: end;
+      white-space: nowrap;
+      font-size: clamp(1.9rem, 4.35vw, 3.45rem);
+      font-weight: 1000;
+      line-height: 0.95;
+    }
+
+    .equation-rule {
+      width: 100%;
+      height: 4px;
+      margin-top: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255, 248, 232, 0.26), rgba(255, 200, 87, 0.82));
+    }
+
+    .limit-expression {
+      gap: 10px;
+    }
+
+    .limit-cap-row {
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 12px;
+      color: var(--sky);
+      white-space: nowrap;
+    }
+
+    .limit-cap-label {
+      font-size: clamp(1.15rem, 2.6vw, 1.72rem);
+      font-weight: 1000;
+    }
+
+    .limit-cap-value {
+      font-size: clamp(1.65rem, 3.6vw, 2.8rem);
+      font-weight: 1000;
+      line-height: 0.98;
     }
 
     .step-board {
@@ -500,7 +604,7 @@
     }
 
     .step-chips {
-      display: flex;
+      display: none;
       gap: 8px;
       flex-wrap: wrap;
       min-height: 32px;
@@ -531,13 +635,13 @@
 
     .instruction {
       margin: 0;
-      font-size: clamp(1.12rem, 2.1vw, 1.45rem);
-      line-height: 1.2;
+      font-size: clamp(1.6rem, 3.25vw, 2.25rem);
+      line-height: 1.15;
       font-weight: 1000;
     }
 
     .answer-slot {
-      min-height: 92px;
+      min-height: 124px;
       border-radius: 8px;
       border: 2px dashed rgba(255, 255, 255, 0.28);
       display: grid;
@@ -546,7 +650,7 @@
       color: var(--muted);
       background: rgba(14, 12, 22, 0.38);
       text-align: center;
-      font-size: clamp(1.35rem, 2.9vw, 2.2rem);
+      font-size: clamp(2.5rem, 5.8vw, 4.25rem);
       font-weight: 1000;
       line-height: 1.1;
       overflow-wrap: anywhere;
@@ -625,6 +729,31 @@
 
     .complete-panel.is-visible {
       display: flex;
+    }
+
+    .problem-grid.is-complete {
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .problem-grid.is-complete .choices-panel {
+      display: none;
+    }
+
+    .problem-grid.is-complete .complete-panel {
+      grid-column: 2 / 3;
+      grid-row: 2 / 3;
+      min-height: 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .problem-grid.is-complete .complete-panel .primary-button {
+      min-height: 56px;
+      width: min(220px, 100%);
+      padding: 0 24px;
+      font-size: 1.08rem;
     }
 
     .complete-text {
@@ -968,7 +1097,7 @@
   </style>
 </head>
 <body>
-  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800" data-cover-standard="generated-title-overlay">
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800" data-cover-standard="generated-title-overlay" data-cover-start-standard="generated-button-art" data-result-visual-standard="generated-assets">
     <div class="stage-shell">
       <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -990,7 +1119,9 @@
             <h1 class="visually-hidden" id="coverTitle">매스몬 택배 무게 맞추기</h1>
             <img class="hero-title-art" src="title-logo-generated.webp" alt="" aria-hidden="true">
             <p class="cover-goal">택배 한도에 맞는 무게를 골라요.</p>
-            <button class="primary-button" id="startButton" type="button">시작</button>
+            <button class="cover-start-button" id="startButton" type="button" aria-label="시작">
+              <img class="start-button-art" src="start-button-generated.webp" width="620" height="220" alt="" aria-hidden="true">
+            </button>
           </div>
         </div>
         <div class="mini-badge topic-badge">무게의 덧셈·뺄셈과 어림</div>
@@ -1219,8 +1350,10 @@
         const left = { kg: randomInt(rng, 1, 6), g: randomInt(rng, 520, 940) };
         const right = { kg: randomInt(rng, 1, 5), g: randomInt(rng, 520, 940) };
         const gramSum = left.g + right.g;
+        const kgSum = left.kg + right.kg;
+        const carriedGram = fromTotalGrams(gramSum);
         const final = fromTotalGrams(toTotalGrams(left) + toTotalGrams(right));
-        const noCarry = `${left.kg + right.kg}kg ${gramSum}g`;
+        const noCarry = `${kgSum}kg ${gramSum}g`;
         const lowGram = formatGrams(gramSum - 1000);
         const choices1 = uniqueChoices([
           formatGrams(gramSum),
@@ -1229,10 +1362,16 @@
           formatGrams(left.g + right.g + 100)
         ], rng);
         const choices2 = uniqueChoices([
+          formatWeight(carriedGram),
+          formatGrams(carriedGram.g),
+          `0kg ${gramSum}g`,
+          `1kg ${carriedGram.g + 100}g`
+        ], rng);
+        const choices3 = uniqueChoices([
           formatWeight(final),
           noCarry,
-          `${final.kg - 1}kg ${final.g}g`,
-          `${final.kg}kg ${Math.min(final.g + 100, 990)}g`
+          `${kgSum}kg ${final.g}g`,
+          `${final.kg + 1}kg ${final.g}g`
         ], rng);
         return {
           id: `add-${serial}`,
@@ -1243,13 +1382,16 @@
           left,
           right,
           gramSum,
+          kgSum,
+          carriedGram,
           final,
           finalText: formatWeight(final),
           fitsLimit: null,
           representativeMistake: noCarry,
           steps: [
             makeStep("addGrams", "g끼리 더한 값을 골라요.", "g 합", formatGrams(gramSum), choices1, `${formatGrams(gramSum)}이 들어갔어요.`),
-            makeStep("addFinal", "1000g을 1kg으로 바꾼 무게를 골라요.", "완성 무게", formatWeight(final), choices2, `${formatWeight(final)}로 보낼 수 있어요.`)
+            makeStep("addCarry", "1000g을 1kg으로 바꿔요.", "바꾼 g", formatWeight(carriedGram), choices2, `${formatWeight(carriedGram)}이 되었어요.`),
+            makeStep("addFinal", "kg까지 더한 무게를 골라요.", "완성 무게", formatWeight(final), choices3, `${formatWeight(final)}로 보낼 수 있어요.`)
           ]
         };
       }
@@ -1258,6 +1400,7 @@
         const top = { kg: randomInt(rng, 5, 9), g: randomInt(rng, 100, 420) };
         const bottom = { kg: randomInt(rng, 1, top.kg - 2), g: randomInt(rng, top.g + 160, 960) };
         const borrowedTop = { kg: top.kg - 1, g: top.g + 1000 };
+        const gramDifference = borrowedTop.g - bottom.g;
         const final = fromTotalGrams(toTotalGrams(top) - toTotalGrams(bottom));
         const noBorrow = `${top.kg - bottom.kg}kg ${Math.abs(top.g - bottom.g)}g`;
         const choices1 = uniqueChoices([
@@ -1267,10 +1410,17 @@
           `${top.kg - 2}kg ${top.g + 1000}g`
         ], rng);
         const choices2 = uniqueChoices([
+          formatGrams(gramDifference),
+          formatGrams(Math.abs(top.g - bottom.g)),
+          formatGrams(gramDifference + 100),
+          formatGrams(Math.max(0, gramDifference - 100)),
+          formatGrams(gramDifference + 200)
+        ], rng);
+        const choices3 = uniqueChoices([
           formatWeight(final),
           noBorrow,
           `${final.kg + 1}kg ${final.g}g`,
-          `${Math.max(final.kg - 1, 0)}kg ${final.g}g`
+          `${final.kg}kg ${Math.min(final.g + 100, 990)}g`
         ], rng);
         return {
           id: `subtract-${serial}`,
@@ -1281,13 +1431,15 @@
           top,
           bottom,
           borrowedTop,
+          gramDifference,
           final,
           finalText: formatWeight(final),
           fitsLimit: null,
           representativeMistake: noBorrow,
           steps: [
             makeStep("borrowKg", "위 무게를 1kg 줄이고 1000g 늘려요.", "바뀐 위 무게", formatWeight(borrowedTop), choices1, `${formatWeight(borrowedTop)}로 바뀌었어요.`),
-            makeStep("subtractFinal", "남은 택배 무게를 골라요.", "완성 무게", formatWeight(final), choices2, `${formatWeight(final)}이 남았어요.`)
+            makeStep("subtractGrams", "g끼리 뺀 값을 골라요.", "g 차", formatGrams(gramDifference), choices2, `${formatGrams(gramDifference)}이 남았어요.`),
+            makeStep("subtractFinal", "kg까지 뺀 무게를 골라요.", "완성 무게", formatWeight(final), choices3, `${formatWeight(final)}이 남았어요.`)
           ]
         };
       }
@@ -1442,6 +1594,7 @@
       runProgressText: document.getElementById("runProgressText"),
       problemKind: document.getElementById("problemKind"),
       problemTitle: document.getElementById("problemTitle"),
+      problemGrid: document.querySelector(".problem-grid"),
       stepChips: document.getElementById("stepChips"),
       stepInstruction: document.getElementById("stepInstruction"),
       answerSlot: document.getElementById("answerSlot"),
@@ -1591,13 +1744,74 @@
       element.textContent = Lesson5PackageWeightModel.displayWeightText(text);
     }
 
+    function createFormulaSpan(className, text = "") {
+      const span = document.createElement("span");
+      span.className = className;
+      if (text) setDisplayText(span, text);
+      return span;
+    }
+
+    function appendWeightRow(container, operator, weight, isFirst = false) {
+      const row = createFormulaSpan(`weight-row${isFirst ? " is-first" : ""}`);
+      const operatorSpan = createFormulaSpan("weight-operator", operator);
+      const valueSpan = createFormulaSpan("weight-value", Lesson5PackageWeightModel.formatWeight(weight));
+      row.append(operatorSpan, valueSpan);
+      container.append(row);
+    }
+
+    function createWeightEquation(rows) {
+      const equation = createFormulaSpan("weight-equation");
+      rows.forEach((row, index) => appendWeightRow(equation, row.operator, row.weight, index === 0));
+      equation.append(createFormulaSpan("equation-rule"));
+      return equation;
+    }
+
+    function renderProblemPrompt(problem) {
+      ui.problemTitle.textContent = "";
+      ui.problemTitle.setAttribute("aria-label", problem.prompt);
+
+      if (problem.type === "addCarry") {
+        const expression = createFormulaSpan("problem-expression");
+        expression.append(createWeightEquation([
+          { operator: "", weight: problem.left },
+          { operator: "+", weight: problem.right }
+        ]));
+        ui.problemTitle.append(expression);
+        return;
+      }
+
+      if (problem.type === "subtractBorrow") {
+        const expression = createFormulaSpan("problem-expression");
+        expression.append(createWeightEquation([
+          { operator: "", weight: problem.top },
+          { operator: "-", weight: problem.bottom }
+        ]));
+        ui.problemTitle.append(expression);
+        return;
+      }
+
+      const expression = createFormulaSpan("problem-expression limit-expression");
+      expression.append(createWeightEquation([
+        { operator: "", weight: problem.box },
+        { operator: "+", weight: problem.wrap }
+      ]));
+      const limitRow = createFormulaSpan("limit-cap-row");
+      limitRow.append(
+        createFormulaSpan("limit-cap-label", "한도"),
+        createFormulaSpan("limit-cap-value", Lesson5PackageWeightModel.formatWeight(problem.limit))
+      );
+      expression.append(limitRow);
+      ui.problemTitle.append(expression);
+    }
+
     function renderProblem() {
       const problem = currentProblem();
       state.stepIndex = 0;
       state.mistakeTouched = false;
       ui.problemCounter.textContent = `${state.problemIndex + 1}/10`;
       ui.problemKind.textContent = problem.kind;
-      setDisplayText(ui.problemTitle, problem.prompt);
+      renderProblemPrompt(problem);
+      ui.problemGrid.classList.remove("is-complete");
       ui.completePanel.classList.remove("is-visible");
       setButtonDisabled(ui.truckButton, true);
       renderProgress();
@@ -1680,6 +1894,7 @@
     function showCompletePanel() {
       const problem = currentProblem();
       setDisplayText(ui.completeExpression, problem.expression);
+      ui.problemGrid.classList.add("is-complete");
       ui.completePanel.classList.add("is-visible");
       setButtonDisabled(ui.truckButton, false);
       ui.truckButton.focus({ preventScroll: true });

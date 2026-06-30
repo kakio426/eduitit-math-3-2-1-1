@@ -5,7 +5,7 @@
 - 대상: 3학년 2학기 1단원 3차시 `(몇십)×(몇십), (몇십몇)×(몇십)`
 - 실행 파일: `3-2-1-3-mathmon-jump-islands/index.html`
 - Stage: `16:10`, `1280x800`, `.stage-shell` contain 구조
-- 첫 화면: `cover-generated.webp` 배경, `title-poster-generated.webp` 제목 아트, HTML 목표 문장과 `시작` 버튼
+- 첫 화면: `cover-generated.webp` 배경, `title-poster-generated.webp` 제목 아트, HTML 목표 문장, 독립 생성형 `start-button-generated.webp` 버튼 아트와 실제 HTML 버튼
 - 흐름: 첫 화면 → 설명 → 문제 → 바람 → 도착 전 살펴보기 → 결과
 
 ## 첫 화면과 설명
@@ -144,6 +144,7 @@
 
 - `cover-generated.webp`
 - `title-poster-source.png`, `title-poster-generated.png`, `title-poster-generated.webp`, `title-poster-transparent-raw.png`
+- `start-button-source.png`, `start-button-generated.png`, `start-button-generated.webp`
 - `tutorial-generated.webp`
 - `play-map-strip-source.png`, `play-map-strip-generated.webp`
 - `reward-tailwind-source.png`, `reward-tailwind-generated.webp`
@@ -167,7 +168,7 @@
 
 ## RasterStage 안전 구역
 
-- 첫 화면: 왼쪽 제목·목표·시작 버튼 영역과 오른쪽 장면 영역을 분리했습니다.
+- 첫 화면: 왼쪽 제목·목표·두툼한 노란 시작 버튼 영역과 오른쪽 장면 영역을 분리했습니다.
 - 문제 화면: 상단 전체 섬 지도 아래에서 왼쪽은 원문제 고정판, 오른쪽은 현재 계산판·선택지 행동판으로 나눴습니다. 왼쪽 판은 오른쪽 행동판의 위·아래 기준선에 맞춰 같은 높이로 보이고, 오른쪽 계산판의 상단도 왼쪽 판 상단에 맞춥니다. 선택 전에는 반복 지시문을 숨기고, 노란 계산 문제판과 큰 보기 버튼만 보이게 했습니다. 정답·오답 뒤에는 같은 자리에서 짧은 확인 문구만 잠깐 보입니다. 답 완성 뒤에는 안내 문장 없이 완성식과 generated image 버튼 `어떤 바람이 불까?`만 보입니다.
 - 보상 화면: 중앙 generated art 위에 보상 문구 한 개와 버튼 한 개만 둡니다. 매스몬과 바람 효과는 결과별 생성 이미지 안에 포함합니다.
 - 결과 화면: `result-final-*` 래스터 6장이 도착 섬, 결과 라벨, 다시하기 버튼 모양, 점수용 빈 네모 상자를 담당합니다. HTML 오버레이는 정답 수 숫자 `#finalCorrectText`와 투명 `#restartButton` hitbox만 맡습니다. 점수 숫자는 각 이미지의 빈 네모 상자 위치에 맞춘 `data-result-island` RasterStage 슬롯 변수로 배치하고, 픽셀 중심 QA로 중앙 정렬을 검증합니다. `<main class="game">`에는 `data-result-visual-standard="generated-assets"`와 `data-result-render-mode="fullscene-score-slot"`를 선언했습니다.

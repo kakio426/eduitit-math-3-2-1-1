@@ -283,9 +283,11 @@ const PLAY_TO_COMPLETE = String.raw`
   document.querySelector("#startButton").click();
   document.querySelector("#tutorialStartButton").click();
   await waitFor(() => document.querySelector("#screen-play").classList.contains("is-active"), "play screen");
-  clickCorrect();
-  await waitFor(() => [...document.querySelectorAll("#choicesPanel button")].some((item) => item.dataset.correct === "true" && !item.disabled), "step 2 choices");
-  clickCorrect();
+  for (let guard = 0; guard < 8 && !document.querySelector("#completePanel").classList.contains("is-visible"); guard += 1) {
+    clickCorrect();
+    await waitFor(() => [...document.querySelectorAll("#choicesPanel button")].some((item) => item.dataset.correct === "true" && !item.disabled)
+      || document.querySelector("#completePanel").classList.contains("is-visible"), "next choices or complete panel");
+  }
   await waitFor(() => document.querySelector("#completePanel").classList.contains("is-visible"), "complete panel");
 	  return {
 	    progressBeforeReward: document.querySelector("#runProgressText").textContent,

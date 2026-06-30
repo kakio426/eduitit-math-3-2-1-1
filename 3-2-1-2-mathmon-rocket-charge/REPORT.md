@@ -42,7 +42,7 @@
 
 ### 첫 화면
 
-첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 로켓과 매스몬이 보이는 기존 대표 장면은 그대로 유지하고, 제목 부분만 GPT Image로 만든 독립 타이틀 아트(`title-poster-generated.webp`)로 얹었습니다. 한 줄 목표와 시작 버튼은 HTML로 얹습니다. 한 줄 목표는 실제 화면에서 `받아올림 있는 곱셈을 풀어 로켓의 연료를 넣어요.`로 보여 줍니다.
+첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 로켓과 매스몬이 보이는 기존 대표 장면은 그대로 유지하고, 제목 부분은 GPT Image로 만든 독립 타이틀 아트(`title-poster-generated.webp`)로 얹었습니다. 시작 버튼은 1차시 포스터형 버튼 물성을 참고해 별도로 생성한 `start-button-generated.webp`로 보여 주고, 실제 클릭은 같은 크기의 HTML 버튼이 맡습니다. 한 줄 목표는 실제 화면에서 `받아올림 있는 곱셈을 풀어 로켓의 연료를 넣어요.`로 보여 줍니다.
 
 ![첫 화면](screenshots/01-cover.png)
 
@@ -100,6 +100,7 @@
 - `index.html`
 - `cover-generated.webp`
 - `title-poster-generated.webp`
+- `start-button-source.png`, `start-button-generated.png`, `start-button-generated.webp`
 - `tutorial-generated.webp`
 - `rocket-charge.webp`
 - `reward-events-sprite-generated.png`

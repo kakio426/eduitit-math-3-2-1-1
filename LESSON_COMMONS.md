@@ -10,7 +10,9 @@
 - 화면을 크게 바꾼 뒤에는 루트에서 `node scripts/check-stage-ratio.mjs`를 실행합니다.
 - 첫 화면은 `generated-title-overlay` 표준을 씁니다. 글자 없는 `cover-generated.webp`를 배경으로 깔고, 생성형 이미지 제목 자산을 `.hero-title-art`로 얹습니다.
 - 제목 자산은 GPT Image/imagegen 같은 생성형 이미지 산출물이어야 합니다. HTML/CSS/SVG/로컬 폰트로 만든 글자 이미지는 제목 아트로 쓰지 않습니다.
-- 한 줄 목표와 `시작` 버튼은 실제 HTML 오버레이로 둡니다. 커버 전체 투명 hitbox는 새 차시에 쓰지 않습니다.
+- 한 줄 목표는 실제 HTML 오버레이로 둡니다. 새 차시와 이관 완료 차시는 `data-cover-start-standard="generated-button-art"`를 붙이고, `start-button-generated.webp` 같은 생성형 버튼 아트를 실제 HTML 버튼 안에 넣습니다.
+- 시작 버튼은 1차시 포스터형 버튼처럼 플레이 아이콘이 들어간 두툼한 노란 래스터 버튼을 기준으로 삼고, 1280×800 Stage 기준 `400-460px × 140-170px` 정도로 목표 바로 아래에 둡니다. 커버 전체 투명 hitbox는 새 차시에 쓰지 않습니다.
+- 기존 `generated-title-overlay` 차시의 `.primary-button` 시작은 개별 이관 전까지 `compatibility-primary-button`으로 보존할 수 있습니다. 이 호환 상태는 새 차시 기준이 아니며, 이관할 때는 생성형 버튼 자산과 실제 `.cover-start-button` 구조로 바꿉니다.
 
 ## 2. 상단 슬롯과 소리 버튼
 

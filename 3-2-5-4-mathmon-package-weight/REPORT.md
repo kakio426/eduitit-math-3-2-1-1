@@ -23,7 +23,7 @@
 첫 화면 -> 설명 -> 문제 -> 보상 -> 결과
 ```
 
-- 첫 화면: `cover-generated.webp` 배경, `title-logo-generated.webp` 제목 아트, HTML 목표 문장과 실제 `시작` 버튼
+- 첫 화면: `cover-generated.webp` 배경, `title-logo-generated.webp` 제목 아트, HTML 목표 문장, `data-cover-start-standard="generated-button-art"` 기반 독립 생성형 `start-button-generated.webp` 버튼 아트와 실제 HTML 버튼
 - 설명: 3개의 짧은 카드로 g 더하기, 1kg 빌리기, 한도 판단을 안내
 - 문제: 큰 문제, 현재 계산판, 한 줄 지시, 선택지만 기본 노출
 - 보상: 부품 상자 이름, CSS 트럭 미리보기, 현재 트럭 단계 1개만 크게 표시
@@ -38,6 +38,9 @@
 | `title-logo-chromakey.png` | 생성형 제목 크로마키 원본 |
 | `title-logo-generated.png` | 배경 제거 제목 PNG |
 | `title-logo-generated.webp` | 런타임 제목 WebP |
+| `start-button-source.png` | 1차시 버튼 물성을 참고한 독립 생성형 시작 버튼 원본 |
+| `start-button-generated.png` | 배경 제거 시작 버튼 PNG |
+| `start-button-generated.webp` | 런타임 시작 버튼 WebP |
 | `reward-truck-upgrade-source.png` / `reward-truck-upgrade-generated.webp` | 트럭 업그레이드 작업장 보상 배경 |
 | `result-truck-plain-source.png` / `result-truck-plain-generated.webp` | 평범 트럭 결과 장면 |
 | `result-truck-slight-source.png` / `result-truck-slight-generated.webp` | 살짝 멋진 트럭 결과 장면 |
@@ -65,14 +68,15 @@
 
 ## 6. HTML 오버레이 경계
 
-- 첫 화면 HTML: 브랜드/단원 배지, 배움주제 배지, 목표 문장, `시작`
-- 첫 화면 이미지: 글자 없는 택배 작업장과 생성형 제목 아트
+- 첫 화면 HTML: 브랜드/단원 배지, 배움주제 배지, 목표 문장, 생성형 `시작` 버튼 아트 위의 실제 HTML 버튼
+- 첫 화면 이미지: 글자 없는 택배 작업장, 생성형 제목 아트, 독립 생성형 `시작` 버튼 아트
 - 문제 화면 HTML: 모든 문제식, 선택지, 답 칸, 피드백, 단계 칩, `트럭 보기`
 - 보상 화면 이미지: `reward-truck-upgrade-generated.webp` 트럭 업그레이드 작업장 배경
 - 보상 화면 HTML: 부품 상자 이름, CSS 트럭 미리보기, 트럭 단계 트랙, 변화 문구, 다음 버튼
 - 결과 화면 이미지: `result-truck-*-generated.webp` 트럭 단계와 택배 매스몬 장면
 - 결과 화면 생성형 오버레이: `result-title-*-generated.webp` 트럭 단계 이름, `result-retry-button-generated.webp` 버튼 아트
 - 결과 화면 동적(dynamic) 값: `resultTitle`, `resultSummary`, `resultNext`는 스크린리더용 숨김 텍스트로만 유지합니다.
+- 첫 화면 고정 조작: `startButton`은 생성형 버튼 아트 위의 실제 HTML 버튼입니다. 보이는 버튼 글자와 장식은 CSS가 아니라 이미지 자산이 맡습니다.
 - 결과 화면 고정 조작: `retryButton`은 생성형 버튼 아트 위의 실제 HTML hitbox입니다. 보이는 버튼 글자와 장식은 CSS가 아니라 이미지 자산이 맡습니다.
 - 결과 화면 전역 배지/조작: 상단 `오늘의 트럭`, `5단원 무게` 배지와 소리 아이콘은 시리즈 공통 Stage chrome입니다.
 

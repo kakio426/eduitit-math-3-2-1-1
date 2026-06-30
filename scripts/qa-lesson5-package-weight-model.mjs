@@ -76,7 +76,8 @@ function validateChoiceSet(step, problem, index) {
 }
 
 function validateProblem(problem, index, model) {
-  assert(problem.steps.length === 2, `problem ${index} must have exactly two steps`);
+  const expectedStepCount = problem.type === "limit" ? 2 : 3;
+  assert(problem.steps.length === expectedStepCount, `problem ${index} must have exactly ${expectedStepCount} steps`);
   assert(problem.expression.includes(problem.finalText), `problem ${index} expression does not show final value`);
   for (const step of problem.steps) {
     validateChoiceSet(step, problem, index);
@@ -89,8 +90,11 @@ function validateProblem(problem, index, model) {
     assert(problem.gramSum >= 1000, `problem ${index} addCarry must carry g >= 1000`);
     const expected = model.fromTotalGrams(model.toTotalGrams(problem.left) + model.toTotalGrams(problem.right));
     assert(problem.final.kg === expected.kg && problem.final.g === expected.g, `problem ${index} add final mismatch`);
+    assert(problem.kgSum === problem.left.kg + problem.right.kg, `problem ${index} add kg sum mismatch`);
+    assert(problem.carriedGram.kg === 1 && problem.carriedGram.g === problem.gramSum - 1000, `problem ${index} add carry conversion mismatch`);
     assert(problem.steps[0].correct === model.formatGrams(problem.gramSum), `problem ${index} add g step mismatch`);
-    assert(problem.steps[1].correct === model.formatWeight(problem.final), `problem ${index} add final step mismatch`);
+    assert(problem.steps[1].correct === model.formatWeight(problem.carriedGram), `problem ${index} add carry step mismatch`);
+    assert(problem.steps[2].correct === model.formatWeight(problem.final), `problem ${index} add final step mismatch`);
     return;
   }
 
@@ -100,8 +104,10 @@ function validateProblem(problem, index, model) {
     assert(problem.borrowedTop.g === problem.top.g + 1000, `problem ${index} borrowed g mismatch`);
     const expected = model.fromTotalGrams(model.toTotalGrams(problem.top) - model.toTotalGrams(problem.bottom));
     assert(problem.final.kg === expected.kg && problem.final.g === expected.g, `problem ${index} subtract final mismatch`);
+    assert(problem.gramDifference === problem.borrowedTop.g - problem.bottom.g, `problem ${index} subtract g difference mismatch`);
     assert(problem.steps[0].correct === model.formatWeight(problem.borrowedTop), `problem ${index} borrow step mismatch`);
-    assert(problem.steps[1].correct === model.formatWeight(problem.final), `problem ${index} subtract final step mismatch`);
+    assert(problem.steps[1].correct === model.formatGrams(problem.gramDifference), `problem ${index} subtract g step mismatch`);
+    assert(problem.steps[2].correct === model.formatWeight(problem.final), `problem ${index} subtract final step mismatch`);
     return;
   }
 
