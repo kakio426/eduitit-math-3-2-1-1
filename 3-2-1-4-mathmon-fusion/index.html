@@ -517,7 +517,7 @@
 
     .goal-rail {
       position: relative;
-      height: 190px;
+      height: 168px;
       margin-bottom: 8px;
       overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.14);
@@ -1104,9 +1104,9 @@
     .problem-panel {
       min-height: 0;
       display: grid;
-      grid-template-rows: minmax(138px, auto) minmax(120px, auto) minmax(0, 1fr) auto;
-      gap: 10px;
-      padding: clamp(14px, 2vw, 22px);
+      grid-template-rows: minmax(86px, 0.75fr) minmax(88px, auto) minmax(166px, auto) minmax(28px, auto);
+      gap: 8px;
+      padding: clamp(12px, 1.6vw, 18px);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
@@ -1126,7 +1126,7 @@
       width: 100%;
       margin: 0;
       color: #ffffff;
-      font-size: clamp(4.7rem, 7.8vw, 7.15rem);
+      font-size: clamp(4.1rem, 7vw, 6.2rem);
       line-height: 1;
       font-weight: 1000;
       text-align: center;
@@ -1155,9 +1155,9 @@
       grid-template-rows: auto auto;
       align-content: center;
       justify-items: center;
-      gap: 8px;
-      min-height: 112px;
-      padding: clamp(12px, 1.7vw, 18px);
+      gap: 6px;
+      min-height: 88px;
+      padding: clamp(10px, 1.4vw, 14px);
       border: 2px solid rgba(255, 200, 87, 0.78);
       border-radius: var(--radius);
       color: #251500;
@@ -1176,7 +1176,7 @@
     }
 
     .step-formula {
-      font-size: clamp(2.4rem, 4.4vw, 3.85rem);
+      font-size: clamp(2.25rem, 4vw, 3.35rem);
       font-weight: 1000;
       line-height: 1;
       letter-spacing: 0;
@@ -1188,10 +1188,10 @@
     }
 
     .choice-grid {
-      min-height: 0;
+      min-height: 166px;
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      grid-template-rows: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(78px, 1fr));
       align-content: stretch;
       gap: 10px;
     }
@@ -2152,7 +2152,7 @@
       }
 
       .goal-rail {
-        height: 132px;
+        height: 128px;
         margin-bottom: 8px;
       }
 
@@ -2233,7 +2233,7 @@
       }
 
       .problem-panel {
-        grid-template-rows: minmax(88px, auto) minmax(82px, auto) minmax(0, 1fr) 26px;
+        grid-template-rows: minmax(78px, auto) minmax(74px, auto) minmax(132px, auto) 24px;
         gap: 8px;
         padding: 12px;
       }
@@ -2262,11 +2262,13 @@
       }
 
       .choice-grid {
+        min-height: 132px;
+        grid-template-rows: repeat(2, minmax(62px, 1fr));
         gap: 8px;
       }
 
       .choice-button {
-        min-height: 0;
+        min-height: 62px;
         padding: 8px 10px;
         font-size: 1.58rem;
       }
@@ -3214,9 +3216,8 @@
         return {
           id: "instantLaunch",
           amount: 10,
-          title: "즉시 완성!",
-          message: "합체 신호가 켜졌어요. 지금 결과를 볼 수 있어요.",
-          launches: true
+          title: "완성 신호!",
+          message: "합체 신호가 켜져 에너지가 10% 늘었어요."
         };
       }
       if (roll < 97) {
@@ -3275,11 +3276,6 @@
           ? `무지개 코어가 켜지고 에너지가 ${actualDelta}% 늘었어요.`
           : "무지개 코어가 켜졌어요. 전설 로봇 매스몬이 열려요.";
       }
-      if (event.launches) {
-        return actualDelta > 0
-          ? `합체 신호가 켜지고 에너지가 ${actualDelta}% 늘었어요.`
-          : "합체 신호가 켜졌어요. 지금 결과를 볼 수 있어요.";
-      }
       if (event.emptiesTank) {
         return before > 0 ? "에너지가 흩어져 0이 되었어요. 다음 문제로 다시 모아 봐요." : "에너지가 아직 비어 있어요. 다음 문제로 다시 모아 봐요.";
       }
@@ -3297,9 +3293,6 @@
     function getFusionEventDeltaLabel(event) {
       if (event.rainbow) {
         return "무지개";
-      }
-      if (event.launches) {
-        return "완성!";
       }
       if (event.emptiesTank) {
         return "0%";
@@ -3334,9 +3327,7 @@
       el.rewardTitle.textContent = result.title;
       el.rewardDelta.textContent = getFusionEventDeltaLabel(result);
       el.rewardMessage.textContent = result.message;
-      el.rewardNextButton.textContent = result.launches
-        ? "완성 보기"
-        : state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
+      el.rewardNextButton.textContent = state.index + 1 >= TOTAL_QUESTIONS ? "결과 보기" : "다음";
       window.setTimeout(() => {
         el.rewardPop.classList.add("is-visible");
         el.rewardNextButton.focus();
@@ -3344,7 +3335,7 @@
     }
 
     function nextAfterReward() {
-      if (state.lastEvent?.launches || state.index + 1 >= TOTAL_QUESTIONS) {
+      if (state.index + 1 >= TOTAL_QUESTIONS) {
         showResult();
         return;
       }
