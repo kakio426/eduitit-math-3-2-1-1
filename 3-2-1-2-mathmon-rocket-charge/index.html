@@ -3105,7 +3105,11 @@
     const LESSON_ID = "3-2-1-2-mathmon-rocket-charge";
     const TOTAL_QUESTIONS = 10;
     const MAX_FUEL = 100;
-    const SCOREBOARD_API_URL = String(window.MATHMON_SCOREBOARD_API_URL || "").trim().replace(/\/+$/, "");
+    function getScoreboardApiUrl() {
+      const queryUrl = new URLSearchParams(window.location.search).get("scoreboardApi");
+      return String(window.MATHMON_SCOREBOARD_API_URL || queryUrl || "").trim().replace(/\/+$/, "");
+    }
+    const SCOREBOARD_API_URL = getScoreboardApiUrl();
     const DESTINATIONS = [
       { id: "mercury", short: "수", name: "수성", min: 1, max: 12, image: "result-mercury-generated.webp" },
       { id: "venus", short: "금", name: "금성", min: 13, max: 24, image: "result-venus-generated.webp" },

@@ -1847,7 +1847,11 @@
       const ROUND_SIZE = 10;
       const MIN_PROBLEM_BANK_SIZE = 100;
       const BASE_CORRECT_SCORE = 100n;
-      const SCOREBOARD_API_URL = String(window.MATHMON_SCOREBOARD_API_URL || "").trim().replace(/\/+$/, "");
+      function getScoreboardApiUrl() {
+        const queryUrl = new URLSearchParams(window.location.search).get("scoreboardApi");
+        return String(window.MATHMON_SCOREBOARD_API_URL || queryUrl || "").trim().replace(/\/+$/, "");
+      }
+      const SCOREBOARD_API_URL = getScoreboardApiUrl();
       const PHASES = Object.freeze({
         cover: "cover",
         playing: "playing",

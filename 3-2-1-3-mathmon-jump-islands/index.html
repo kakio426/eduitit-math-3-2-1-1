@@ -1874,7 +1874,11 @@
     const MAX_JUMP_DISTANCE = 100;
     const BASE_FIRST_TRY_DISTANCE = 5;
     const STEP_CONFIRM_DELAY = 920;
-    const SCOREBOARD_API_URL = String(window.MATHMON_SCOREBOARD_API_URL || "").trim().replace(/\/+$/, "");
+    function getScoreboardApiUrl() {
+      const queryUrl = new URLSearchParams(window.location.search).get("scoreboardApi");
+      return String(window.MATHMON_SCOREBOARD_API_URL || queryUrl || "").trim().replace(/\/+$/, "");
+    }
+    const SCOREBOARD_API_URL = getScoreboardApiUrl();
     const ISLANDS = [
       { id: "start", name: "출발섬", minDistance: 0, minCorrect: 0, image: "result-final-start-generated.webp?v=clean-slot-20260630" },
       { id: "sand", name: "모래섬", minDistance: 1, minCorrect: 0, image: "result-final-sand-generated.webp?v=clean-slot-20260630" },

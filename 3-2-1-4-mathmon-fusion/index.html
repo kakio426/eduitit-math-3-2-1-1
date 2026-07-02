@@ -2971,7 +2971,11 @@
     const LESSON_ID = "3-2-1-4-mathmon-fusion";
     const TOTAL_QUESTIONS = 10;
     const MAX_ENERGY = 100;
-    const SCOREBOARD_API_URL = String(window.MATHMON_SCOREBOARD_API_URL || "").trim().replace(/\/+$/, "");
+    function getScoreboardApiUrl() {
+      const queryUrl = new URLSearchParams(window.location.search).get("scoreboardApi");
+      return String(window.MATHMON_SCOREBOARD_API_URL || queryUrl || "").trim().replace(/\/+$/, "");
+    }
+    const SCOREBOARD_API_URL = getScoreboardApiUrl();
     const GRADES = [
       { id: "small", short: "소", name: "소형 로봇 매스몬", min: 1, max: 20, minCorrect: 1, image: "result-small-generated.webp" },
       { id: "medium", short: "중", name: "중형 로봇 매스몬", min: 21, max: 40, minCorrect: 3, image: "result-medium-generated.webp" },

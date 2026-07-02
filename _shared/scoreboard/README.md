@@ -98,5 +98,5 @@ const scoreboardBridge = window.MathmonScoreboard.createApiBridge({
 
 - 게임 시작: `scoreboardBridge.start()`
 - 결과 화면의 순위 버튼: `leaderboardButton.addEventListener("click", scoreboardBridge.open)`
-- API 주소 주입 위치: `window.MATHMON_SCOREBOARD_API_URL`
+- API 주소 주입 위치: `window.MATHMON_SCOREBOARD_API_URL` 또는 `?scoreboardApi=https%3A%2F%2Feduitit.site`
 - API 주소가 비어 있으면 점수 제출 없이 같은 순위 화면 안에서 꺼짐 안내만 보입니다.
