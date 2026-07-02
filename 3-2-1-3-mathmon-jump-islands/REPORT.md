@@ -20,7 +20,7 @@
 
 ![설명 화면](screenshots/tutorial.png)
 
-설명 화면은 규칙을 길게 풀어 쓰지 않고, 문제를 풀고 바람을 확인한 뒤 섬을 건너는 흐름만 보여 줍니다. 계산 원리는 문제 화면에서 직접 조작하며 확인하게 하고, 설명 화면은 게임의 약속을 빠르게 잡는 역할만 합니다.
+설명 화면은 생성 이미지 포스터 한 장으로 규칙을 보여 줍니다. 학생이 바로 볼 말은 `0을 붙여 점프해요`, `0을 잠깐 가려요`, `남은 곱셈을 해요`, `0을 다시 붙여요`, `점프 시작`뿐입니다. HTML은 숨김 접근성 설명과 `점프 시작` 투명 hitbox만 맡습니다.
 
 ## 문제 은행
 
@@ -153,6 +153,7 @@
 - `title-poster-source.png`, `title-poster-generated.png`, `title-poster-generated.webp`, `title-poster-transparent-raw.png`
 - `start-button-source.png`, `start-button-generated.png`, `start-button-generated.webp`
 - `tutorial-generated.webp`
+- `tutorial-fulltext-source.png`, `tutorial-fulltext-generated.webp`
 - `play-map-strip-source.png`, `play-map-strip-generated.webp`
 - `reward-tailwind-source.png`, `reward-tailwind-generated.webp`
 - `reward-headwind-source.png`, `reward-headwind-generated.webp`
@@ -241,3 +242,11 @@
 - 보상 시뮬레이션: `node scripts/simulate-lesson3-islands.mjs --seed 12345 --runs 50000 --expect-rainbow-min 0.10`
 - Stage 검사: `node scripts/check-stage-ratio.mjs`
 - 브라우저 QA: 첫 화면, 설명, 문제 1단계, 문제 2단계, 보상, 결과 공개 통이미지, 결과, 오답 힌트, 태블릿 가로 문제, 세로 보호막, 지도 매스몬 효과 캡처 확인
+
+## 2026-07-02 설명 화면 포스터형 이관
+
+설명 화면을 생성 이미지 포스터형으로 통일했습니다. `tutorial-fulltext-source.png`와 `tutorial-fulltext-generated.webp`가 설명 글자, 0을 가리는 예시, `점프 시작` 버튼 표면을 맡고, HTML은 접근성용 숨김 설명과 투명 hitbox만 맡습니다.
+
+학생 문구는 `0을 붙여 점프해요`, `0을 잠깐 가려요.`, `남은 곱셈을 해요.`, `0을 다시 붙여요.`로 줄였습니다. Humanizer 기준으로 4단계 보상 설명을 설명 화면에서 빼고, 0을 가리고 곱한 뒤 다시 붙이는 방법만 보이게 했습니다.
+
+텍스트 넘침·요소 겹침 QA는 로컬 Chrome에서 1280×800과 1024×768로 확인했습니다. 설명 화면 이미지 로드, 투명 `점프 시작` hitbox Stage 안 배치, 보이는 DOM 텍스트 overflow, 화면 밖 이탈이 모두 0건이었습니다. REPORT용 최신 캡처는 `screenshots/tutorial.png`입니다.

@@ -335,9 +335,43 @@
     }
 
     .tutorial {
-      place-items: center;
-      padding: clamp(18px, 5vw, 56px);
       position: relative;
+      place-items: stretch;
+      padding: 0;
+      background: #171421;
+    }
+
+    .tutorial-fulltext-art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .tutorial-poster-hitbox {
+      position: absolute;
+      left: 34.5%;
+      top: 86.5%;
+      z-index: 2;
+      width: 31%;
+      height: 9.5%;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      color: transparent;
+      font-size: 0;
+    }
+
+    .tutorial-poster-hitbox:focus-visible {
+      outline: 5px solid rgba(255, 255, 255, 0.95);
+      outline-offset: 5px;
+      box-shadow: 0 0 0 10px rgba(255, 228, 92, 0.42);
     }
 
     .tutorial-card {
@@ -1706,18 +1740,17 @@
     </section>
 
     <section class="screen tutorial" data-screen="tutorial" aria-labelledby="tutorialTitle">
-      <div class="tutorial-mathmon tutorial-mathmon-top" aria-hidden="true"></div>
-      <div class="tutorial-mathmon tutorial-mathmon-bottom" aria-hidden="true"></div>
-      <div class="tutorial-card">
-        <span class="unit-label">어떻게 해요?</span>
-        <h2 class="tutorial-title" id="tutorialTitle">점수를 모아요</h2>
-        <ol class="tutorial-steps">
-          <li data-tutorial-step><b>1</b><span>10문제를 풀며 점수를 모아요</span></li>
-          <li data-tutorial-step><b>2</b><span>정답이면 일반, 반짝, 황금 상자를 열어요</span></li>
-          <li data-tutorial-step><b>3</b><span>마지막 점수와 정답 수로 매스몬을 얻어요</span></li>
+      <img class="tutorial-fulltext-art" src="tutorial-fulltext-generated.webp" alt="" aria-hidden="true">
+      <h2 class="sr-only" id="tutorialTitle">곱해서 상자를 열어요</h2>
+      <div class="sr-only">
+        <p>어떻게 해요? 곱해서 상자를 열어요.</p>
+        <ol>
+          <li>문제를 봐요.</li>
+          <li>답을 골라요.</li>
+          <li>상자를 열어요.</li>
         </ol>
-        <button class="primary-button" type="button" data-action="start-first-problem">문제 시작</button>
       </div>
+      <button class="tutorial-poster-hitbox" type="button" data-action="start-first-problem" aria-label="문제 시작"></button>
     </section>
 
     <section class="screen play" data-screen="play" aria-label="매스몬 상자런 문제">
@@ -2308,6 +2341,7 @@
         state.reviewReturnScreen = state.screen || "cover";
         state.tutorialReviewMode = true;
         els.startFirstProblemButton.textContent = TUTORIAL_REVIEW_LABEL;
+        els.startFirstProblemButton.setAttribute("aria-label", TUTORIAL_REVIEW_LABEL);
         closeSettings({ restoreFocus: false });
         showScreen("tutorial");
         window.requestAnimationFrame(() => els.startFirstProblemButton.focus());
@@ -2318,6 +2352,7 @@
         state.tutorialReviewMode = false;
         state.reviewReturnScreen = "cover";
         els.startFirstProblemButton.textContent = TUTORIAL_START_LABEL;
+        els.startFirstProblemButton.setAttribute("aria-label", TUTORIAL_START_LABEL);
         showScreen(returnScreen);
       }
 
@@ -2339,6 +2374,7 @@
         state.tutorialReviewMode = false;
         state.reviewReturnScreen = "cover";
         els.startFirstProblemButton.textContent = TUTORIAL_START_LABEL;
+        els.startFirstProblemButton.setAttribute("aria-label", TUTORIAL_START_LABEL);
         closeSettings({ restoreFocus: false });
         showScreen("cover");
       }

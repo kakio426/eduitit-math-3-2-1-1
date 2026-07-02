@@ -49,7 +49,7 @@
 
 ![설명 화면](screenshots/02-tutorial.png)
 
-학생이 읽기 쉬운 세 단계로 규칙을 보여 줍니다. 핵심은 문제를 풀고, 정답이면 상자를 열고, 두 번 틀리면 깨진 상자가 열린다는 점입니다.
+설명 화면은 생성 이미지 포스터 한 장으로 규칙을 보여 줍니다. 학생이 바로 볼 말은 `곱해서 상자를 열어요`, `문제를 봐요`, `답을 골라요`, `상자를 열어요`, `문제 시작`뿐입니다. HTML은 숨김 접근성 설명과 `문제 시작` 투명 hitbox만 맡습니다.
 
 ### 문제 화면
 
@@ -131,6 +131,8 @@
 
 - `index.html`
 - `cover-generated.webp`
+- `tutorial-fulltext-source.png`
+- `tutorial-fulltext-generated.webp`
 - `result-generated-v2.webp`
 - `eduitit-logo-mark.png`
 - `assets/audio/*.wav`
@@ -163,3 +165,11 @@
 - 백엔드 검사: `cd scoreboard-api && bun test`, `bun run typecheck`, `bun run lint`
 - 브라우저 QA: 1280x800, 1024x768, 856x544에서 결과 화면 `순위` 클릭, 전국 순위 화면 진입, 10행 샘플 렌더, `결과로` hitbox 복귀를 확인했습니다. SVG `<text>` Stage 밖 이탈, 보이는 HTML 버튼 텍스트, `foreignObject`, 버튼 겹침 0건을 확인했습니다.
 - 2026-07-02 추가 QA: `scoreboard-title-box-generated.webp` 생성형 타이틀 자산을 적용하고 1280x800, 1024x768, 856x544에서 타이틀 가독성, 배경 겹침, 상단 상태 문구 제거, 목록/버튼 위치를 다시 확인했습니다.
+
+## 11. 2026-07-02 설명 화면 포스터형 이관
+
+설명 화면을 기존 카드형 설명에서 생성 이미지 포스터형으로 바꿨습니다. `tutorial-fulltext-source.png`와 `tutorial-fulltext-generated.webp`가 설명 글자, 예시, `문제 시작` 버튼 표면을 맡고, HTML은 접근성용 숨김 설명과 투명 hitbox만 맡습니다.
+
+학생 문구는 초3 학생이 바로 읽을 수 있게 `곱해서 상자를 열어요`, `문제를 봐요.`, `답을 골라요.`, `상자를 열어요.`로 줄였습니다. Humanizer 기준으로 제작자 말과 긴 보상 설명은 설명 화면에서 빼고, 한 문장에 행동 하나만 남겼습니다.
+
+텍스트 넘침·요소 겹침 QA는 로컬 Chrome에서 1280×800과 1024×768로 확인했습니다. 설명 화면 이미지 로드, 투명 `문제 시작` hitbox Stage 안 배치, 보이는 DOM 텍스트 overflow, 화면 밖 이탈이 모두 0건이었습니다. REPORT용 최신 캡처는 `screenshots/02-tutorial.png`입니다.

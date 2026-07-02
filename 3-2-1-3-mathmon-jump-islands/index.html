@@ -449,6 +449,48 @@
       display: none;
     }
 
+    .tutorial--fulltext {
+      align-items: stretch;
+      padding: 0;
+    }
+
+    .tutorial--fulltext::after {
+      display: none;
+    }
+
+    .tutorial-fulltext-art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .tutorial-poster-hitbox {
+      position: absolute;
+      left: 31%;
+      top: 86.5%;
+      z-index: 5;
+      width: 38%;
+      height: 10%;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      color: transparent;
+      font-size: 0;
+    }
+
+    .tutorial-poster-hitbox:focus-visible {
+      outline: 5px solid rgba(255, 255, 255, 0.95);
+      outline-offset: 5px;
+      box-shadow: 0 0 0 10px rgba(255, 228, 92, 0.42);
+    }
+
     .cover-scene {
       position: relative;
       z-index: 2;
@@ -1734,26 +1776,22 @@
         </div>
       </section>
 
-      <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle">
-        <img class="raster-bg" src="tutorial-generated.webp" alt="">
+      <section class="screen tutorial tutorial--fulltext" id="tutorialScreen" aria-labelledby="tutorialTitle">
+        <img class="tutorial-fulltext-art" src="tutorial-fulltext-generated.webp" alt="" aria-hidden="true">
         <div class="top-row">
           <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
           <span class="unit-badge">3학년 2학기 1단원 3차시</span>
         </div>
-        <div class="tutorial-layout">
-          <div class="tutorial-copy">
-            <span class="mini-badge">어떻게 해요?</span>
-            <h2 id="tutorialTitle">두 번 고르면 점프해요.</h2>
-            <ol class="steps">
-              <li><b>1</b><span>0을 잠깐 가려요.</span></li>
-              <li><b>2</b><span>남은 곱셈을 먼저 해요.</span></li>
-              <li><b>3</b><span>가렸던 0을 붙여요.</span></li>
-              <li><b>4</b><span>바람에 따라 점프 길이 달라져요.</span></li>
-            </ol>
-            <button class="primary-button" id="tutorialNextButton" type="button">점프 시작</button>
-          </div>
-          <div class="tutorial-art-spacer" aria-hidden="true"></div>
+        <h2 class="visually-hidden" id="tutorialTitle">0을 붙여 점프해요</h2>
+        <div class="visually-hidden">
+          <p>어떻게 해요? 0을 붙여 점프해요.</p>
+          <ol>
+            <li>0을 잠깐 가려요.</li>
+            <li>남은 곱셈을 해요.</li>
+            <li>0을 다시 붙여요.</li>
+          </ol>
         </div>
+        <button class="tutorial-poster-hitbox" id="tutorialNextButton" type="button" aria-label="점프 시작"></button>
       </section>
 
       <section class="screen play" id="playScreen" aria-labelledby="questionText">
@@ -2451,6 +2489,7 @@
       state.tutorialReviewMode = false;
       state.reviewReturnScreen = "cover";
       el.tutorialNextButton.textContent = TUTORIAL_START_LABEL;
+      el.tutorialNextButton.setAttribute("aria-label", TUTORIAL_START_LABEL);
     }
 
     function loadAudioPreference(key) {
@@ -2556,6 +2595,7 @@
       state.reviewReturnScreen = state.screen || "cover";
       state.tutorialReviewMode = true;
       el.tutorialNextButton.textContent = TUTORIAL_REVIEW_LABEL;
+      el.tutorialNextButton.setAttribute("aria-label", TUTORIAL_REVIEW_LABEL);
       closeSettings({ restoreFocus: false });
       showScreen("tutorial");
       window.requestAnimationFrame(() => el.tutorialNextButton.focus());
