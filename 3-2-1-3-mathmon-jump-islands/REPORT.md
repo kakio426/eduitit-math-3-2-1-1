@@ -6,7 +6,7 @@
 - 실행 파일: `3-2-1-3-mathmon-jump-islands/index.html`
 - Stage: `16:10`, `1280x800`, `.stage-shell` contain 구조
 - 첫 화면: `cover-generated.webp` 배경, `title-poster-generated.webp` 제목 아트, HTML 목표 문장, 독립 생성형 `start-button-generated.webp` 버튼 아트와 실제 HTML 버튼
-- 흐름: 첫 화면 → 설명 → 문제 → 바람 → 도착 전 살펴보기 → 결과
+- 흐름: 첫 화면 → 설명 1(0 가리고 곱하기) → 설명 2(점프와 순위 목표) → 문제 → 바람 → 도착 전 살펴보기 → 결과 → 전국 순위
 
 ## 첫 화면과 설명
 
@@ -20,7 +20,7 @@
 
 ![설명 화면](screenshots/tutorial.png)
 
-설명 화면은 생성 이미지 포스터 한 장으로 규칙을 보여 줍니다. 학생이 바로 볼 말은 `0을 붙여 점프해요`, `0을 잠깐 가려요`, `남은 곱셈을 해요`, `0을 다시 붙여요`, `점프 시작`뿐입니다. HTML은 숨김 접근성 설명과 `점프 시작` 투명 hitbox만 맡습니다.
+설명 화면은 생성 이미지 2장 흐름입니다. 첫 장 `tutorial-solve-generated.webp`는 0을 잠깐 가리고 곱한 뒤 다시 붙이는 방법을 보여 주고, 버튼은 `다음`입니다. 둘째 장 `tutorial-goal-generated.webp`는 10문제를 풀며 점프 힘과 바람을 얻고 마지막에 도착 섬과 전국 순위를 확인한다는 목표를 보여 줍니다. HTML은 숨김 접근성 설명, `data-tutorial-step`, 투명 hitbox만 맡고 보이는 설명 UI를 다시 그리지 않습니다.
 
 ## 문제 은행
 
@@ -152,8 +152,10 @@
 - `cover-generated.webp`
 - `title-poster-source.png`, `title-poster-generated.png`, `title-poster-generated.webp`, `title-poster-transparent-raw.png`
 - `start-button-source.png`, `start-button-generated.png`, `start-button-generated.webp`
-- `tutorial-generated.webp`
-- `tutorial-fulltext-source.png`, `tutorial-fulltext-generated.webp`
+- `tutorial-solve-source.png`, `tutorial-solve-generated.webp`
+- `tutorial-goal-source.png`, `tutorial-goal-generated.webp`
+- `tutorial-generated.webp`(이전 설명 보존본, 현재 실행 경로에서는 미사용)
+- `tutorial-fulltext-source.png`, `tutorial-fulltext-generated.webp`(이전 포스터 보존본, 현재 실행 경로에서는 미사용)
 - `play-map-strip-source.png`, `play-map-strip-generated.webp`
 - `reward-tailwind-source.png`, `reward-tailwind-generated.webp`
 - `reward-headwind-source.png`, `reward-headwind-generated.webp`
@@ -188,7 +190,8 @@
 
 - 어려운 말과 제작자 말은 화면에 남기지 않았습니다.
 - 첫 화면 목표: `0을 잠깐 가리고 먼저 곱한 뒤, 0을 붙여 섬을 건너요.`
-- 설명 4단계: `바람에 따라 점프 길이 달라져요.`
+- 설명 1장: `0을 잠깐 가려요.`, `남은 수를 곱해요.`, `0을 다시 붙여요.`
+- 설명 2장: `10문제`, `바람`, `마지막에 순위 보기`, `점프 준비`
 - 문제 화면 문구: `0을 잠깐 가리고 곱해요.`, `가렸던 0을 다시 붙여요.`, `맞았어요. 다음은 0 붙이기예요.`, `맞았어요. 답이 완성됐어요.`
 - 답 완성 버튼 이미지: `어떤 바람이 불까?`
 - 선택지: `0 한 개 붙이기`, `0 두 개 붙이기`, `0 세 개 붙이기`
@@ -218,7 +221,7 @@
 | 파일 | 화면 | 상태 |
 | --- | --- | --- |
 | `screenshots/cover.png` | 1280x800 | 첫 화면 |
-| `screenshots/tutorial.png` | 1280x800 | 설명 |
+| `screenshots/tutorial.png` | 1280x800 | 설명 1장 기준 캡처 |
 | `screenshots/play-step1.png` | 1280x800 | 먼저 곱하기 |
 | `screenshots/play-step2.png` | 1280x800 | 0 붙이기 |
 | `screenshots/play-complete.png` | 1280x800 | 답 완성 |
@@ -249,4 +252,4 @@
 
 HTML은 보이는 설명을 다시 그리지 않고 접근성용 숨김 설명, 단계 전환 상태값, 투명 hitbox만 맡습니다. 첫 클릭은 `solve`에서 `goal`로 넘어가고, 둘째 클릭은 `점프 준비`로 첫 문제를 시작합니다. 설정의 `방법 다시 보기`도 같은 두 장을 보여 준 뒤 원래 화면으로 돌아옵니다.
 
-학생 문구는 `0을 잠깐 가려요.`, `남은 수를 곱해요.`, `0을 다시 붙여요.`, `점프 준비`처럼 짧은 행동 말로 유지했습니다. 로컬 Chrome QA에서 1280×800 기준 `시작 → 설명 1장 → 다음 → 설명 2장 → 점프 준비 → 문제 화면` 흐름을 확인했고, 설명 이미지 표시, 버튼 aria-label, Stage 비율, inline script 파싱, `git diff --check`를 통과했습니다.
+학생 문구는 `0을 잠깐 가려요.`, `남은 수를 곱해요.`, `0을 다시 붙여요.`, `점프 준비`처럼 짧은 행동 말로 유지했습니다. 로컬 Chrome QA와 배포본 QA에서 1280×800 기준 `시작 → 설명 1장 → 다음 → 설명 2장 → 점프 준비 → 문제 화면` 흐름을 확인했고, 설명 이미지 표시, 버튼 aria-label, Stage 비율, inline script 파싱, `git diff --check`를 통과했습니다. 에듀잇티 운영 런처는 `https://kakio426.github.io/eduitit-math-3-2/3-2-1-3-mathmon-jump-islands/?v=3bc3c71&scoreboardApi=https%3A%2F%2Feduitit.site`를 iframe으로 엽니다.

@@ -1,0 +1,66 @@
+name: Deploy Pages and Sync Eduitit
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "3-2-*/**"
+      - "_shared/**"
+      - "manifest.json"
+      - ".nojekyll"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static artifact
+        run: |
+          mkdir -p _site
+          git ls-files -z | rsync -a --files-from=- --from0 ./ _site/
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Sync Eduitit iframe launcher versions
+        env:
+          SYNC_TOKEN: ${{ secrets.EDUITIT_MATHMON_SYNC_TOKEN }}
+          SYNC_URL: ${{ vars.EDUITIT_MATHMON_SYNC_URL }}
+        run: |
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo "::warning::EDUITIT_MATHMON_SYNC_TOKEN is not configured; skipping Eduitit launcher sync."
+            exit 0
+          fi
+          SYNC_URL="${SYNC_URL:-https://eduitit.site/edu-materials/mathmon-launchers/sync/}"
+          curl --fail --show-error --silent \
+            --request POST \
+            --header "Content-Type: application/json" \
+            --header "X-Mathmon-Sync-Token: $SYNC_TOKEN" \
+            --data "{\"repository\":\"${GITHUB_REPOSITORY}\",\"ref\":\"${GITHUB_REF}\",\"sha\":\"${GITHUB_SHA}\"}" \
+            "$SYNC_URL"

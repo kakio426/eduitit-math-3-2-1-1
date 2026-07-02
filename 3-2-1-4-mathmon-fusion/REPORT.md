@@ -30,7 +30,7 @@
 ## 3. 게임 흐름
 
 ```text
-첫 화면 -> 설명 화면 -> 부품 1 -> 부품 2 -> 합체 덧셈 -> 합체 에너지 이벤트 -> 다음 문제 -> 10문제 완료 -> 에너지 측정 -> 로봇 매스몬 등급 결과
+첫 화면 -> 설명 1(나누어 곱하기) -> 설명 2(합체와 순위 목표) -> 부품 1 -> 부품 2 -> 합체 덧셈 -> 합체 에너지 이벤트 -> 다음 문제 -> 10문제 완료 -> 에너지 측정 -> 로봇 매스몬 등급 결과 -> 전국 순위
 ```
 
 학생은 먼저 첫 곱셈 부품을 고릅니다. 예를 들어 `23 × 45`에서는 `23 × 5 = 115`를 고릅니다. 다음에는 십의 자리 4가 40을 뜻한다는 것을 확인하며 `23 × 40 = 920`을 고릅니다. 마지막으로 `115 + 920 = 1,035`를 골라 로봇 합체를 완성합니다.
@@ -39,15 +39,15 @@
 
 ### 첫 화면
 
-첫 화면은 `cover-robot-mathmon-generated.webp`를 RasterStage 배경으로 사용합니다. 둥글고 웃는 로봇형 매스몬 장면 위에 게임 제목, 한 줄 목표, 시작 버튼을 HTML로 얹습니다. 로봇이 곧 이번 차시의 매스몬이라는 점이 첫 화면에서 바로 읽히도록 했습니다. 생성 이미지에는 텍스트를 넣지 않아 제목과 버튼이 선명하게 유지됩니다.
+첫 화면은 `cover-generated.webp`를 RasterStage 배경으로 사용합니다. 로봇형 매스몬이 있는 대표 장면 위에 GPT Image로 만든 독립 타이틀 아트 `title-poster-generated.webp`를 얹고, 시작 버튼은 별도 생성형 버튼 자산 `start-button-generated.webp`로 보여 줍니다. 실제 클릭은 같은 크기의 HTML 버튼이 맡고, 접근성용 실제 제목은 숨김 텍스트로 유지합니다.
 
 ### 설명 화면
 
 ![설명 화면](screenshots/02-tutorial.png)
 
-설명 화면은 생성 이미지 포스터 한 장으로 규칙을 보여 줍니다. 학생이 바로 볼 말은 `나눠서 곱해요`, `아래 수를 둘로 나눠요`, `두 조각을 따로 곱해요`, `두 값을 더해요`, `합체 시작`뿐입니다. HTML은 숨김 접근성 설명과 `합체 시작` 투명 hitbox만 맡습니다.
+설명 화면은 생성 이미지 2장 흐름입니다. 첫 장 `tutorial-solve-generated.webp`는 `45 = 40 + 5`, `23 × 40`, `23 × 5`, `920 + 115`처럼 아래 수를 둘로 나누어 따로 곱한 뒤 더하는 방법을 보여 주고, 버튼은 `다음`입니다. 둘째 장 `tutorial-goal-generated.webp`는 10문제를 풀며 합체 힘을 얻고 마지막에 로봇 등급과 전국 순위를 확인한다는 목표를 보여 줍니다. HTML은 숨김 접근성 설명, `data-tutorial-step`, 투명 hitbox만 맡고 보이는 설명 UI를 다시 그리지 않습니다.
 
-버튼 문구는 다음 행동이 바로 보이도록 `합체 시작`으로 두었습니다.
+학생이 실제로 누르는 둘째 장 행동은 `합체 준비`입니다.
 
 ### 문제 화면
 
@@ -63,7 +63,7 @@
 
 ### 결과 화면
 
-결과 화면은 도달 등급별 RasterStage 배경 6장과 다시하기 배경 1장을 사용합니다. 소형, 중형, 대형, 거대, 초거대, 전설 합체 이미지가 따로 있으며, 등급이 올라갈수록 몸집, 색 포인트, 배경 에너지 효과가 분명히 커지도록 다시 생성했습니다. 생성 이미지에는 텍스트·점수·버튼을 넣지 않았습니다. 그 위에 합체 에너지 측정 막대, 정답 수, 도달 등급, 칭찬 문구, 다시하기 버튼을 HTML로 얹습니다.
+결과 화면은 도달 등급별 RasterStage 배경 6장과 다시하기 배경 1장을 사용합니다. 소형, 중형, 대형, 거대, 초거대, 전설 합체 이미지가 따로 있으며, 등급이 올라갈수록 몸집, 색 포인트, 배경 에너지 효과가 분명히 커지도록 다시 생성했습니다. 생성 이미지는 로봇 장면을 맡고, SVG 동적 레이어가 정답 수, 도달 등급, 합체 힘, `순위 보기`, `한 번 더` 버튼 표면을 정확한 좌표에 그립니다. 실제 클릭은 투명 HTML hitbox가 맡습니다.
 
 ### 전국 순위 화면
 
@@ -84,8 +84,15 @@
 이 폴더는 별도 빌드 없이 바로 열 수 있는 정적 패키지입니다. 학생용 static 사본에는 실행에 필요한 파일만 복사하고, PNG 원본과 스크린샷은 작업실에 보관합니다.
 
 - `index.html`
-- `cover-robot-mathmon-generated.webp`
-- `play-robot-goal-*-generated.webp`
+- `cover-generated.webp`
+- `title-poster-source.png`, `title-poster-generated.png`, `title-poster-generated.webp`
+- `start-button-source.png`, `start-button-generated.png`, `start-button-generated.webp`
+- `tutorial-solve-source.png`, `tutorial-solve-generated.webp`
+- `tutorial-goal-source.png`, `tutorial-goal-generated.webp`
+- `tutorial-fulltext-source.png`, `tutorial-fulltext-generated.webp`(이전 포스터 보존본, 현재 실행 경로에서는 미사용)
+- `tutorial-dynamic-bg-source.png`, `tutorial-dynamic-bg-generated.webp`(이전 비교안 보존본, 현재 학생 기본 흐름에서는 미사용)
+- `play-robot-goal-strip-source.png`, `play-robot-goal-strip-generated.webp`
+- `play-robot-goal-*-generated.webp`(상태별 목표 지도 실험 보존본, 현재 runtime은 strip 한 장 고정)
 - `fusion-workshop-generated.webp`
 - `mathmon-rfa-01-standby.webp`
 - `mathmon-rfa-02-one-part.webp`
@@ -166,16 +173,12 @@
 - 번들 Chromium/Playwright에서 `Math.random()`을 0.9로 고정해 `완성 신호!`를 10번 연속 발생시켰습니다. 1~9번 보상 버튼은 모두 `다음`, 10번 보상 버튼만 `결과 보기`였고, 결과 화면의 정답 수는 `10/10`으로 확인했습니다.
 - 같은 검증 중 1365×768 화면에서 선택지 그리드 높이가 부족해 1행과 2행 버튼 hitbox가 겹치는 문제를 발견했습니다. 목표판 높이와 문제 패널 행 높이를 조정해 선택지 그리드를 166px로 고정하고, 버튼 1행과 2행 사이에 10px 간격이 남는 것을 좌표로 확인했습니다.
 
-### 2026-07-02 설명 화면 3안 비교 프로토타입
+### 2026-07-02 설명 화면 비교안 정리
 
-- 설명 화면을 최종 채택 전 비교할 수 있도록 `?tutorial=image`, `?tutorial=svg`, `?tutorial=html` 세 가지 variant로 나눴습니다. 1단원 통일 기준으로 A안 `image` variant를 기본값으로 바꿨고, 쿼리값이 없으면 포스터형 설명 화면이 먼저 열립니다.
-- A안 `image`는 `tutorial-fulltext-source.png`와 `tutorial-fulltext-generated.webp`를 사용합니다. 설명 글자, 예시, 시작 버튼 표면까지 생성 이미지 안에 들어간 포스터형 화면이며, HTML은 접근성용 숨김 설명과 투명 hitbox만 맡습니다.
-- B안 `svg`는 `tutorial-dynamic-bg-source.png`와 `tutorial-dynamic-bg-generated.webp`를 배경으로 사용하고, 설명 카드·예시·버튼 표면·보이는 글자는 하나의 1280×800 SVG 좌표계 안에서 그립니다. 실제 클릭은 같은 좌표의 투명 HTML 버튼이 맡습니다.
-- C안 `html`은 기존 HTML/CSS 방식의 개선안입니다. 설명은 `나눠서 곱해요`, `아래 수를 둘로 나눠요`, `두 조각을 따로 곱해요`, `두 값을 더해요`로 줄였고, 태블릿 가로에서는 예시판을 숨겨 텍스트와 버튼이 화면 안에 안정적으로 남게 했습니다.
-- Humanizer 학생 문구 QA: 세 안 모두 어려운 제작자 말 대신 `아래 수`, `두 조각`, `두 값`, `합체 시작`처럼 초3 학생이 바로 읽을 수 있는 말로 통일했습니다.
-- 텍스트 넘침·요소 겹침 QA: 로컬 Chrome 원격 디버깅으로 1280×800과 1024×768에서 세 variant를 모두 열었습니다. DOM 텍스트 overflow, 화면 밖 이탈, SVG `<text>` Stage 이탈, 투명 시작 hitbox Stage 이탈이 모두 0건이었습니다. 캡처와 비교 시트는 `.tmp-qa/fusion-tutorial-variants-final/`에 남겼습니다.
-- A안 채택 후에도 `?tutorial=svg`, `?tutorial=html` 비교 링크는 유지했습니다. 기본 학생 흐름은 `image`이고, HTML은 접근성용 숨김 설명과 투명 hitbox만 맡습니다.
-- 1단원 통일 후 로컬 Chrome에서 1280×800과 1024×768 기본 진입 화면을 다시 확인했습니다. 쿼리값이 없을 때 `image` variant가 열리고, 이미지 로드, 투명 `합체 시작` hitbox Stage 안 배치, 보이는 DOM 텍스트 overflow, 화면 밖 이탈이 모두 0건이었습니다. REPORT용 최신 캡처는 `screenshots/02-tutorial.png`입니다.
+- 설명 화면은 최종 채택 전 `image`, `svg`, `html` 세 가지 방식으로 비교했습니다. 현재 학생 기본 흐름은 `image` 하나로 고정했고, JS의 `TUTORIAL_VARIANTS`도 `image`만 허용합니다.
+- 예전 `tutorial-fulltext-source.png`, `tutorial-fulltext-generated.webp`, `tutorial-dynamic-bg-source.png`, `tutorial-dynamic-bg-generated.webp`, SVG/HTML 설명 마크업은 비교용 보존물입니다. 현재 실행 경로에서는 `tutorial-solve-generated.webp`와 `tutorial-goal-generated.webp` 두 장만 학생에게 보입니다.
+- Humanizer 학생 문구 QA는 최신 2장 흐름 기준으로 다시 정리했습니다. 화면 말은 `아래 수를 둘로 나눠요.`, `두 조각을 따로 곱해요.`, `두 값을 더해요.`, `합체 준비`처럼 초3 학생이 바로 읽을 수 있는 말로 유지했습니다.
+- 로컬 Chrome과 배포본에서 1280×800 기본 진입 흐름을 다시 확인했습니다. `시작 → 설명 1장 → 다음 → 설명 2장 → 합체 준비 → 문제 화면` 순서로 동작하고, 이미지 로드, 투명 hitbox Stage 안 배치, 보이는 DOM 텍스트 overflow, 화면 밖 이탈이 0건이었습니다.
 
 ### 2026-07-01 결과 등급 이미지 재생성
 
@@ -195,6 +198,6 @@
 
 - 설명 화면을 생성 이미지 2장 흐름으로 바꿨습니다. 첫 장은 `tutorial-solve-source.png`와 `tutorial-solve-generated.webp`가 맡고, 아래 수를 둘로 나누어 따로 곱한 뒤 더하는 방법과 `다음` 버튼을 보여 줍니다.
 - 둘째 장은 `tutorial-goal-source.png`와 `tutorial-goal-generated.webp`가 맡고, 문제를 맞히면 합체 힘을 얻고 마지막에 전국 순위를 볼 수 있음을 알려 줍니다.
-- 기존 비교용 `?tutorial=svg`, `?tutorial=html` 흐름은 학생 기본 흐름에서 제외하고, 기본 variant를 `image` 하나로 고정했습니다. HTML은 접근성용 숨김 설명, 단계 전환 상태값, 투명 hitbox만 맡습니다.
+- 기존 SVG/HTML 비교 흐름은 학생 기본 흐름에서 제외하고, 기본 variant를 `image` 하나로 고정했습니다. HTML은 접근성용 숨김 설명, 단계 전환 상태값, 투명 hitbox만 맡습니다.
 - 첫 클릭은 `solve`에서 `goal`로 넘어가고, 둘째 클릭은 `합체 준비`로 첫 문제를 시작합니다. 학생 문구는 `아래 수를 둘로 나눠요.`, `두 조각을 따로 곱해요.`, `두 값을 더해요.`, `합체 준비`처럼 짧은 행동 말로 유지했습니다.
-- 로컬 Chrome QA에서 1280×800 기준 `시작 → 설명 1장 → 다음 → 설명 2장 → 합체 준비 → 문제 화면` 흐름을 확인했고, 설명 이미지 표시, 버튼 aria-label, Stage 비율, inline script 파싱, `git diff --check`를 통과했습니다.
+- 로컬 Chrome QA와 배포본 QA에서 1280×800 기준 `시작 → 설명 1장 → 다음 → 설명 2장 → 합체 준비 → 문제 화면` 흐름을 확인했고, 설명 이미지 표시, 버튼 aria-label, Stage 비율, inline script 파싱, `git diff --check`를 통과했습니다. 에듀잇티 운영 런처는 `https://kakio426.github.io/eduitit-math-3-2/3-2-1-4-mathmon-fusion/?v=3bc3c71&scoreboardApi=https%3A%2F%2Feduitit.site`를 iframe으로 엽니다.
