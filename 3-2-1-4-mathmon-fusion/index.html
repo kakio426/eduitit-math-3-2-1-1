@@ -219,6 +219,7 @@
     }
 
     .primary-button:focus-visible,
+    .cover-start-button:focus-visible,
     .ghost-button:focus-visible,
     .choice-button:focus-visible,
     .tutorial-image-hitbox:focus-visible,
@@ -334,6 +335,11 @@
       gap: 22px;
     }
 
+    .cover .hero-copy {
+      gap: 16px;
+      transform: translateY(-10px);
+    }
+
     .hero-copy h1,
     .result-copy h2 {
       max-width: 8em;
@@ -345,6 +351,16 @@
       text-shadow: 0 7px 0 rgba(0, 0, 0, 0.2), 0 0 28px rgba(80, 201, 222, 0.24);
     }
 
+    .hero-title-art {
+      display: block;
+      width: min(560px, 100%);
+      height: auto;
+      margin: -8px 0 -10px -10px;
+      filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.3));
+      pointer-events: none;
+      user-select: none;
+    }
+
     .hero-copy p,
     .praise {
       max-width: 560px;
@@ -354,6 +370,40 @@
       font-weight: 900;
       line-height: 1.35;
       text-shadow: 0 4px 14px rgba(0, 0, 0, 0.42);
+    }
+
+    .cover-start-button {
+      display: inline-grid;
+      place-items: center;
+      width: 420px;
+      height: 149px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      box-shadow: none;
+      cursor: pointer;
+      filter: drop-shadow(0 14px 24px rgba(255, 174, 34, 0.24));
+      transition: filter 160ms ease, transform 160ms ease;
+    }
+
+    .cover-start-button:hover {
+      filter: brightness(1.04) drop-shadow(0 16px 26px rgba(255, 174, 34, 0.28));
+      transform: translateY(-1px);
+    }
+
+    .cover-start-button:active {
+      filter: brightness(0.99) drop-shadow(0 10px 18px rgba(255, 174, 34, 0.22));
+      transform: translateY(1px);
+    }
+
+    .start-button-art {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
     }
 
     .result-visual-space {
@@ -2312,6 +2362,16 @@
         font-size: 1.18rem;
       }
 
+      .hero-title-art {
+        width: min(520px, 100%);
+      }
+
+      .cover-start-button {
+        width: min(400px, 100%);
+        height: auto;
+        aspect-ratio: 1950 / 647;
+      }
+
       .tutorial-copy h2 {
         font-size: 2.7rem;
       }
@@ -2390,6 +2450,180 @@
       }
     }
 
+    .result {
+      align-items: stretch;
+      padding: 0;
+      background: #12181d;
+    }
+
+    .result::after {
+      z-index: 1;
+      background:
+        linear-gradient(90deg, rgba(10, 13, 17, 0.08) 0%, rgba(10, 13, 17, 0.1) 42%, rgba(10, 13, 17, 0.54) 70%, rgba(10, 13, 17, 0.78) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.3));
+    }
+
+    .result-layout {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      width: 100%;
+      height: 100%;
+      display: block;
+      pointer-events: none;
+    }
+
+    .result-accessibility-copy {
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+
+    .result-dynamic-stage {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .result-panel-glow {
+      opacity: 0.9;
+      filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.38));
+    }
+
+    .result.is-measuring .result-panel-glow {
+      animation: result-panel-pulse 1.1s ease-in-out infinite;
+    }
+
+    .result-scan-beam {
+      opacity: 0;
+      transform: translateX(-120px);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .result.is-measuring .result-scan-beam {
+      opacity: 0.72;
+      animation: result-svg-scan 1.35s ease-in-out infinite;
+    }
+
+    .result-svg-kicker,
+    .result-svg-label,
+    .result-svg-button-text {
+      fill: #d8f9ff;
+      font-weight: 950;
+    }
+
+    .result-svg-kicker {
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .result-svg-title {
+      fill: #ffffff;
+      font-size: 66px;
+      font-weight: 1000;
+      letter-spacing: 0;
+      filter: url(#resultTextGlow);
+    }
+
+    .result-svg-label {
+      fill: rgba(216, 249, 255, 0.82);
+      font-size: 20px;
+    }
+
+    .result-svg-value {
+      fill: #ffffff;
+      font-size: 39px;
+      font-weight: 1000;
+      letter-spacing: 0;
+    }
+
+    .result-svg-energy {
+      fill: #b9ffe8;
+    }
+
+    .result-svg-grade {
+      fill: #ffd979;
+    }
+
+    .result-svg-button-text {
+      fill: #241500;
+      font-size: 25px;
+      letter-spacing: 0;
+    }
+
+    .result.is-measuring .result-actions {
+      visibility: hidden;
+    }
+
+    .result-actions {
+      position: absolute;
+      left: 59.375%;
+      top: 76%;
+      z-index: 5;
+      width: 32.8125%;
+      height: 8%;
+      display: block;
+      pointer-events: none;
+    }
+
+    .result-action-hitbox {
+      position: absolute;
+      top: 0;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      border-radius: 12px;
+      color: transparent;
+      background: transparent;
+      box-shadow: none;
+      pointer-events: auto;
+    }
+
+    .result-leaderboard-hitbox {
+      left: 0;
+      width: 47.62%;
+    }
+
+    .result-restart-hitbox {
+      right: 0;
+      width: 42.86%;
+    }
+
+    .result-action-hitbox:focus-visible {
+      outline: 4px solid rgba(255, 255, 255, 0.9);
+      outline-offset: 4px;
+    }
+
+    @keyframes result-panel-pulse {
+      0%,
+      100% {
+        filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.38)) drop-shadow(0 0 0 rgba(80, 201, 222, 0));
+      }
+      50% {
+        filter: drop-shadow(0 20px 42px rgba(0, 0, 0, 0.38)) drop-shadow(0 0 26px rgba(80, 201, 222, 0.38));
+      }
+    }
+
+    @keyframes result-svg-scan {
+      0% {
+        transform: translateX(-160px);
+        opacity: 0;
+      }
+      22%,
+      70% {
+        opacity: 0.72;
+      }
+      100% {
+        transform: translateX(360px);
+        opacity: 0;
+      }
+    }
+
     @media (max-width: 720px) and (orientation: portrait) {
       .game,
       .sound-toggle {
@@ -2435,7 +2669,7 @@
     </div>
   </div>
 
-  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800">
+  <main class="game" data-stage-ratio="16:10" data-stage-size="1280x800" data-cover-standard="generated-title-overlay" data-cover-start-standard="generated-button-art" data-result-render-mode="hybrid-generated-dynamic">
     <div class="stage-shell">
       <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="true" aria-label="소리 켜짐">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -2446,7 +2680,7 @@
         </svg>
       </button>
     <section class="screen cover is-active" id="coverScreen" aria-labelledby="coverTitle">
-      <img class="raster-bg" src="cover-robot-mathmon-generated.webp" alt="">
+      <img class="raster-bg" src="cover-generated.webp" alt="">
       <div class="top-row">
         <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
         <span class="unit-badge">3학년 2학기 1단원 4차시</span>
@@ -2454,9 +2688,12 @@
       <span class="lesson-badge">(몇)×(몇십몇), (몇십몇)×(몇십몇)</span>
       <div class="cover-scene">
         <div class="hero-copy">
-          <h1 id="coverTitle">매스몬 로봇 합체</h1>
+          <h1 class="visually-hidden" id="coverTitle">매스몬 로봇 합체</h1>
+          <img class="hero-title-art" src="title-poster-generated.webp" alt="" aria-hidden="true">
           <p>두 번 곱하고 더해서 로봇을 완성해요.</p>
-          <button class="primary-button" id="startButton" type="button">시작</button>
+          <button class="cover-start-button" id="startButton" type="button" aria-label="시작">
+            <img class="start-button-art" src="start-button-generated.webp" width="1950" height="647" alt="" aria-hidden="true">
+          </button>
         </div>
       </div>
     </section>
@@ -2656,11 +2893,10 @@
         <span class="unit-badge">3학년 2학기 1단원 4차시</span>
       </div>
       <div class="result-layout">
-        <div class="result-visual-space" aria-hidden="true"></div>
-        <div class="result-copy">
-          <h2 id="resultTitle">합체 에너지 측정 중</h2>
-          <p class="praise" id="praiseText">두 부품을 차근차근 합치고 있어요.</p>
-          <div class="result-measure" id="resultMeasure" aria-label="합체 등급 측정 결과">
+        <div class="result-accessibility-copy visually-hidden" aria-live="polite">
+          <h2 class="visually-hidden" id="resultTitle">합체 에너지 측정 중</h2>
+          <p class="visually-hidden" id="praiseText">두 부품을 차근차근 합치고 있어요.</p>
+          <div id="resultMeasure" aria-label="합체 등급 측정 결과">
             <div class="measure-top">
               <span id="measureStatus">합체 에너지 측정 중</span>
               <strong id="measurePercent">0%</strong>
@@ -2671,29 +2907,62 @@
             </div>
             <div class="result-grade-track" id="resultGradeTrack" aria-label="합체 등급 측정"></div>
           </div>
-          <div class="result-stats">
-            <div class="result-stat">
-              <span>합체 에너지</span>
-              <strong id="finalEnergyText">0%</strong>
-            </div>
-            <div class="result-stat">
-              <span>맞힌 문제</span>
-              <strong id="finalCorrectText">0/10</strong>
-            </div>
-            <div class="result-stat">
-              <span>도달 등급</span>
-              <strong id="finalGradeText">소형</strong>
-            </div>
-          </div>
-          <div class="result-actions">
-            <button class="primary-button" id="leaderboardButton" type="button">순위 보기</button>
-            <button class="primary-button" id="restartButton" type="button">다시하기</button>
-          </div>
+          <span id="finalEnergyText">0%</span>
+          <span id="finalCorrectText">0/10</span>
+          <span id="finalGradeText">소형</span>
+        </div>
+        <svg class="result-dynamic-stage" viewBox="0 0 1280 800" role="img" aria-labelledby="resultSvgTitle">
+          <defs>
+            <linearGradient id="resultPanelFill" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10232b" stop-opacity="0.78"></stop>
+              <stop offset="58%" stop-color="#121820" stop-opacity="0.64"></stop>
+              <stop offset="100%" stop-color="#2e1d41" stop-opacity="0.7"></stop>
+            </linearGradient>
+            <linearGradient id="resultPanelStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#b8fff0"></stop>
+              <stop offset="52%" stop-color="#ffc857"></stop>
+              <stop offset="100%" stop-color="#d49bff"></stop>
+            </linearGradient>
+            <linearGradient id="resultButtonFill" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#fff0a8"></stop>
+              <stop offset="100%" stop-color="#ffc04e"></stop>
+            </linearGradient>
+            <filter id="resultTextGlow" x="-20%" y="-50%" width="140%" height="200%">
+              <feDropShadow dx="0" dy="7" stdDeviation="0" flood-color="#000000" flood-opacity="0.22"></feDropShadow>
+              <feDropShadow dx="0" dy="0" stdDeviation="9" flood-color="#50c9de" flood-opacity="0.42"></feDropShadow>
+            </filter>
+          </defs>
+          <g class="result-panel-glow">
+            <path d="M716 112H1198C1211 112 1222 123 1222 136V708C1222 721 1211 732 1198 732H716C703 732 692 721 692 708V136C692 123 703 112 716 112Z" fill="url(#resultPanelFill)" stroke="url(#resultPanelStroke)" stroke-width="3"></path>
+            <path d="M731 130H1183C1193 130 1201 138 1201 148V696C1201 706 1193 714 1183 714H731C721 714 713 706 713 696V148C713 138 721 130 731 130Z" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"></path>
+            <rect class="result-scan-beam" x="724" y="138" width="86" height="568" rx="43" fill="rgba(255,255,255,0.22)"></rect>
+            <text class="result-svg-kicker" x="760" y="188">이번 합체</text>
+            <text class="result-svg-title" id="resultSvgTitle" x="760" y="266">합체 중</text>
+            <line x1="760" y1="366" x2="1154" y2="366" stroke="rgba(255,255,255,0.22)" stroke-width="2"></line>
+            <text class="result-svg-label" x="760" y="421">정답</text>
+            <text class="result-svg-value" id="resultSvgCorrect" x="760" y="469">0/10</text>
+            <text class="result-svg-label" x="972" y="421">로봇</text>
+            <text class="result-svg-value result-svg-grade" id="resultSvgGrade" x="972" y="469">확인 중</text>
+            <text class="result-svg-label" x="760" y="536">합체 힘</text>
+            <text class="result-svg-value result-svg-energy" id="resultSvgEnergy" x="760" y="586">측정 중</text>
+            <rect x="760" y="608" width="200" height="64" rx="12" fill="url(#resultButtonFill)" stroke="#ffdc75" stroke-width="2"></rect>
+            <rect x="982" y="608" width="180" height="64" rx="12" fill="url(#resultButtonFill)" stroke="#ffdc75" stroke-width="2"></rect>
+            <text class="result-svg-button-text" x="860" y="649" text-anchor="middle">순위 보기</text>
+            <text class="result-svg-button-text" id="resultSvgRestartText" x="1072" y="649" text-anchor="middle">한 번 더</text>
+          </g>
+        </svg>
+        <div class="result-actions" aria-hidden="false">
+          <button class="result-action-hitbox result-leaderboard-hitbox" id="leaderboardButton" type="button" aria-label="순위 보기">
+            <span class="visually-hidden">순위 보기</span>
+          </button>
+          <button class="result-action-hitbox result-restart-hitbox" id="restartButton" type="button" aria-label="한 번 더">
+            <span class="visually-hidden">한 번 더</span>
+          </button>
         </div>
       </div>
     </section>
 
-    <section class="screen mathmon-scoreboard" id="scoreboardScreen" aria-labelledby="scoreboardTitle" data-scoreboard-title="전국 합체 순위" data-scoreboard-title-art="../_shared/scoreboard/scoreboard-title-fusion-generated.webp" data-scoreboard-score-label="합체 점수" data-scoreboard-list-title="합체 점수 순위" data-scoreboard-unit="3학년 2학기 1단원 4차시"></section>
+    <section class="screen mathmon-scoreboard" id="scoreboardScreen" aria-labelledby="scoreboardTitle" data-scoreboard-title="전국 합체 순위" data-scoreboard-title-art="../_shared/scoreboard/scoreboard-title-fusion-generated.webp" data-scoreboard-result-kind="fusion" data-scoreboard-score-label="얻은 로봇" data-scoreboard-list-title="로봇 순위" data-scoreboard-unit="3학년 2학기 1단원 4차시"></section>
     </div>
   </main>
 
@@ -2824,6 +3093,11 @@
       finalEnergyText: document.getElementById("finalEnergyText"),
       finalCorrectText: document.getElementById("finalCorrectText"),
       finalGradeText: document.getElementById("finalGradeText"),
+      resultSvgTitle: document.getElementById("resultSvgTitle"),
+      resultSvgCorrect: document.getElementById("resultSvgCorrect"),
+      resultSvgGrade: document.getElementById("resultSvgGrade"),
+      resultSvgEnergy: document.getElementById("resultSvgEnergy"),
+      resultSvgRestartText: document.getElementById("resultSvgRestartText"),
       leaderboardButton: document.getElementById("leaderboardButton"),
       restartButton: document.getElementById("restartButton"),
       scoreboardScreen: document.getElementById("scoreboardScreen")
@@ -2840,6 +3114,32 @@
       setVariant: setTutorialVariant,
       getVariant: () => el.tutorialScreen.dataset.tutorialVariant
     };
+
+    window.__mathmonFusionQa = {
+      showResult(gradeId = "legend", correct = TOTAL_QUESTIONS) {
+        const targetGrade = ALL_GRADES.find((grade) => grade.id === gradeId);
+        const safeCorrect = clamp(Math.round(Number(correct) || 0), 0, TOTAL_QUESTIONS);
+        state.correct = safeCorrect;
+        state.index = TOTAL_QUESTIONS;
+        state.rainbowCore = Boolean(targetGrade?.secret);
+        state.energy = targetGrade ? targetGrade.max : 0;
+        showResult();
+        return {
+          correct: state.correct,
+          energy: getEnergy(),
+          grade: getGradeByEnergy()?.id || "retry",
+          screen: state.screen
+        };
+      }
+    };
+
+    const qaResultParam = new URLSearchParams(window.location.search).get("qa-result");
+    if (qaResultParam) {
+      const qaCorrectParam = new URLSearchParams(window.location.search).get("qa-correct");
+      window.requestAnimationFrame(() => {
+        window.__mathmonFusionQa.showResult(qaResultParam, qaCorrectParam ?? TOTAL_QUESTIONS);
+      });
+    }
 
     const scoreboardBridge = window.MathmonScoreboard.createApiBridge({
       root: el.scoreboardScreen,
@@ -3544,20 +3844,27 @@
       const energy = getEnergy();
       const measureLabel = state.rainbowCore ? "무지개 코어" : `${energy}%`;
       const measureWidth = state.rainbowCore ? 100 : energy;
+      const correctLabel = `${state.correct}/${TOTAL_QUESTIONS}`;
       el.resultRaster.src = launched ? grade.image : "result-retry-generated.webp";
       el.resultScreen.classList.add("is-measuring");
       el.resultScreen.classList.toggle("is-rainbow-result", state.rainbowCore);
       document.getElementById("resultTitle").textContent = "합체 에너지 측정 중";
       el.finalEnergyText.textContent = "측정 중";
-      el.finalCorrectText.textContent = `${state.correct}/${TOTAL_QUESTIONS}`;
+      el.finalCorrectText.textContent = correctLabel;
       el.finalGradeText.textContent = "측정 중";
       el.praiseText.textContent = "합체 공방에서 모은 에너지를 재고 있어요.";
       el.measureStatus.textContent = "합체 에너지 측정 중";
       el.measurePercent.textContent = "0%";
       el.measureFill.style.setProperty("--measure-width", "0%");
+      el.resultSvgTitle.textContent = "합체 중";
+      el.resultSvgCorrect.textContent = correctLabel;
+      el.resultSvgGrade.textContent = "확인 중";
+      el.resultSvgEnergy.textContent = "측정 중";
+      el.resultSvgRestartText.textContent = launched ? "한 번 더" : "다시하기";
       renderGradeTrack(el.resultGradeTrack, { targetIndex: -1, reachedIndex: -1 });
       el.restartButton.hidden = true;
       el.restartButton.disabled = true;
+      el.restartButton.setAttribute("aria-label", launched ? "한 번 더" : "다시하기");
       el.restartButton.textContent = launched ? "한 번 더" : "다시하기";
       playSound("scan");
       showScreen("result");
@@ -3566,6 +3873,7 @@
         el.measurePercent.textContent = measureLabel;
         el.measureFill.style.setProperty("--measure-width", `${measureWidth}%`);
         el.finalEnergyText.textContent = measureLabel;
+        el.resultSvgEnergy.textContent = measureLabel;
         renderGradeTrack(el.resultGradeTrack, {
           targetIndex: launched ? grade.index : -1,
           reachedIndex: launched ? grade.index : -1
@@ -3577,10 +3885,20 @@
         document.getElementById("resultTitle").textContent = launched ? `${grade.name}!` : "다시 합체해요";
         el.finalGradeText.textContent = launched ? getShortGradeName(grade) : "다시 도전";
         el.praiseText.textContent = launched ? getPraise(grade) : getRetryMessage();
+        el.resultSvgTitle.textContent = launched ? getResultDisplayTitle(grade) : "다시 합체";
+        el.resultSvgGrade.textContent = launched ? getShortGradeName(grade) : "다시 도전";
+        el.resultSvgEnergy.textContent = measureLabel;
         el.restartButton.hidden = false;
         el.restartButton.disabled = false;
         playSound("finish");
       }, 2500);
+    }
+
+    function getResultDisplayTitle(grade) {
+      if (grade.secret) {
+        return "전설 로봇!";
+      }
+      return `${getShortGradeName(grade)} 로봇!`;
     }
 
     function getPraise(grade) {

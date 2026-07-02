@@ -76,6 +76,10 @@ teacher-facing SaaS·관리자 화면에는 적용하지 않는다(그건 `eduit
 - `fullscene-score-slot`의 점수 숫자는 이미지 안 빈 점수칸에 맞춘 RasterStage 슬롯으로 배치한다. 생성 이미지마다 빈칸 위치가 다르면 `data-result-island` 같은 상태별 슬롯을 명시한다. 중앙 정렬은 CSS 좌표값만 확인하면 실패다. 1280×800과 1024×768 스크린샷 픽셀에서 숫자 글자 중심과 이미지 속 빈 점수칸 중심을 비교해 확인한다.
 - `fullscene-score-slot` 모드에서 `.result-stats`, `.result-stat`, `.result-card`, `.result-copy`, 보이는 CSS 제목/본문/버튼 장식이 있으면 실패다. 점수 박스 라벨도 이미지와 HTML 양쪽에서 보이지 않게 한다.
 - 결과 화면의 버튼을 이미지 안에 그린 경우에도 실제 클릭과 접근성을 위한 HTML 버튼 또는 hitbox는 같은 위치에 둔다. 단, 이 hitbox가 새 시각 요소를 로컬에서 그려 붙이는 방식이 되면 로컬 합성으로 본다.
+- **혼합형 ResultStage**: 결과 화면에 멋진 보상 장면과 정확한 동적 정보가 함께 필요하면 `data-result-render-mode="hybrid-generated-dynamic"`을 쓴다. 생성 이미지는 로봇·섬·행성·무대·빛·감정 같은 결과 세계를 맡고, SVG `viewBox="0 0 1280 800"` 오버레이는 정답 수, 이번 판 결과명, 짧은 진행값, 버튼 표면처럼 정확한 정렬이 필요한 동적 UI만 맡는다.
+- 혼합형 결과 화면의 생성 프롬프트에는 `no text`, `no letters`, `no numbers`, `no score board`, `no stats cards`, `no table`, `no buttons`, `no UI panels`를 기본으로 넣는다. 이미지 안에 남겨도 되는 것은 세계 안의 자연스러운 빛, 받침대, 홀로그램 빔, 빈 에너지 장치처럼 텍스트가 없는 장면 소품뿐이다.
+- 혼합형에서 SVG 오버레이는 새로운 CSS 카드가 아니라 정밀 UI 레이어다. 모든 보이는 SVG 텍스트는 1-3개 짧은 값으로 제한하고, 긴 칭찬·고정 결과 라벨·버튼 장식은 생성형 결과 이미지나 독립 생성형 타이틀/버튼 자산으로 처리한다. 동적 값이 4개 이상 필요해지면 결과 화면이 아니라 순위판/대시보드 패턴으로 분리한다.
+- 혼합형 QA는 생성 이미지 품질과 SVG 정렬을 따로 본다. 1280×800과 1024×768 캡처에서 보상 장면이 먼저 보이고, SVG `<text>`의 `getBBox()`가 의도한 UI 영역 밖으로 나가지 않으며, 점수·통계 카드가 결과 보상보다 시각적으로 앞서지 않아야 한다.
 - 배경 제거, 크롭, WebP 변환, 용량 최적화처럼 생성형 원본의 의미를 바꾸지 않는 후처리는 허용된다. 단, 새 문구·버튼·캐릭터·패널을 로컬에서 그려 붙이는 순간 로컬 합성으로 본다.
 
 ## 정밀 동적 UI 화면 계약
@@ -90,6 +94,18 @@ teacher-facing SaaS·관리자 화면에는 적용하지 않는다(그건 `eduit
 - 목록은 고정 높이 row 슬롯 안에서 4행처럼 안정적으로 보여 주고, 10위까지 같은 SVG 리스트 안에서 wheel/pointer 스크롤로 확인하게 한다.
 - 이 패턴은 동적 UI가 많은 화면을 위한 예외다. 결과 라벨·칭찬·고정 버튼 장식처럼 유한하고 고정된 시각 요소는 여전히 생성형 결과 이미지/타이틀/버튼 자산으로 처리한다.
 - QA는 CSS 좌표값만 보지 않는다. 1280×800, 1024×768, 사용자가 올린 문제 크기와 비슷한 브라우저 크기에서 캡처하고, SVG `<text>`의 `getBBox()`가 Stage와 의도한 보드 영역 밖으로 나가지 않는지 확인한다. 보이는 HTML 버튼 텍스트, `foreignObject`, 제작자 용어, 금지 문구도 0건이어야 한다.
+
+## 전국 순위 백엔드 연동 계약
+
+전국 순위판을 차시에 붙일 때는 UI만 만들고 끝내지 않는다. 학생 점수 제출, 주간 순위 조회, 백엔드 검증 규칙, API 꺼짐 상태까지 한 묶음으로 확인한다.
+
+- 1단원 1·2·3·4차시는 전국 순위 프론트가 이미 붙어 있는 기준 차시다. 1·3·4차시는 `_shared/scoreboard/scoreboard-ui.js`의 `MathmonScoreboard.createApiBridge(...)`를 쓰고, 2차시는 같은 `/api/v1` 엔드포인트를 직접 호출하는 이전 방식으로 동작한다.
+- 새 차시는 가능하면 직접 API 호출을 새로 쓰지 말고 `MathmonScoreboard.createApiBridge(...)`를 쓴다. 차시 폴더의 `index.html`에는 `_shared/scoreboard/scoreboard-ui.css`, `_shared/scoreboard/scoreboard-ui.js`, 빈 `<section class="screen mathmon-scoreboard" id="scoreboardScreen" ...>`, 결과 화면의 `leaderboardButton`, `scoreboardBridge.start()`, `scoreboardBridge.open()` 흐름이 모두 있어야 한다.
+- 브리지에는 `lessonId`, `getScore`, `getAnswers`, `showScoreboard`, `showResult`, `restart`를 차시 실제 상태와 연결한다. `lessonId`는 폴더명과 같게 두고, 답안 로그는 문제 번호, 선택값, 정답값, 정오답, 풀이 시간처럼 백엔드가 검증할 수 있는 값을 담는다.
+- 에듀잇티 백엔드는 `/Users/yubyeongju/Documents/eduitit`의 `mathmon_scoreboard` Django 앱이 기준이다. 새 단원 차시를 전국 순위로 공개하기 전에는 해당 차시 `lessonId`가 백엔드 검증 규칙에 들어갔는지 확인한다. 범용 가드레일이 있더라도 공개 차시는 차시별 정답 구조를 아는 검증 규칙을 추가하는 것을 기본으로 한다.
+- 백엔드 모델이 바뀌면 `makemigrations`와 Railway migration까지 진행한다. 모델이 바뀌지 않고 검증 규칙만 늘어나는 경우에도 `manage.py check`, `mathmon_scoreboard` 테스트, Railway production `manage.py check`로 운영 설정이 앱을 인식하는지 확인한다.
+- API가 꺼져 있거나 네트워크 오류가 나도 차시는 끝까지 플레이되어야 한다. 순위 화면 안에는 자연스러운 안내가 보여야 하고, 결과로 돌아가기·다시하기 hitbox는 계속 동작해야 한다.
+- 새 단원 QA는 프론트만 보지 않는다. API 켜짐 success, API 꺼짐/offline, loading, error, empty, 10행 스크롤, 긴 닉네임 말줄임, 버튼 hitbox 클릭까지 확인한다.
 
 첫 화면 커버는 기본적으로 `generated-title-overlay` 표준을 따른다. 새 차시와 생성형 시작 버튼으로 이관한 차시는 `<main class="game" data-cover-standard="generated-title-overlay" data-cover-start-standard="generated-button-art">`를 선언한다. `cover-generated.webp`는 글자 없는 대표 장면 배경으로 `.raster-bg`에 `object-fit: cover`로 깐다. 게임명은 생성형 이미지로 만든 `title-*-generated.webp`를 `.hero-title-art`로 얹고, 한 줄 목표는 짧은 HTML 텍스트로 둔다. 시작 버튼의 보이는 면은 CSS 텍스트 버튼이 아니라 생성형 버튼 자산(`start-button-generated.webp`)으로 둔다. 실제 조작은 `<button class="cover-start-button" id="startButton" aria-label="시작"><img class="start-button-art" src="start-button-generated.webp" alt="" aria-hidden="true"></button>`처럼 같은 크기의 HTML 버튼이 맡는다.
 

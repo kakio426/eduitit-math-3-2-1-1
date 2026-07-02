@@ -189,7 +189,6 @@ const FUSION_RULE: ProgressRule = {
   baseForPerfect: 0,
   maxScore: 100,
   mistakeId: "leak",
-  earlyFinishRewardId: "instantLaunch",
   rules: [
     { id: "normal", min: 7, max: 13 },
     { id: "smallExplosion", min: -9, max: -4 },

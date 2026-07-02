@@ -94,6 +94,7 @@ bun run check
 
 ## 문서
 
+- [업체 인계서](docs/VENDOR_HANDOFF.md)
 - [API 명세](docs/API.md)
 - [Railway 배포](docs/RAILWAY_DEPLOY.md)
 - [게임 연동](docs/GAME_INTEGRATION.md)

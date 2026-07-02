@@ -2979,7 +2979,7 @@
       </div>
     </section>
 
-    <section class="screen mathmon-scoreboard" id="scoreboardScreen" aria-labelledby="scoreboardTitle" data-scoreboard-title="전국 로켓 순위" data-scoreboard-title-art="../_shared/scoreboard/scoreboard-title-rocket-generated.webp">
+    <section class="screen mathmon-scoreboard" id="scoreboardScreen" aria-labelledby="scoreboardTitle" data-scoreboard-title="전국 로켓 순위" data-scoreboard-title-art="../_shared/scoreboard/scoreboard-title-rocket-generated.webp" data-scoreboard-result-kind="rocket">
       <svg class="mathmon-scoreboard-stage" viewBox="0 0 1280 800" preserveAspectRatio="xMidYMid meet" aria-hidden="false">
         <defs>
           <linearGradient id="scoreboardTitleGradient" x1="0" x2="0" y1="0" y2="1">
@@ -3055,7 +3055,7 @@
               <rect class="mathmon-scoreboard-card" x="820" y="222" width="286" height="88" rx="16"></rect>
               <text class="mathmon-scoreboard-label" x="214" y="248">내 이름</text>
               <text class="mathmon-scoreboard-value" id="scoreboardNickname" x="214" y="282" data-scoreboard-nickname>준비 중</text>
-              <text class="mathmon-scoreboard-label" x="537" y="248">연료 점수</text>
+              <text class="mathmon-scoreboard-label" x="537" y="248">도착한 곳</text>
               <text class="mathmon-scoreboard-value" id="scoreboardScore" x="537" y="282" data-scoreboard-score>0</text>
               <text class="mathmon-scoreboard-label" x="860" y="248">내 등수</text>
               <text class="mathmon-scoreboard-value mathmon-scoreboard-rank-value" id="scoreboardRank" x="860" y="282" data-scoreboard-rank>기록 전</text>
@@ -3065,7 +3065,7 @@
               <rect class="mathmon-scoreboard-list-panel" x="174" y="334" width="932" height="286" rx="24"></rect>
               <rect class="mathmon-scoreboard-list-header" x="174" y="334" width="932" height="54" rx="22"></rect>
               <text class="mathmon-scoreboard-head-left" x="214" y="361">10위까지</text>
-              <text class="mathmon-scoreboard-head-title" id="leaderboardTitle" x="640" y="361">로켓 연료 순위</text>
+              <text class="mathmon-scoreboard-head-title" id="leaderboardTitle" x="640" y="361">도착 순위</text>
               <text class="mathmon-scoreboard-head-week" id="leaderboardUpdated" x="1066" y="361" data-scoreboard-week>이번 주</text>
               <rect class="mathmon-scoreboard-row-slot" x="190" y="398" width="900" height="48" rx="17"></rect>
               <rect class="mathmon-scoreboard-row-slot" x="190" y="452" width="900" height="48" rx="17"></rect>
@@ -3589,6 +3589,7 @@
         session: state.scoreboardSession,
         submission: state.scoreboardSubmission,
         score: getScoreboardScore(),
+        rewardResult: getScoreboardRewardResult(),
         myEntry: findMyLeaderboardEntry(),
         weekLabel: getLeaderboardWeekLabel(),
         entries: state.scoreboardEntries,

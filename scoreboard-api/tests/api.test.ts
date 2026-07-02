@@ -36,6 +36,7 @@ const LeaderboardResponseSchema = z.object({
       correctCount: z.number().int(),
       lessonId: z.string(),
       weekStart: z.string(),
+      rewardResult: z.unknown(),
     }),
   ),
 })
@@ -86,7 +87,7 @@ describe("scoreboard api", () => {
         clientCorrectCount: 10,
         playTimeMs: 62000,
         answers: createRocketAnswers(),
-        rewardResult: { id: "neptune" },
+        rewardResult: { destinationId: "neptune" },
       }),
     })
     const scoreBody = ScoreResponseSchema.parse(await scoreResponse.json())
@@ -109,6 +110,7 @@ describe("scoreboard api", () => {
       correctCount: 10,
       lessonId: "3-2-1-2-mathmon-rocket-charge",
       weekStart: "2026-06-29",
+      rewardResult: { destinationId: "neptune" },
     })
     expect(JSON.stringify(leaderboardBody)).not.toContain("M7K2Q")
     expect(JSON.stringify(leaderboardBody)).not.toContain("sessionId")

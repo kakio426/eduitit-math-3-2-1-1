@@ -5,6 +5,39 @@
   const ROW_STEP = 54;
   const VISIBLE_ROWS = ROW_Y.length;
   const REQUEST_TIMEOUT_MS = 7000;
+  const OUTCOME_LABELS = Object.freeze({
+    box: Object.freeze({ retry: "상자 준비" }),
+    rocket: Object.freeze({
+      retry: "출발 준비",
+      mercury: "수성",
+      venus: "금성",
+      earth: "지구",
+      mars: "화성",
+      jupiter: "목성",
+      saturn: "토성",
+      uranus: "천왕성",
+      neptune: "해왕성",
+      andromeda: "안드로메다"
+    }),
+    island: Object.freeze({
+      retry: "출발섬",
+      start: "출발섬",
+      sand: "모래섬",
+      forest: "숲섬",
+      cloud: "구름섬",
+      starlight: "별빛섬",
+      rainbow: "무지개섬"
+    }),
+    fusion: Object.freeze({
+      retry: "합체 준비",
+      small: "소형 로봇",
+      medium: "중형 로봇",
+      large: "대형 로봇",
+      giant: "거대 로봇",
+      ultra: "초거대 로봇",
+      legend: "전설 로봇"
+    })
+  });
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>"']/g, (character) => ({
@@ -167,6 +200,46 @@
     return `${textValue.slice(0, maxLength - 1)}…`;
   }
 
+  function objectValue(value, key) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return "";
+    const propertyValue = value[key];
+    if (typeof propertyValue === "string" || typeof propertyValue === "number") {
+      return String(propertyValue);
+    }
+    return "";
+  }
+
+  function resultKind(root) {
+    return root.dataset.scoreboardResultKind || "score";
+  }
+
+  function outcomeFromRewardResult(kind, rewardResult) {
+    if (kind === "box") {
+      return objectValue(rewardResult, "mathmonName") || OUTCOME_LABELS.box.retry;
+    }
+    if (kind === "rocket") {
+      const id = objectValue(rewardResult, "destinationId") || objectValue(rewardResult, "id");
+      return OUTCOME_LABELS.rocket[id] || OUTCOME_LABELS.rocket.retry;
+    }
+    if (kind === "island") {
+      const id = objectValue(rewardResult, "islandId") || objectValue(rewardResult, "id");
+      return OUTCOME_LABELS.island[id] || OUTCOME_LABELS.island.retry;
+    }
+    if (kind === "fusion") {
+      const id = objectValue(rewardResult, "gradeId") || objectValue(rewardResult, "id");
+      return OUTCOME_LABELS.fusion[id] || OUTCOME_LABELS.fusion.retry;
+    }
+    return "";
+  }
+
+  function mainRecordValue(root, rewardResult, score, options = {}) {
+    const kind = resultKind(root);
+    if (kind === "score") return options.withPoint ? `${score}점` : String(score);
+    const outcome = outcomeFromRewardResult(kind, rewardResult);
+    if (outcome) return outcome;
+    return options.submitted ? "기록 완료" : "준비 중";
+  }
+
   function svgElement(tagName, attributes = {}) {
     const element = document.createElementNS(SVG_NS, tagName);
     Object.entries(attributes).forEach(([name, value]) => {
@@ -186,7 +259,7 @@
     appendSvgText(list, "mathmon-scoreboard-empty", 640, 506, message, 34);
   }
 
-  function appendEntry(list, entry, myRank, totalQuestions, rowIndex) {
+  function appendEntry(root, list, entry, myRank, totalQuestions, rowIndex) {
     const group = svgElement("g", { class: "mathmon-scoreboard-row" });
     const y = ROW_Y[rowIndex];
     if (entry.rank === myRank) {
@@ -203,7 +276,14 @@
 
     appendSvgText(group, "mathmon-scoreboard-rank", 238, y, entry.rank);
     appendSvgText(group, "mathmon-scoreboard-name", 300, y, entry.nickname, 12);
-    appendSvgText(group, "mathmon-scoreboard-score", 952, y, `${entry.score}점`);
+    appendSvgText(
+      group,
+      "mathmon-scoreboard-score",
+      952,
+      y,
+      mainRecordValue(root, entry.rewardResult, entry.score, { submitted: true, withPoint: true }),
+      10
+    );
     appendSvgText(group, "mathmon-scoreboard-correct", 1052, y, `${entry.correctCount}/${totalQuestions}`);
 
     list.appendChild(group);
@@ -297,7 +377,10 @@
 
     text(root, "[data-scoreboard-status]", truncate(statusText(state), 34));
     text(root, "[data-scoreboard-nickname]", truncate(state.session ? state.session.nickname : "준비 중", 9));
-    text(root, "[data-scoreboard-score]", String(state.score));
+    text(root, "[data-scoreboard-score]", truncate(
+      mainRecordValue(root, state.rewardResult, state.score, { submitted: Boolean(state.submission) }),
+      10
+    ));
     text(root, "[data-scoreboard-rank]", rankLabel);
     text(root, "[data-scoreboard-week]", truncate(state.weekLabel, 12));
 
@@ -315,7 +398,7 @@
     setOffset(root, entries.length, offset);
     entries
       .slice(offset, offset + VISIBLE_ROWS)
-      .forEach((entry, rowIndex) => appendEntry(list, entry, myRank, state.totalQuestions, rowIndex));
+      .forEach((entry, rowIndex) => appendEntry(root, list, entry, myRank, state.totalQuestions, rowIndex));
   }
 
   function getElapsedMs(startedAt) {
@@ -348,6 +431,7 @@
         session: state.session,
         submission: state.submission,
         score: options.getScore(),
+        rewardResult: options.getRewardResult(),
         myEntry: findMyLeaderboardEntry(),
         weekLabel: getLeaderboardWeekLabel(),
         entries: state.entries,

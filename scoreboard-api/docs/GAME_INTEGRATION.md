@@ -80,7 +80,7 @@ await fetch(`${SCOREBOARD_API_URL}/api/v1/scores`, {
 
 ## answer log 계약
 
-`answers`는 기본 10개를 보냅니다. `instantLaunch`처럼 게임 규칙상 조기 종료되는 보상이 마지막에 나온 경우에는 10개보다 적어도 됩니다.
+`answers`는 기본 10개를 보냅니다. 2차시 로켓의 `instantLaunch`처럼 게임 규칙상 조기 종료되는 보상이 마지막에 나온 경우에만 10개보다 적어도 됩니다. 3차시와 4차시는 반드시 10개를 보냅니다.
 
 ```json
 {
@@ -97,12 +97,12 @@ await fetch(`${SCOREBOARD_API_URL}/api/v1/scores`, {
 
 ## 1~4차시 프론트 연동 지점
 
-| 차시 | `LESSON_ID` | 순위 화면 제목 | 서버 점수 | 답안 로그 | 놓치기 쉬운 점 |
-| --- | --- | --- | --- | --- | --- |
-| 1차시 상자런 | `3-2-1-1-mathmon-box-run` | 전국 상자 순위 | 최종 상자 점수 | `answer` 1단계 | 깨진 상자의 `0`, `÷2`는 고정값이 아니라 `after - before` 변화량을 `broken.amount`로 보냅니다. |
-| 2차시 로켓 | `3-2-1-2-mathmon-rocket-charge` | 전국 로켓 순위 | 연료 점수 | `ones`, `tens`, `hundreds` | `instantLaunch`가 마지막 보상이면 10문제 전에도 제출할 수 있습니다. |
-| 3차시 점프섬 | `3-2-1-3-mathmon-jump-islands` | 전국 점프 순위 | 점프 거리 | `smallProduct`, `scaleFooting` | 한 번이라도 틀린 문제는 좋은 바람이 아니라 `shaky` 보상으로 검증됩니다. |
-| 4차시 로봇 합체 | `3-2-1-4-mathmon-fusion` | 전국 합체 순위 | 합체 에너지 | `partial1`, `partial2`, `fusion` | `emptyTank`는 서버에서도 점수를 0으로 만들고, `rainbowFuel`은 결과값에 `rainbowCore`를 함께 보냅니다. |
+| 차시 | `LESSON_ID` | 순위 화면 제목 | 내부 정렬 점수 | 학생에게 보이는 값 | 답안 로그 | 놓치기 쉬운 점 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1차시 상자런 | `3-2-1-1-mathmon-box-run` | 전국 상자 순위 | 최종 상자 점수 | 상자 결과/매스몬 이름 | `answer` 1단계 | 깨진 상자의 `0`, `÷2`는 고정값이 아니라 `after - before` 변화량을 `broken.amount`로 보냅니다. |
+| 2차시 로켓 | `3-2-1-2-mathmon-rocket-charge` | 전국 로켓 순위 | 연료 점수 | 도착한 곳 | `ones`, `tens`, `hundreds` | `instantLaunch`가 마지막 보상이면 10문제 전에도 제출할 수 있습니다. |
+| 3차시 점프섬 | `3-2-1-3-mathmon-jump-islands` | 전국 점프 순위 | 점프 거리 | 도착한 섬 | `smallProduct`, `scaleFooting` | 한 번이라도 틀린 문제는 좋은 바람이 아니라 `shaky` 보상으로 검증됩니다. |
+| 4차시 로봇 합체 | `3-2-1-4-mathmon-fusion` | 전국 합체 순위 | 합체 에너지 | 얻은 로봇 | `partial1`, `partial2`, `fusion` | `emptyTank`는 서버에서도 점수를 0으로 만들고, `rainbowFuel`은 결과값에 `rainbowCore`를 함께 보냅니다. |
 
 프론트 화면 위치:
 
@@ -129,9 +129,9 @@ await fetch(`${SCOREBOARD_API_URL}/api/v1/scores`, {
 문제 풀이 -> 결과 화면 -> 순위 보기 -> 전국 순위 화면
 ```
 
-전국 순위 화면에는 서버가 만든 기록 이름, 점수, 정답 수, 등수만 보여 줍니다. 자유 닉네임 입력, 학교명, 지역명, 참가코드는 학생 화면에 노출하지 않습니다.
+전국 순위 화면에는 서버가 만든 기록 이름, 차시 결과명, 정답 수, 등수만 보여 줍니다. 순위 정렬에는 서버 `score`를 쓰지만, 학생 화면의 주 값으로 점수 숫자를 노출하지 않습니다. 자유 닉네임 입력, 학교명, 지역명, 참가코드는 학생 화면에 노출하지 않습니다.
 
-공통 화면은 `_shared/scoreboard/scoreboard-celebration-bg-generated.webp`, `_shared/scoreboard/scoreboard-ui.css`, `_shared/scoreboard/scoreboard-ui.js`를 사용합니다. 생성 이미지는 매스몬, 불꽃, 무대 조명 같은 축하 배경만 맡습니다. 순위판, 내 기록 3칸, 순위 행, 스크롤 영역, 버튼 표면, 보이는 글자는 SVG `viewBox="0 0 1280 800"` 안의 공통 컴포넌트가 그립니다. 배경 이미지 안에 만든 박스에 글자를 맞추지 않습니다. HTML 버튼은 보이지 않는 hitbox와 접근성 라벨만 맡습니다. 차시별 화면은 제목과 점수 라벨만 바꾸고, 중앙 순위판과 버튼 배치는 유지합니다.
+공통 화면은 `_shared/scoreboard/scoreboard-celebration-bg-generated.webp`, `_shared/scoreboard/scoreboard-ui.css`, `_shared/scoreboard/scoreboard-ui.js`를 사용합니다. 생성 이미지는 매스몬, 불꽃, 무대 조명 같은 축하 배경만 맡습니다. 순위판, 내 기록 3칸, 순위 행, 스크롤 영역, 버튼 표면, 보이는 글자는 SVG `viewBox="0 0 1280 800"` 안의 공통 컴포넌트가 그립니다. 배경 이미지 안에 만든 박스에 글자를 맞추지 않습니다. HTML 버튼은 보이지 않는 hitbox와 접근성 라벨만 맡습니다. 차시별 화면은 제목, 결과 라벨, `data-scoreboard-result-kind`만 바꾸고, 중앙 순위판과 버튼 배치는 유지합니다.
 
 ## 공개 전 QA 순서
 
@@ -142,7 +142,7 @@ await fetch(`${SCOREBOARD_API_URL}/api/v1/scores`, {
 4. 순위 보기 클릭
 5. POST /api/v1/scores 201 확인
 6. GET /api/v1/leaderboards/weekly 200 확인
-7. 순위 화면에 서버 닉네임, 점수, 등수 표시 확인
+7. 순위 화면에 서버 닉네임, 차시 결과명, 정답 수, 등수 표시 확인
 ```
 
 랭킹 응답에는 참가코드, 세션 ID, DB ID, IP 주소가 들어가면 안 됩니다.

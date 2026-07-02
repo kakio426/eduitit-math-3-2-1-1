@@ -91,7 +91,16 @@ const toLeaderboardEntries = (submissions: readonly ScoreSubmission[]) =>
     correctCount: submission.correctCount,
     lessonId: submission.lessonId,
     weekStart: submission.weekStart,
+    rewardResult: parseRewardResult(submission.rewardResultJson),
   }))
+
+const parseRewardResult = (rewardResultJson: string): unknown => {
+  try {
+    return JSON.parse(rewardResultJson)
+  } catch {
+    return null
+  }
+}
 
 const createRateLimiter = () => {
   const hits = new Map<string, { count: number; resetAt: number }>()
@@ -215,6 +224,7 @@ export const createApp = (deps: AppDeps): Hono => {
         status: submission.status,
         flagReasons: submission.flagReasons,
         weekStart: submission.weekStart,
+        rewardResult: parseRewardResult(submission.rewardResultJson),
       },
       201,
     )

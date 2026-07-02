@@ -84,7 +84,7 @@
       "reward": { "id": "normal", "amount": 5 }
     }
   ],
-  "rewardResult": { "id": "neptune" }
+  "rewardResult": { "destinationId": "neptune" }
 }
 ```
 
@@ -100,13 +100,14 @@
   "maxScore": "100",
   "status": "accepted",
   "flagReasons": [],
-  "weekStart": "2026-06-29"
+  "weekStart": "2026-06-29",
+  "rewardResult": { "destinationId": "neptune" }
 }
 ```
 
-`score`는 큰 점수 안전성을 위해 문자열입니다.
+`score`는 큰 점수 안전성을 위해 문자열입니다. 순위 정렬에는 이 값을 쓰지만, 학생 화면의 공통 순위표는 `rewardResult`를 이용해 도착한 곳·도착한 섬·얻은 로봇 같은 차시 결과명을 보여 줍니다.
 
-`answers`는 기본 10개입니다. 다만 `instantLaunch`처럼 차시 규칙상 마지막 보상으로 조기 종료되는 경우에는 10개보다 적은 답안 로그도 받을 수 있습니다.
+`answers`는 기본 10개입니다. 다만 2차시 로켓의 `instantLaunch`처럼 차시 규칙상 마지막 보상으로 조기 종료되는 경우에만 10개보다 적은 답안 로그도 받을 수 있습니다. 3차시와 4차시는 반드시 10개를 보냅니다.
 
 1차시 상자런의 깨진 상자는 `reward.id = "broken"`으로 보내고, `reward.amount`에는 실제 점수 변화량을 넣습니다. 예를 들어 깨진 상자에서 점수가 100100점에서 0점이 되면 `amount`는 `-100100`입니다.
 
@@ -125,7 +126,8 @@
       "score": "50",
       "correctCount": 10,
       "lessonId": "3-2-1-2-mathmon-rocket-charge",
-      "weekStart": "2026-06-29"
+      "weekStart": "2026-06-29",
+      "rewardResult": { "destinationId": "neptune" }
     }
   ]
 }
