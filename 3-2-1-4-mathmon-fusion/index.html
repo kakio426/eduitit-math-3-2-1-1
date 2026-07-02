@@ -682,6 +682,7 @@
       --goal-glow-strong: rgba(255, 226, 126, 0.96);
       --goal-glow-soft: rgba(255, 200, 87, 0.38);
       --goal-scan: rgba(103, 231, 255, 0.48);
+      --goal-marker-size: 96px;
     }
 
     .goal-map-raster {
@@ -699,6 +700,7 @@
     }
 
     .goal-shade,
+    .goal-current-robot,
     .goal-transition {
       content: "";
       position: absolute;
@@ -712,6 +714,26 @@
       z-index: 1;
       height: 48%;
       background: linear-gradient(180deg, transparent, rgba(14, 12, 22, 0.58));
+    }
+
+    .goal-current-robot {
+      left: var(--goal-flare-x);
+      bottom: -4px;
+      z-index: 3;
+      width: var(--goal-marker-size);
+      height: var(--goal-marker-size);
+      object-fit: contain;
+      object-position: center;
+      transform: translateX(-50%);
+      filter:
+        drop-shadow(0 10px 14px rgba(0, 0, 0, 0.42))
+        drop-shadow(0 0 18px var(--goal-glow-soft));
+      transition:
+        left 0.34s cubic-bezier(0.18, 0.84, 0.2, 1),
+        width 0.24s ease,
+        height 0.24s ease,
+        filter 0.24s ease;
+      user-select: none;
     }
 
     .goal-transition {
@@ -759,22 +781,27 @@
 
     .goal-rail[data-goal-tier="small"] {
       --goal-flare-x: 9.7%;
+      --goal-marker-size: 90px;
     }
 
     .goal-rail[data-goal-tier="medium"] {
       --goal-flare-x: 22.2%;
+      --goal-marker-size: 100px;
     }
 
     .goal-rail[data-goal-tier="large"] {
       --goal-flare-x: 36.3%;
+      --goal-marker-size: 112px;
     }
 
     .goal-rail[data-goal-tier="giant"] {
       --goal-flare-x: 50.8%;
+      --goal-marker-size: 124px;
     }
 
     .goal-rail[data-goal-tier="ultra"] {
       --goal-flare-x: 66.4%;
+      --goal-marker-size: 136px;
     }
 
     .goal-rail[data-goal-tier="legend"] {
@@ -782,6 +809,7 @@
       --goal-glow-strong: rgba(238, 179, 255, 0.98);
       --goal-glow-soft: rgba(178, 92, 255, 0.48);
       --goal-scan: rgba(255, 131, 236, 0.54);
+      --goal-marker-size: 152px;
     }
 
     .play-layout {
@@ -2309,6 +2337,30 @@
         margin-bottom: 8px;
       }
 
+      .goal-rail[data-goal-tier="small"] {
+        --goal-marker-size: 70px;
+      }
+
+      .goal-rail[data-goal-tier="medium"] {
+        --goal-marker-size: 78px;
+      }
+
+      .goal-rail[data-goal-tier="large"] {
+        --goal-marker-size: 86px;
+      }
+
+      .goal-rail[data-goal-tier="giant"] {
+        --goal-marker-size: 96px;
+      }
+
+      .goal-rail[data-goal-tier="ultra"] {
+        --goal-marker-size: 106px;
+      }
+
+      .goal-rail[data-goal-tier="legend"] {
+        --goal-marker-size: 116px;
+      }
+
       .play-layout {
         grid-template-columns: minmax(220px, 0.42fr) minmax(0, 1fr);
         gap: 8px;
@@ -2817,7 +2869,8 @@
       </header>
 
       <div class="goal-rail" id="goalRail" data-art-slot="play-robot-goal-state-images" data-goal-tier="small" aria-label="멋진 로봇까지 가는 길">
-        <img class="goal-map-raster" id="goalMapRaster" src="play-robot-goal-strip-generated.webp?v=goal-full-strip-20260702a" alt="">
+        <img class="goal-map-raster" id="goalMapRaster" src="play-robot-goal-small-generated.webp?v=goal-state-20260702a" alt="">
+        <img class="goal-current-robot" id="goalCurrentRobot" src="mathmon-rfa-04-complete.webp" alt="" aria-hidden="true">
         <span class="goal-shade" aria-hidden="true"></span>
         <span class="goal-transition goal-transition-sweep" aria-hidden="true"></span>
         <span class="goal-transition goal-transition-burst" aria-hidden="true"></span>
@@ -3006,9 +3059,10 @@
       secret: true
     };
     const ALL_GRADES = [...GRADES, SECRET_GRADE];
-    const GOAL_RAIL_ASSET_VERSION = "goal-full-strip-20260702a";
-    const GOAL_RAIL_IMAGE = `play-robot-goal-strip-generated.webp?v=${GOAL_RAIL_ASSET_VERSION}`;
-    const GOAL_RAIL_IMAGES = ALL_GRADES.map(() => GOAL_RAIL_IMAGE);
+    const GOAL_RAIL_ASSET_VERSION = "goal-state-20260702a";
+    const GOAL_RAIL_IMAGES = ALL_GRADES.map(
+      (grade) => `play-robot-goal-${grade.id}-generated.webp?v=${GOAL_RAIL_ASSET_VERSION}`
+    );
     const EVENT_CLASSES = [
       "fuel-event--normal",
       "fuel-event--smallExplosion",
@@ -3419,7 +3473,7 @@
       const reachedIndex = reachedGrade ? reachedGrade.index : -1;
       return state.rainbowCore
         ? ALL_GRADES.length - 1
-        : Math.min(GRADES.length - 1, Math.max(0, reachedIndex + 1));
+        : Math.min(GRADES.length - 1, Math.max(0, reachedIndex));
     }
 
     function updateGoalRail() {
@@ -3427,13 +3481,16 @@
       const progress = state.rainbowCore ? 100 : energy;
       const currentIndex = getGoalRailImageIndex();
       const currentGrade = ALL_GRADES[currentIndex] || ALL_GRADES[0];
+      const reachedGrade = getGradeByEnergy();
       el.goalRail.dataset.goalTier = currentGrade.id;
       setGoalRailImage(currentIndex);
       el.goalRail.setAttribute(
         "aria-label",
         state.rainbowCore
           ? "전설 로봇까지 빛이 켜졌어요."
-          : `멋진 로봇까지 가는 길, 합체 에너지 ${progress}%, 다음 로봇 ${currentGrade.name}.`
+          : reachedGrade
+            ? `멋진 로봇까지 가는 길, 합체 에너지 ${progress}%, ${currentGrade.name}이 보이는 중.`
+            : `멋진 로봇까지 가는 길, 합체 에너지 ${progress}%, 첫 로봇을 준비하는 중.`
       );
     }
 
@@ -3549,8 +3606,8 @@
 
     function renderQuestionHighlight(problem, stepId) {
       const topClass = stepId === "fusion" ? "" : " is-step-target";
-      const tensClass = stepId === "partial2" || stepId === "fusion" ? " is-step-target" : "";
-      const onesClass = stepId === "partial1" || stepId === "fusion" ? " is-step-target" : "";
+      const tensClass = stepId === "partial2" ? " is-step-target" : "";
+      const onesClass = stepId === "partial1" ? " is-step-target" : "";
       el.questionText.setAttribute("aria-label", `${problem.top} 곱하기 ${problem.bottom}`);
       el.questionText.innerHTML = [
         `<span class="question-part${topClass}">${formatNumber(problem.top)}</span>`,
