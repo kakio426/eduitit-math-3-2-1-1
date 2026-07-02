@@ -133,6 +133,8 @@
 - `cover-generated.webp`
 - `tutorial-fulltext-source.png`
 - `tutorial-fulltext-generated.webp`
+- `tutorial-solve-source.png`, `tutorial-solve-generated.webp`
+- `tutorial-goal-source.png`, `tutorial-goal-generated.webp`
 - `result-generated-v2.webp`
 - `eduitit-logo-mark.png`
 - `assets/audio/*.wav`
@@ -166,10 +168,10 @@
 - 브라우저 QA: 1280x800, 1024x768, 856x544에서 결과 화면 `순위` 클릭, 전국 순위 화면 진입, 10행 샘플 렌더, `결과로` hitbox 복귀를 확인했습니다. SVG `<text>` Stage 밖 이탈, 보이는 HTML 버튼 텍스트, `foreignObject`, 버튼 겹침 0건을 확인했습니다.
 - 2026-07-02 추가 QA: `scoreboard-title-box-generated.webp` 생성형 타이틀 자산을 적용하고 1280x800, 1024x768, 856x544에서 타이틀 가독성, 배경 겹침, 상단 상태 문구 제거, 목록/버튼 위치를 다시 확인했습니다.
 
-## 11. 2026-07-02 설명 화면 포스터형 이관
+## 11. 2026-07-02 설명 화면 2장 이관
 
-설명 화면을 기존 카드형 설명에서 생성 이미지 포스터형으로 바꿨습니다. `tutorial-fulltext-source.png`와 `tutorial-fulltext-generated.webp`가 설명 글자, 예시, `문제 시작` 버튼 표면을 맡고, HTML은 접근성용 숨김 설명과 투명 hitbox만 맡습니다.
+설명 화면을 생성 이미지 2장 흐름으로 바꿨습니다. 첫 장은 `tutorial-solve-source.png`와 `tutorial-solve-generated.webp`가 맡고, 자리마다 곱하는 방법과 `다음` 버튼을 보여 줍니다. 둘째 장은 `tutorial-goal-source.png`와 `tutorial-goal-generated.webp`가 맡고, 문제를 맞히면 상자를 열어 점수를 얻고 마지막에 전국 순위를 볼 수 있음을 알려 줍니다.
 
-학생 문구는 초3 학생이 바로 읽을 수 있게 `곱해서 상자를 열어요`, `문제를 봐요.`, `답을 골라요.`, `상자를 열어요.`로 줄였습니다. Humanizer 기준으로 제작자 말과 긴 보상 설명은 설명 화면에서 빼고, 한 문장에 행동 하나만 남겼습니다.
+HTML은 보이는 설명을 다시 그리지 않고 접근성용 숨김 설명, 단계 전환 상태값, 투명 hitbox만 맡습니다. 첫 클릭은 `solve`에서 `goal`로 넘어가고, 둘째 클릭은 `상자 열기`로 첫 문제를 시작합니다. 설정의 `방법 다시 보기`도 같은 두 장을 보여 준 뒤 원래 화면으로 돌아옵니다.
 
-텍스트 넘침·요소 겹침 QA는 로컬 Chrome에서 1280×800과 1024×768로 확인했습니다. 설명 화면 이미지 로드, 투명 `문제 시작` hitbox Stage 안 배치, 보이는 DOM 텍스트 overflow, 화면 밖 이탈이 모두 0건이었습니다. REPORT용 최신 캡처는 `screenshots/02-tutorial.png`입니다.
+학생 문구는 `일의 자리부터 곱해요.`, `십의 자리도 곱해요.`, `백의 자리까지 곱해요.`, `상자 열기`처럼 짧은 행동 말로 유지했습니다. 로컬 Chrome QA에서 1280×800 기준 `시작 → 설명 1장 → 다음 → 설명 2장 → 상자 열기 → 문제 화면` 흐름을 확인했고, 설명 이미지 표시, 버튼 aria-label, Stage 비율, inline script 파싱, `git diff --check`를 통과했습니다.

@@ -469,6 +469,16 @@
       user-select: none;
     }
 
+    .tutorial-step-art {
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .tutorial[data-tutorial-step="solve"] .tutorial-solve-art,
+    .tutorial[data-tutorial-step="goal"] .tutorial-goal-art {
+      opacity: 1;
+    }
+
     .tutorial-poster-hitbox {
       position: absolute;
       left: 31%;
@@ -1776,22 +1786,24 @@
         </div>
       </section>
 
-      <section class="screen tutorial tutorial--fulltext" id="tutorialScreen" aria-labelledby="tutorialTitle">
-        <img class="tutorial-fulltext-art" src="tutorial-fulltext-generated.webp" alt="" aria-hidden="true">
+      <section class="screen tutorial tutorial--fulltext" id="tutorialScreen" data-tutorial-step="solve" aria-labelledby="tutorialTitle">
+        <img class="tutorial-fulltext-art tutorial-step-art tutorial-solve-art" src="tutorial-solve-generated.webp?v=two-step-20260702" alt="" aria-hidden="true">
+        <img class="tutorial-fulltext-art tutorial-step-art tutorial-goal-art" src="tutorial-goal-generated.webp?v=two-step-20260702" alt="" aria-hidden="true">
         <div class="top-row">
           <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
           <span class="unit-badge">3학년 2학기 1단원 3차시</span>
         </div>
         <h2 class="visually-hidden" id="tutorialTitle">0을 붙여 점프해요</h2>
         <div class="visually-hidden">
-          <p>어떻게 해요? 0을 붙여 점프해요.</p>
+          <p>첫 화면은 0을 잠깐 가리고 곱한 뒤 다시 붙이는 방법을 보여 줍니다.</p>
           <ol>
             <li>0을 잠깐 가려요.</li>
             <li>남은 곱셈을 해요.</li>
             <li>0을 다시 붙여요.</li>
           </ol>
+          <p>두 번째 화면은 문제를 맞혀 점프 힘을 얻고, 마지막에 전국 순위를 볼 수 있음을 알려 줍니다.</p>
         </div>
-        <button class="tutorial-poster-hitbox" id="tutorialNextButton" type="button" aria-label="점프 시작"></button>
+        <button class="tutorial-poster-hitbox" id="tutorialNextButton" type="button" aria-label="다음"></button>
       </section>
 
       <section class="screen play" id="playScreen" aria-labelledby="questionText">
@@ -1911,7 +1923,8 @@
       bgm: "mathmon-audio-bgm-enabled",
       sfx: "mathmon-audio-sfx-enabled"
     });
-    const TUTORIAL_START_LABEL = "점프 시작";
+    const TUTORIAL_NEXT_LABEL = "다음";
+    const TUTORIAL_GOAL_LABEL = "점프 준비";
     const TUTORIAL_REVIEW_LABEL = "계속하기";
     const MAP_MARKER_EFFECT_CLASSES = [
       "is-map-travel-forward",
@@ -2492,8 +2505,18 @@
     function resetTutorialButton() {
       state.tutorialReviewMode = false;
       state.reviewReturnScreen = "cover";
-      el.tutorialNextButton.textContent = TUTORIAL_START_LABEL;
-      el.tutorialNextButton.setAttribute("aria-label", TUTORIAL_START_LABEL);
+      setTutorialStep("solve");
+    }
+
+    function setTutorialStep(step) {
+      const nextStep = step === "goal" ? "goal" : "solve";
+      el.tutorialScreen.dataset.tutorialStep = nextStep;
+      const label = nextStep === "solve"
+        ? TUTORIAL_NEXT_LABEL
+        : state.tutorialReviewMode ? TUTORIAL_REVIEW_LABEL : TUTORIAL_GOAL_LABEL;
+      el.tutorialNextButton.textContent = label;
+      el.tutorialNextButton.setAttribute("aria-label", label);
+      return nextStep;
     }
 
     function loadAudioPreference(key) {
@@ -2598,8 +2621,7 @@
     function enterTutorialReview() {
       state.reviewReturnScreen = state.screen || "cover";
       state.tutorialReviewMode = true;
-      el.tutorialNextButton.textContent = TUTORIAL_REVIEW_LABEL;
-      el.tutorialNextButton.setAttribute("aria-label", TUTORIAL_REVIEW_LABEL);
+      setTutorialStep("solve");
       closeSettings({ restoreFocus: false });
       showScreen("tutorial");
       window.requestAnimationFrame(() => el.tutorialNextButton.focus());
@@ -3355,6 +3377,11 @@
       showScreen("tutorial");
     });
     el.tutorialNextButton.addEventListener("click", () => {
+      if (el.tutorialScreen.dataset.tutorialStep !== "goal") {
+        playSound("next");
+        setTutorialStep("goal");
+        return;
+      }
       if (state.tutorialReviewMode) {
         playSound("next");
         leaveTutorialReview();

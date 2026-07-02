@@ -448,6 +448,16 @@
       user-select: none;
     }
 
+    .tutorial-step-art {
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .tutorial[data-tutorial-step="solve"] .tutorial-solve-art,
+    .tutorial[data-tutorial-step="goal"] .tutorial-goal-art {
+      opacity: 1;
+    }
+
     .tutorial-image-hitbox,
     .tutorial-svg-hitbox {
       position: absolute;
@@ -2698,7 +2708,7 @@
       </div>
     </section>
 
-    <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle" data-tutorial-variant="image">
+    <section class="screen tutorial" id="tutorialScreen" aria-labelledby="tutorialTitle" data-tutorial-variant="image" data-tutorial-step="solve">
       <div class="top-row">
         <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
         <span class="unit-badge">3학년 2학기 1단원 4차시</span>
@@ -2706,17 +2716,19 @@
       <h2 class="visually-hidden" id="tutorialTitle">나눠서 곱해요</h2>
 
       <div class="tutorial-variant tutorial-image-variant" aria-label="이미지로 만든 설명 화면">
-        <img class="tutorial-fulltext-art" src="tutorial-fulltext-generated.webp" alt="" aria-hidden="true">
+        <img class="tutorial-fulltext-art tutorial-step-art tutorial-solve-art" src="tutorial-solve-generated.webp?v=two-step-20260702" alt="" aria-hidden="true">
+        <img class="tutorial-fulltext-art tutorial-step-art tutorial-goal-art" src="tutorial-goal-generated.webp?v=two-step-20260702" alt="" aria-hidden="true">
         <div class="visually-hidden">
-          <p>어떻게 해요? 나눠서 곱해요.</p>
+          <p>첫 화면은 아래 수를 둘로 나누어 곱하는 방법을 보여 줍니다.</p>
           <ol>
             <li>아래 수를 둘로 나눠요.</li>
             <li>두 조각을 따로 곱해요.</li>
             <li>두 값을 더해요.</li>
           </ol>
+          <p>두 번째 화면은 문제를 맞혀 합체 힘을 얻고, 마지막에 전국 순위를 볼 수 있음을 알려 줍니다.</p>
           <p>예: 45는 40과 5로 나누고, 23 곱하기 40과 23 곱하기 5를 따로 봐요.</p>
         </div>
-        <button class="tutorial-image-hitbox" type="button" data-tutorial-start aria-label="합체 시작"></button>
+        <button class="tutorial-image-hitbox" id="tutorialNextButton" type="button" data-tutorial-start aria-label="다음"></button>
       </div>
 
       <div class="tutorial-variant tutorial-svg-variant" aria-label="정밀 UI로 만든 설명 화면">
@@ -2778,7 +2790,7 @@
             <li><b>2</b><span>두 조각을 따로 곱해요.</span></li>
             <li><b>3</b><span>두 값을 더해요.</span></li>
           </ol>
-          <button class="primary-button" id="tutorialNextButton" type="button" data-tutorial-start>합체 시작</button>
+          <button class="primary-button" type="button" data-tutorial-start>합체 시작</button>
           </div>
           <div class="example-board" aria-label="곱셈 부품 합체 예시">
             <p class="example-title">예시</p>
@@ -3014,7 +3026,9 @@
     };
     const ROBOT_STAGE_CLASSES = ["attach-one", "attach-two", "complete"];
     const GOAL_RAIL_CLASSES = ["is-goal-up", "is-goal-down", "is-goal-rare", "is-goal-empty"];
-    const TUTORIAL_VARIANTS = new Set(["image", "svg", "html"]);
+    const TUTORIAL_VARIANTS = new Set(["image"]);
+    const TUTORIAL_NEXT_LABEL = "다음";
+    const TUTORIAL_GOAL_LABEL = "합체 준비";
     const tutorialVariantParam = new URLSearchParams(window.location.search).get("tutorial");
     const initialTutorialVariant = TUTORIAL_VARIANTS.has(tutorialVariantParam) ? tutorialVariantParam : "image";
 
@@ -3054,7 +3068,6 @@
       resultScreen: document.getElementById("resultScreen"),
       startButton: document.getElementById("startButton"),
       tutorialNextButton: document.getElementById("tutorialNextButton"),
-      tutorialStartButtons: Array.from(document.querySelectorAll("[data-tutorial-start]")),
       soundToggle: document.getElementById("soundToggle"),
       progressText: document.getElementById("progressText"),
       energyText: document.getElementById("energyText"),
@@ -3108,15 +3121,27 @@
     };
 
     function setTutorialVariant(variant) {
-      const nextVariant = TUTORIAL_VARIANTS.has(variant) ? variant : "html";
+      const nextVariant = TUTORIAL_VARIANTS.has(variant) ? variant : "image";
       el.tutorialScreen.dataset.tutorialVariant = nextVariant;
       return nextVariant;
     }
 
+    function setTutorialStep(step) {
+      const nextStep = step === "goal" ? "goal" : "solve";
+      el.tutorialScreen.dataset.tutorialStep = nextStep;
+      const label = nextStep === "solve" ? TUTORIAL_NEXT_LABEL : TUTORIAL_GOAL_LABEL;
+      el.tutorialNextButton.textContent = label;
+      el.tutorialNextButton.setAttribute("aria-label", label);
+      return nextStep;
+    }
+
     setTutorialVariant(initialTutorialVariant);
+    setTutorialStep("solve");
     window.__mathmonTutorialQa = {
       setVariant: setTutorialVariant,
-      getVariant: () => el.tutorialScreen.dataset.tutorialVariant
+      getVariant: () => el.tutorialScreen.dataset.tutorialVariant,
+      setStep: setTutorialStep,
+      getStep: () => el.tutorialScreen.dataset.tutorialStep
     };
 
     window.__mathmonFusionQa = {
@@ -4035,10 +4060,16 @@
 
     el.startButton.addEventListener("click", () => {
       playSound("start");
+      setTutorialStep("solve");
       showScreen("tutorial");
     });
-    el.tutorialStartButtons.forEach((button) => {
-      button.addEventListener("click", startGame);
+    el.tutorialNextButton.addEventListener("click", () => {
+      if (el.tutorialScreen.dataset.tutorialStep !== "goal") {
+        playSound("next");
+        setTutorialStep("goal");
+        return;
+      }
+      startGame();
     });
     el.rewardNextButton.addEventListener("click", nextAfterReward);
     el.leaderboardButton.addEventListener("click", scoreboardBridge.open);

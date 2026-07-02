@@ -734,6 +734,16 @@
       user-select: none;
     }
 
+    .tutorial-step-art {
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+
+    .tutorial[data-tutorial-step="solve"] .tutorial-solve-art,
+    .tutorial[data-tutorial-step="goal"] .tutorial-goal-art {
+      opacity: 1;
+    }
+
     .tutorial-poster-hitbox {
       position: absolute;
       left: 29%;
@@ -2791,22 +2801,24 @@
       </div>
     </section>
 
-    <section class="screen tutorial tutorial--fulltext" id="tutorialScreen" aria-labelledby="tutorialTitle">
-      <img class="tutorial-fulltext-art" src="tutorial-fulltext-generated.webp" alt="" aria-hidden="true">
+    <section class="screen tutorial tutorial--fulltext" id="tutorialScreen" data-tutorial-step="solve" aria-labelledby="tutorialTitle">
+      <img class="tutorial-fulltext-art tutorial-step-art tutorial-solve-art" src="tutorial-solve-generated.webp?v=two-step-20260702" alt="" aria-hidden="true">
+      <img class="tutorial-fulltext-art tutorial-step-art tutorial-goal-art" src="tutorial-goal-generated.webp?v=two-step-20260702" alt="" aria-hidden="true">
       <div class="top-row">
         <span class="brand-badge"><img src="eduitit-logo-mark.png" alt="">에듀잇티 수학 게임</span>
         <span class="unit-badge">3학년 2학기 1단원 2차시</span>
       </div>
       <h2 class="visually-hidden" id="tutorialTitle">차례로 곱해요</h2>
       <div class="visually-hidden">
-        <p>어떻게 해요? 차례로 곱해요.</p>
+        <p>첫 화면은 받아올림하며 곱하는 방법을 보여 줍니다.</p>
         <ol>
           <li>일의 자리부터 곱해요.</li>
-          <li>받아올리면 위에 적어요.</li>
-          <li>연료를 넣어요.</li>
+          <li>받아올릴 수를 위에 적어요.</li>
+          <li>올린 수까지 더해 답을 만들어요.</li>
         </ol>
+        <p>두 번째 화면은 문제를 맞혀 연료를 얻고, 마지막에 전국 순위를 볼 수 있음을 알려 줍니다.</p>
       </div>
-      <button class="tutorial-poster-hitbox" id="tutorialNextButton" type="button" aria-label="연료 넣기"></button>
+      <button class="tutorial-poster-hitbox" id="tutorialNextButton" type="button" aria-label="다음"></button>
     </section>
 
     <section class="screen play" id="playScreen" aria-labelledby="questionText">
@@ -3160,7 +3172,8 @@
       bgm: "mathmon-audio-bgm-enabled",
       sfx: "mathmon-audio-sfx-enabled"
     });
-    const TUTORIAL_START_LABEL = "연료 넣기";
+    const TUTORIAL_NEXT_LABEL = "다음";
+    const TUTORIAL_GOAL_LABEL = "발사 준비";
     const TUTORIAL_REVIEW_LABEL = "계속하기";
 
     const state = {
@@ -3328,8 +3341,18 @@
     function resetTutorialButton() {
       state.tutorialReviewMode = false;
       state.reviewReturnScreen = "cover";
-      el.tutorialNextButton.textContent = TUTORIAL_START_LABEL;
-      el.tutorialNextButton.setAttribute("aria-label", TUTORIAL_START_LABEL);
+      setTutorialStep("solve");
+    }
+
+    function setTutorialStep(step) {
+      const nextStep = step === "goal" ? "goal" : "solve";
+      el.tutorialScreen.dataset.tutorialStep = nextStep;
+      const label = nextStep === "solve"
+        ? TUTORIAL_NEXT_LABEL
+        : state.tutorialReviewMode ? TUTORIAL_REVIEW_LABEL : TUTORIAL_GOAL_LABEL;
+      el.tutorialNextButton.textContent = label;
+      el.tutorialNextButton.setAttribute("aria-label", label);
+      return nextStep;
     }
 
     function restartAnimation(target, className, duration = 760) {
@@ -4593,8 +4616,7 @@
     function enterTutorialReview() {
       state.reviewReturnScreen = state.screen || "cover";
       state.tutorialReviewMode = true;
-      el.tutorialNextButton.textContent = TUTORIAL_REVIEW_LABEL;
-      el.tutorialNextButton.setAttribute("aria-label", TUTORIAL_REVIEW_LABEL);
+      setTutorialStep("solve");
       closeSettings({ restoreFocus: false });
       showScreen("tutorial");
       window.requestAnimationFrame(() => el.tutorialNextButton.focus());
@@ -4837,6 +4859,11 @@
     });
 
     el.tutorialNextButton.addEventListener("click", () => {
+      if (el.tutorialScreen.dataset.tutorialStep !== "goal") {
+        playSound("next");
+        setTutorialStep("goal");
+        return;
+      }
       if (state.tutorialReviewMode) {
         playSound("next");
         leaveTutorialReview();
